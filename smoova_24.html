@@ -994,20 +994,20 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 96px 56px 80px;
+      padding: 40px;
     }
     @media (max-width: 1023px) {
-      .cs-slide { width: 100%; height: auto; min-height: 70dvh; padding: 48px 24px; }
+      .cs-slide { width: 100%; height: auto; min-height: 70dvh; padding: 20px; }
     }
     .cs-slide-img {
       max-width: 75%;
-      max-height: 65%;
+      max-height: 85%;
       object-fit: contain;
       border-radius: 4px;
       box-shadow: 0 16px 48px -8px rgba(15, 23, 42, 0.15);
     }
     @media (max-width: 1023px) {
-      .cs-slide-img { max-width: 100%; max-height: none; width: 100%; }
+      .cs-slide-img { max-width: 92%; max-height: 80vh; width: auto; }
     }
     .cs-slide-caption {
       font-family: 'Manrope', sans-serif;
@@ -1015,7 +1015,7 @@
       text-transform: uppercase;
       letter-spacing: 0.22em;
       color: rgba(15, 23, 42, 0.45);
-      margin-top: 20px;
+      margin-top: 24px;
       text-align: center;
     }
 
@@ -1127,40 +1127,106 @@
     }
     .cs-close-context {
       font-family: 'Manrope', sans-serif;
-      font-size: 0.65rem;
+      font-size: 0.6875rem;
       text-transform: uppercase;
-      letter-spacing: 0.22em;
+      letter-spacing: 0.15em;
       color: rgba(248, 250, 252, 0.5);
-      margin-bottom: 16px;
+      margin-bottom: 24px;
     }
-    .cs-close-next-block {
+    /* Next case study thumbnail card */
+    .cs-next-card {
+      max-width: 380px;
+      width: 100%;
+      margin: 0 auto 40px;
+      background: rgba(245, 241, 234, 0.04);
+      border: 1px solid rgba(245, 241, 234, 0.1);
+      border-radius: 12px;
+      padding: 16px;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 8px;
+      gap: 20px;
       cursor: pointer;
-      transition: opacity 200ms ease-out;
-      background: none;
-      border: none;
+      transition: background-color 200ms ease, border-color 200ms ease;
+      text-align: left;
       color: inherit;
-      padding: 0;
     }
-    @media (hover: hover) { .cs-close-next-block:hover { opacity: 0.75; } }
-    .cs-close-next-headline {
+    @media (hover: hover) {
+      .cs-next-card:hover {
+        background: rgba(245, 241, 234, 0.08);
+        border-color: rgba(245, 241, 234, 0.2);
+      }
+      .cs-next-card:hover .cs-next-card-arrow {
+        transform: translateX(4px);
+      }
+    }
+    @media (max-width: 1023px) {
+      .cs-next-card { padding: 14px; gap: 16px; }
+    }
+    .cs-next-card-thumb {
+      width: 80px;
+      height: 100px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    @media (max-width: 1023px) {
+      .cs-next-card-thumb { width: 70px; height: 88px; }
+    }
+    .cs-next-card-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .cs-next-card-eyebrow {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.625rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(248, 250, 252, 0.5);
+      margin-bottom: 6px;
+    }
+    .cs-next-card-name {
       font-family: 'Fraunces', Georgia, serif;
-      font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+      font-size: 1.5rem;
+      line-height: 1.2;
+      color: #F8FAFC;
+      margin-bottom: 4px;
+    }
+    @media (max-width: 1023px) {
+      .cs-next-card-name { font-size: 1.25rem; }
+    }
+    .cs-next-card-tagline {
+      font-family: 'Fraunces', Georgia, serif;
+      font-style: italic;
+      font-size: 0.75rem;
+      color: rgba(248, 250, 252, 0.6);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cs-next-card-arrow {
+      font-size: 1.25rem;
+      color: rgba(248, 250, 252, 0.4);
+      margin-left: auto;
+      flex-shrink: 0;
+      transition: transform 200ms ease;
+    }
+    /* End-of-list fallback: "All work" centered link */
+    .cs-close-all-work {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 2rem;
       line-height: 1.2;
       color: #F8FAFC;
       text-decoration: underline;
       text-underline-offset: 6px;
       text-decoration-thickness: 1px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: inherit;
+      margin-bottom: 40px;
+      transition: opacity 200ms ease;
     }
-    .cs-close-next-tagline {
-      font-family: 'Manrope', sans-serif;
-      font-size: 0.8rem;
-      color: rgba(248, 250, 252, 0.6);
-      letter-spacing: 0.05em;
-    }
+    @media (hover: hover) { .cs-close-all-work:hover { opacity: 0.7; } }
     .cs-close-hint {
       position: absolute;
       bottom: 28px;
@@ -1882,10 +1948,6 @@
                 x-text="activeCase.hero.tagline"></h2>
             <div class="cs-hero-meta">
               <div class="cs-hero-meta-item">
-                <span class="cs-hero-meta-label">Role</span>
-                <span class="cs-hero-meta-value" x-text="activeCase.hero.meta.role"></span>
-              </div>
-              <div class="cs-hero-meta-item">
                 <span class="cs-hero-meta-label">Year</span>
                 <span class="cs-hero-meta-value" x-text="activeCase.hero.meta.year"></span>
               </div>
@@ -2003,27 +2065,38 @@
           <span class="cs-close-wordmark" aria-hidden="true">smoova.</span>
           <div class="cs-close-divider" aria-hidden="true"></div>
 
-          <!-- If a next project exists: show its headline as a navigable link -->
+          <!-- If a next project exists: thumbnail card preview -->
           <template x-if="getNextCase()">
-            <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
-              <div class="cs-close-context">Next</div>
-              <button class="cs-close-next-block"
+            <div style="display:flex;flex-direction:column;align-items:center;width:100%">
+              <div class="cs-close-context">Next case study</div>
+              <button class="cs-next-card"
                       @click="goToNextCase()"
                       :aria-label="'Open next project: ' + (getNextCase()?.card.headline || '')">
-                <span class="cs-close-next-headline" x-text="getNextCase()?.card.headline"></span>
-                <span class="cs-close-next-tagline" x-text="getNextCase()?.card.eyebrow"></span>
+                <img class="cs-next-card-thumb"
+                     :src="getNextCase()?.card.image"
+                     :style="'object-position:' + (getNextCase()?.card.objectPosition || 'center')"
+                     :alt="getNextCase()?.card.headline"
+                     loading="lazy">
+                <div class="cs-next-card-text">
+                  <div class="cs-next-card-eyebrow" x-text="getNextCase()?.card.eyebrow"></div>
+                  <div class="cs-next-card-name" x-text="getNextCase()?.card.headline"></div>
+                  <template x-if="getNextCase()?.caseStudy?.hero?.tagline">
+                    <div class="cs-next-card-tagline" x-text="getNextCase()?.caseStudy?.hero?.tagline"></div>
+                  </template>
+                </div>
+                <span class="cs-next-card-arrow" aria-hidden="true">→</span>
               </button>
             </div>
           </template>
 
-          <!-- If no next project (end of list): return to all work -->
+          <!-- If no next project (end of list): back to all work -->
           <template x-if="!getNextCase()">
-            <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+            <div style="display:flex;flex-direction:column;align-items:center">
               <div class="cs-close-context">Back to</div>
-              <button class="cs-close-next-block"
+              <button class="cs-close-all-work"
                       @click="scrollToExhibitH()"
                       aria-label="Return to all work">
-                <span class="cs-close-next-headline">All work</span>
+                All work
               </button>
             </div>
           </template>
@@ -2126,157 +2199,157 @@ function smoova() {
     workCards: [
       {
         id: 1, status: 'live',
-        card:  { eyebrow: 'Fintech', headline: 'Trading platform brand and product design', image: 'smoova_21_1_assets/work/1.png', objectPosition: 'center' },
+        card:  { eyebrow: 'Hair · Paris', headline: 'Freaky Darling', image: 'smoova_21_1_assets/work/1.png', objectPosition: 'center' },
         modal: { eyebrow: 'Fintech', headline: 'Eurotrader', bodyLead: 'A complete brand identity and product design system for a European retail trading platform.', bodyRest: 'We defined the visual language from the ground up — logo, type scale, colour system, and component library — then applied it across the web platform, onboarding flow, and marketing site.', heroImage: 'smoova_21_1_assets/work/1.png', caption: 'Figma, Framer, custom design system' },
         caseStudy: {
-          hero: { heroImage: 'smoova_21_1_assets/webpages/1/fd-01-hero.png', tagline: 'Placeholder tagline for case study 01.', meta: { role: 'Brand Identity, Product Design', year: 'TBD', scope: 'TBD' } },
-          brief: { eyebrow: '01 / The Brief', paragraphs: ['Placeholder paragraph one for case study 01.', 'Placeholder paragraph two for case study 01.'], stats: [{ label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }] },
-          system: { eyebrow: '02 / The System', headline: 'Placeholder system headline for case study 01.', palette: [{ name: 'Color 1', hex: '#1a1a1a' }, { name: 'Color 2', hex: '#f0ece3' }, { name: 'Color 3', hex: '#c4a882' }, { name: 'Color 4', hex: '#7a6a55' }], typography: [{ name: 'Display', sample: 'Aa', spec: 'TBD — Regular / Italic' }, { name: 'Body', sample: 'Aa', spec: 'TBD — Regular / Medium' }] },
-          pages: { eyebrow: '03 / The Pages', headline: 'Placeholder pages headline for case study 01.', slides: [{ image: 'smoova_21_1_assets/webpages/1/fd-01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/1/fd-02-services.png', caption: '02 — Services' }, { image: 'smoova_21_1_assets/webpages/1/fd-03-lookbook.png', caption: '03 — Lookbook' }, { image: 'smoova_21_1_assets/webpages/1/fd-04-stylists.png', caption: '04 — Stylists' }, { image: 'smoova_21_1_assets/webpages/1/fd-05-book.png', caption: '05 — Book' }] },
-          outcome: { eyebrow: '04 / What it became', statement: 'Placeholder outcome statement for case study 01.', liveUrl: '', liveUrlLabel: 'View live site' },
+          hero: { heroImage: 'smoova_21_1_assets/webpages/1/fd-01-hero.png', tagline: 'A Paris hair salon for clients who\'d rather be looked at than blended in.', meta: { location: 'Paris, 10e', year: '2026', scope: 'Brand, Web, Copy' } },
+          brief: { eyebrow: '01 / The brief', paragraphs: ['Most salon websites apologise for existing. Soft greys, careful spacing, photography that could be selling skincare or selling sofas. We were asked to build the opposite.', 'Freaky Darling came to us with one instruction: build a brand that doesn\'t audition for anyone. The salon serves clients who already know what they want, which usually involves colour their mother would notice. Our job was to make the website match the chair.', 'We treated it like a record label, not a service business. Loud type, one dominant colour, copy that sounds like a person and not a brochure. The site doesn\'t try to convince anyone. It assumes you already know.'], stats: [{ label: 'Location', value: 'Paris, 10e' }, { label: 'Year', value: '2026' }, { label: 'Scope', value: 'Brand · Web · Copy' }] },
+          system: { eyebrow: '02 / The system', headline: 'Loud is the brief.', palette: [{ name: 'Hot Pink', hex: '#F4A8C8' }, { name: 'Cobalt', hex: '#1E1FB8' }, { name: 'Acid Lime', hex: '#D8F26B' }, { name: 'Bone', hex: '#F5F1EA' }], typography: [{ name: 'Display', sample: 'Be a freak.', spec: 'Recoleta Bold Italic' }, { name: 'UI / Caption', sample: '02 / SERVICES', spec: 'JetBrains Mono' }] },
+          pages: { eyebrow: '03 / The work', headline: 'Five surfaces. One voice.', slides: [{ image: 'smoova_21_1_assets/webpages/1/fd-01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/1/fd-02-services.png', caption: '02 — Services' }, { image: 'smoova_21_1_assets/webpages/1/fd-03-lookbook.png', caption: '03 — Lookbook' }, { image: 'smoova_21_1_assets/webpages/1/fd-04-stylists.png', caption: '04 — Stylists' }, { image: 'smoova_21_1_assets/webpages/1/fd-05-book.png', caption: '05 — Book' }] },
+          outcome: { eyebrow: '04 / What it became', statement: 'A brand confident enough to put "Walk-ins judged lovingly" in the footer and mean it.', liveUrl: null, liveUrlLabel: 'Visit live concept →' },
           close: { nextProjectId: 2 }
         }
       },
       {
         id: 2, status: 'live',
-        card:  { eyebrow: 'Fintech', headline: 'Investment platform brand and UX', image: 'smoova_21_1_assets/work/2.png', objectPosition: 'center' },
+        card:  { eyebrow: 'Nails · Paris', headline: 'Rouge', image: 'smoova_21_1_assets/work/2.png', objectPosition: 'center' },
         modal: { eyebrow: 'Fintech', headline: 'VLT Invest', bodyLead: 'Brand identity and UX design for a Dutch retail investment platform targeting first-time investors.', bodyRest: 'We built a visual system that balances trustworthiness with warmth — dark-on-light typography, restrained colour, and an onboarding flow designed to reduce cognitive load at every step.', heroImage: 'smoova_21_1_assets/work/2.png', caption: 'Figma, Principle, Lottie' },
         caseStudy: {
-          hero: { heroImage: 'smoova_21_1_assets/webpages/2/rg-01-hero.png', tagline: 'Placeholder tagline for case study 02.', meta: { role: 'Brand Identity, UX Design', year: 'TBD', scope: 'TBD' } },
-          brief: { eyebrow: '01 / The Brief', paragraphs: ['Placeholder paragraph one for case study 02.', 'Placeholder paragraph two for case study 02.'], stats: [{ label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }] },
-          system: { eyebrow: '02 / The System', headline: 'Placeholder system headline for case study 02.', palette: [{ name: 'Color 1', hex: '#2c2c2c' }, { name: 'Color 2', hex: '#f5f0e8' }, { name: 'Color 3', hex: '#b8956a' }, { name: 'Color 4', hex: '#6b5c4a' }], typography: [{ name: 'Display', sample: 'Aa', spec: 'TBD — Regular / Italic' }, { name: 'Body', sample: 'Aa', spec: 'TBD — Regular / Medium' }] },
-          pages: { eyebrow: '03 / The Pages', headline: 'Placeholder pages headline for case study 02.', slides: [{ image: 'smoova_21_1_assets/webpages/2/rg-01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/2/rg-02-manifesto.png', caption: '02 — Manifesto' }, { image: 'smoova_21_1_assets/webpages/2/rg-03-objects.png', caption: '03 — Objects' }, { image: 'smoova_21_1_assets/webpages/2/rg-04-services.png', caption: '04 — Services' }, { image: 'smoova_21_1_assets/webpages/2/rg-05-book.png', caption: '05 — Book' }] },
-          outcome: { eyebrow: '04 / What it became', statement: 'Placeholder outcome statement for case study 02.', liveUrl: '', liveUrlLabel: 'View live site' },
+          hero: { heroImage: 'smoova_21_1_assets/webpages/2/rg-01-hero.png', tagline: 'A Paris nail studio that treats the hand as a still life.', meta: { location: 'Paris, 3e', year: '2026', scope: 'Brand, Web, Copy' } },
+          brief: { eyebrow: '01 / The brief', paragraphs: ['Most nail salons sell speed. In and out, two colors, choose from a wheel. Rouge came to us with the opposite proposition: a studio where the nail is treated as an art object and the appointment as a sitting.', 'The brand had to feel less like a service and more like a gallery. We built it around one dominant colour, one display weight, and language that refused to translate itself. The site is in French. The price list is unapologetic. The objects have names like Chrome, Pearl, and Leaf, because that is what they are.', 'The whole system runs on restraint. Two colours. One typeface. One pink dot as the only accent. The discipline is the point - it\'s how you signal that the work inside is worth the wait.', 'Concept piece. Built to prove a quieter register can still hold attention.'], stats: [{ label: 'Location', value: 'Paris, 3e' }, { label: 'Year', value: '2026' }, { label: 'Scope', value: 'Brand · Web · Copy' }] },
+          system: { eyebrow: '02 / The system', headline: 'Restraint as a stance.', palette: [{ name: 'Oxblood', hex: '#7A1F2A' }, { name: 'Bone', hex: '#F5F1EA' }, { name: 'Magenta', hex: '#E91E63' }, { name: 'Ink', hex: '#1A1A1A' }], typography: [{ name: 'Display', sample: 'ROUGE', spec: 'Druk Wide Bold' }, { name: 'Body / Italic', sample: 'Sur rendez-vous uniquement.', spec: 'Newsreader Italic' }] },
+          pages: { eyebrow: '03 / The work', headline: 'One colour. One stance.', slides: [{ image: 'smoova_21_1_assets/webpages/2/rg-01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/2/rg-02-manifesto.png', caption: '02 — Manifesto' }, { image: 'smoova_21_1_assets/webpages/2/rg-03-objects.png', caption: '03 — Objects' }, { image: 'smoova_21_1_assets/webpages/2/rg-04-services.png', caption: '04 — Services' }, { image: 'smoova_21_1_assets/webpages/2/rg-05-book.png', caption: '05 — Book' }] },
+          outcome: { eyebrow: '04 / What it became', statement: 'A brand confident enough to print its price list in a single weight and let the silence around it do the selling.', liveUrl: null, liveUrlLabel: 'Visit live concept →' },
           close: { nextProjectId: 3 }
         }
       },
       {
         id: 3, status: 'live',
-        card:  { eyebrow: 'Crypto', headline: 'Trading automation platform redesign', image: 'smoova_21_1_assets/work/3.png', objectPosition: 'center' },
+        card:  { eyebrow: 'Hair & Beauty · Paris', headline: 'Honey & Halo', image: 'smoova_21_1_assets/work/3.png', objectPosition: 'center' },
         modal: { eyebrow: 'Crypto', headline: 'Bitsgap', bodyLead: 'Product design and design system for a crypto trading automation platform used by over 500,000 traders.', bodyRest: 'We introduced a component-based design system with strict information hierarchy rules, allowing the product team to ship new features while maintaining visual consistency.', heroImage: 'smoova_21_1_assets/work/3.png', caption: 'Figma, React component library, Storybook' },
         caseStudy: {
-          hero: { heroImage: 'smoova_21_1_assets/webpages/3/hh-01-hero.png', tagline: 'Placeholder tagline for case study 03.', meta: { role: 'Product Design, Design System', year: 'TBD', scope: 'TBD' } },
-          brief: { eyebrow: '01 / The Brief', paragraphs: ['Placeholder paragraph one for case study 03.', 'Placeholder paragraph two for case study 03.'], stats: [{ label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }] },
-          system: { eyebrow: '02 / The System', headline: 'Placeholder system headline for case study 03.', palette: [{ name: 'Color 1', hex: '#0d0d0d' }, { name: 'Color 2', hex: '#fafaf8' }, { name: 'Color 3', hex: '#d4a853' }, { name: 'Color 4', hex: '#8a7a65' }], typography: [{ name: 'Display', sample: 'Aa', spec: 'TBD — Regular / Italic' }, { name: 'Body', sample: 'Aa', spec: 'TBD — Regular / Medium' }] },
-          pages: { eyebrow: '03 / The Pages', headline: 'Placeholder pages headline for case study 03.', slides: [{ image: 'smoova_21_1_assets/webpages/3/hh-01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/3/hh-02-menu.png', caption: '02 — Menu' }, { image: 'smoova_21_1_assets/webpages/3/hh-03-gallery.png', caption: '03 — Gallery' }, { image: 'smoova_21_1_assets/webpages/3/hh-04-story.png', caption: '04 — Story' }, { image: 'smoova_21_1_assets/webpages/3/hh-05-book.png', caption: '05 — Book' }] },
-          outcome: { eyebrow: '04 / What it became', statement: 'Placeholder outcome statement for case study 03.', liveUrl: '', liveUrlLabel: 'View live site' },
+          hero: { heroImage: 'smoova_21_1_assets/webpages/3/hh-01-hero.png', tagline: 'A Paris hair and beauty atelier that refuses to apologise for being soft.', meta: { location: 'Paris, 3e', year: '2026', scope: 'Brand, Web, Copy' } },
+          brief: { eyebrow: '01 / The brief', paragraphs: ['The market is full of salons running from softness. Beige walls, sans-serif logos, the same five photos of a marble counter. Honey & Halo wanted to do the opposite and lean fully into the register the market keeps treating as a guilty pleasure.', 'The brief was to build a beauty atelier brand that takes prettiness seriously. Pearls. Gilded mirrors. Lavender clouds. Script logo with hearts. A neon sign that reads "you belong in the clouds" without irony. The whole system is calibrated to feel like a fragrance ad from a decade that hasn\'t happened yet.', 'We pushed the romance harder than felt safe, because the market doesn\'t reward halfway here. The result is a brand that doesn\'t ask permission to be soft - it makes softness the position.'], stats: [{ label: 'Location', value: 'Paris, 3e' }, { label: 'Year', value: '2026' }, { label: 'Scope', value: 'Brand · Web · Copy' }] },
+          system: { eyebrow: '02 / The system', headline: 'Soft, on purpose.', palette: [{ name: 'Plum', hex: '#4A2A45' }, { name: 'Lavender Cloud', hex: '#D4B8D8' }, { name: 'Blush', hex: '#F4DDDB' }, { name: 'Pearl', hex: '#F8F1EC' }], typography: [{ name: 'Display', sample: 'Step into the cloud.', spec: 'Recoleta Italic' }, { name: 'Script', sample: 'Honey & Halo', spec: 'Tan Pearl' }] },
+          pages: { eyebrow: '03 / The work', headline: 'A romance that doesn\'t blink.', slides: [{ image: 'smoova_21_1_assets/webpages/3/hh-01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/3/hh-02-menu.png', caption: '02 — Menu' }, { image: 'smoova_21_1_assets/webpages/3/hh-03-gallery.png', caption: '03 — Gallery' }, { image: 'smoova_21_1_assets/webpages/3/hh-04-story.png', caption: '04 — Story' }, { image: 'smoova_21_1_assets/webpages/3/hh-05-book.png', caption: '05 — Book' }] },
+          outcome: { eyebrow: '04 / What it became', statement: 'A brand confident enough to put "You\'re like really pretty" in neon and treat it as a thesis statement.', liveUrl: null, liveUrlLabel: 'Visit live concept →' },
           close: { nextProjectId: 4 }
         }
       },
       {
         id: 4, status: 'live',
-        card:  { eyebrow: 'Beauty', headline: 'Placeholder project four', image: 'smoova_21_1_assets/work/4.png', objectPosition: 'center' },
+        card:  { eyebrow: 'Spa · Mallorca', headline: 'Casa Solana', image: 'smoova_21_1_assets/work/4.png', objectPosition: 'center' },
         modal: { eyebrow: 'Beauty', headline: 'Project Four', bodyLead: 'Placeholder lead sentence for project four.', bodyRest: 'Placeholder body copy for project four. Replace with real copy when confirmed.', heroImage: 'smoova_21_1_assets/work/4.png', caption: 'Placeholder tools' },
         caseStudy: {
-          hero: { heroImage: 'smoova_21_1_assets/webpages/4/cs-01-hero.png', tagline: 'Placeholder tagline for case study 04.', meta: { role: 'TBD', year: 'TBD', scope: 'TBD' } },
-          brief: { eyebrow: '01 / The Brief', paragraphs: ['Placeholder paragraph one for case study 04.', 'Placeholder paragraph two for case study 04.'], stats: [{ label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }] },
-          system: { eyebrow: '02 / The System', headline: 'Placeholder system headline for case study 04.', palette: [{ name: 'Color 1', hex: '#1c1c1c' }, { name: 'Color 2', hex: '#f2ede5' }, { name: 'Color 3', hex: '#c09b72' }, { name: 'Color 4', hex: '#7d6e5a' }], typography: [{ name: 'Display', sample: 'Aa', spec: 'TBD — Regular / Italic' }, { name: 'Body', sample: 'Aa', spec: 'TBD — Regular / Medium' }] },
-          pages: { eyebrow: '03 / The Pages', headline: 'Placeholder pages headline for case study 04.', slides: [{ image: 'smoova_21_1_assets/webpages/4/cs-01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/4/cs-02-rituals.png', caption: '02 — Rituals' }, { image: 'smoova_21_1_assets/webpages/4/cs-03-spaces.png', caption: '03 — Spaces' }, { image: 'smoova_21_1_assets/webpages/4/cs-04-philosophy.png', caption: '04 — Philosophy' }, { image: 'smoova_21_1_assets/webpages/4/cs-05-book.png', caption: '05 — Book' }] },
-          outcome: { eyebrow: '04 / What it became', statement: 'Placeholder outcome statement for case study 04.', liveUrl: '', liveUrlLabel: 'View live site' },
+          hero: { heroImage: 'smoova_21_1_assets/webpages/4/cs-01-hero.png', tagline: 'A slow-living spa in Mallorca built for people who left the city to stop apologising for resting.', meta: { location: 'Palma, Mallorca', year: '2026', scope: 'Brand, Web, Copy' } },
+          brief: { eyebrow: '01 / The brief', paragraphs: ['The wellness category has been so thoroughly colonised by clinical white space and lemongrass-scented stock photography that it\'s become impossible to tell two spas apart. Casa Solana came to us asking for the opposite: a brand rooted in a specific place, with the texture of that place on every surface.', 'The work pulled directly from Mallorca - terracotta walls, olive shadow, raw linen, hand-thrown ceramics, water trickling into stone basins. The site reads in Spanish and English at once, not because it has to, but because the audience already moves between both. We treated bilingual copy as a brand voice, not an afterthought.', 'The whole system runs on slowness. Generous spacing. Hand-drawn line illustrations instead of icons. Copy that doesn\'t sell - it just describes what\'s there. The site doesn\'t try to relax you. It assumes you came here because you already wanted to.'], stats: [{ label: 'Location', value: 'Palma, Mallorca' }, { label: 'Year', value: '2026' }, { label: 'Scope', value: 'Brand · Web · Copy' }] },
+          system: { eyebrow: '02 / The system', headline: 'Place is the brand.', palette: [{ name: 'Terracotta', hex: '#A85339' }, { name: 'Clay', hex: '#C68B6A' }, { name: 'Linen', hex: '#EFE6D6' }, { name: 'Olive Ink', hex: '#3A3528' }], typography: [{ name: 'Display', sample: 'Casa Solana', spec: 'Canela Deck Light' }, { name: 'Body / Italic', sample: 'Skin, sun, slowness.', spec: 'Canela Italic' }] },
+          pages: { eyebrow: '03 / The work', headline: 'Five surfaces. One pace.', slides: [{ image: 'smoova_21_1_assets/webpages/4/cs-01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/4/cs-02-rituals.png', caption: '02 — Rituals' }, { image: 'smoova_21_1_assets/webpages/4/cs-03-spaces.png', caption: '03 — Spaces' }, { image: 'smoova_21_1_assets/webpages/4/cs-04-philosophy.png', caption: '04 — Philosophy' }, { image: 'smoova_21_1_assets/webpages/4/cs-05-book.png', caption: '05 — Book' }] },
+          outcome: { eyebrow: '04 / What it became', statement: 'A brand confident enough to print its philosophy in two languages and trust the reader to choose one.', liveUrl: null, liveUrlLabel: 'Visit live concept →' },
           close: { nextProjectId: 5 }
         }
       },
       {
         id: 5, status: 'live',
-        card:  { eyebrow: 'Beauty', headline: 'Placeholder project five', image: 'smoova_21_1_assets/work/5.png', objectPosition: 'center' },
+        card:  { eyebrow: 'Hair · Atlanta', headline: 'Crown Salon', image: 'smoova_21_1_assets/work/5.png', objectPosition: 'center' },
         modal: { eyebrow: 'Beauty', headline: 'Project Five', bodyLead: 'Placeholder lead sentence for project five.', bodyRest: 'Placeholder body copy for project five. Replace with real copy when confirmed.', heroImage: 'smoova_21_1_assets/work/5.png', caption: 'Placeholder tools' },
         caseStudy: {
-          hero: { heroImage: 'smoova_21_1_assets/webpages/5/cr-01-hero.png', tagline: 'Placeholder tagline for case study 05.', meta: { role: 'TBD', year: 'TBD', scope: 'TBD' } },
-          brief: { eyebrow: '01 / The Brief', paragraphs: ['Placeholder paragraph one for case study 05.', 'Placeholder paragraph two for case study 05.'], stats: [{ label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }] },
-          system: { eyebrow: '02 / The System', headline: 'Placeholder system headline for case study 05.', palette: [{ name: 'Color 1', hex: '#181818' }, { name: 'Color 2', hex: '#f4f0e9' }, { name: 'Color 3', hex: '#be9876' }, { name: 'Color 4', hex: '#73655a' }], typography: [{ name: 'Display', sample: 'Aa', spec: 'TBD — Regular / Italic' }, { name: 'Body', sample: 'Aa', spec: 'TBD — Regular / Medium' }] },
-          pages: { eyebrow: '03 / The Pages', headline: 'Placeholder pages headline for case study 05.', slides: [{ image: 'smoova_21_1_assets/webpages/5/cr-01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/5/cr-02-services.png', caption: '02 — Services' }, { image: 'smoova_21_1_assets/webpages/5/cr-03-lookbook.png', caption: '03 — Lookbook' }, { image: 'smoova_21_1_assets/webpages/5/cr-04-team.png', caption: '04 — Team' }, { image: 'smoova_21_1_assets/webpages/5/cr-05-book.png', caption: '05 — Book' }] },
-          outcome: { eyebrow: '04 / What it became', statement: 'Placeholder outcome statement for case study 05.', liveUrl: '', liveUrlLabel: 'View live site' },
+          hero: { heroImage: 'smoova_21_1_assets/webpages/5/cr-01-hero.png', tagline: 'An Atlanta texture salon for clients tired of being treated as an afterthought.', meta: { location: 'Atlanta, GA', year: '2026', scope: 'Brand, Web, Copy' } },
+          brief: { eyebrow: '01 / The brief', paragraphs: ['The salon category has been built around one type of hair for so long that most "premium" brands still treat textured hair as a specialty service - if they offer it at all. Crown came to us asking for a brand that flipped the default: texture isn\'t the exception, it\'s the entire practice.', 'The work had to carry weight. We treated the brand like a fashion house, not a salon - deep emerald, antique gold, marigolds, brocade, type that sits down and commands the room. The job titles aren\'t "stylist" - they\'re Texture Specialist, Wave Sculptor, Precision Cutter, Color Architect. Each one signals craft.', 'The copy refuses to soften itself. "Worship the texture." "Texture is our language. Beauty is our crown." The brand assumes its audience is already convinced - it\'s not selling them on themselves, it\'s matching the confidence they walked in with.'], stats: [{ label: 'Location', value: 'Atlanta, GA' }, { label: 'Year', value: '2026' }, { label: 'Scope', value: 'Brand · Web · Copy' }] },
+          system: { eyebrow: '02 / The system', headline: 'A crown, taken seriously.', palette: [{ name: 'Emerald', hex: '#0E3B2E' }, { name: 'Gold', hex: '#D4A017' }, { name: 'Marigold', hex: '#E8852A' }, { name: 'Bone', hex: '#F4EFE3' }], typography: [{ name: 'Display', sample: 'WORSHIP THE TEXTURE.', spec: 'Druk Wide Bold' }, { name: 'Body', sample: 'Texture in full glory.', spec: 'Canela Deck' }] },
+          pages: { eyebrow: '03 / The work', headline: 'Five surfaces. One crown.', slides: [{ image: 'smoova_21_1_assets/webpages/5/cr-01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/5/cr-02-services.png', caption: '02 — Services' }, { image: 'smoova_21_1_assets/webpages/5/cr-03-lookbook.png', caption: '03 — Lookbook' }, { image: 'smoova_21_1_assets/webpages/5/cr-04-team.png', caption: '04 — Team' }, { image: 'smoova_21_1_assets/webpages/5/cr-05-book.png', caption: '05 — Book' }] },
+          outcome: { eyebrow: '04 / What it became', statement: 'A brand confident enough to call its stylists Color Architects and have the work back it up.', liveUrl: null, liveUrlLabel: 'Visit live concept →' },
           close: { nextProjectId: 6 }
         }
       },
       {
         id: 6, status: 'live',
-        card:  { eyebrow: 'Beauty', headline: 'Placeholder project six', image: 'smoova_21_1_assets/work/6.png', objectPosition: 'center' },
+        card:  { eyebrow: 'Hair · London', headline: 'Tutti Frutti Studio', image: 'smoova_21_1_assets/work/6.png', objectPosition: 'center' },
         modal: { eyebrow: 'Beauty', headline: 'Project Six', bodyLead: 'Placeholder lead sentence for project six.', bodyRest: 'Placeholder body copy for project six. Replace with real copy when confirmed.', heroImage: 'smoova_21_1_assets/work/6.png', caption: 'Placeholder tools' },
         caseStudy: {
-          hero: { heroImage: 'smoova_21_1_assets/webpages/6/tf-01-hero.png', tagline: 'Placeholder tagline for case study 06.', meta: { role: 'TBD', year: 'TBD', scope: 'TBD' } },
-          brief: { eyebrow: '01 / The Brief', paragraphs: ['Placeholder paragraph one for case study 06.', 'Placeholder paragraph two for case study 06.'], stats: [{ label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }] },
-          system: { eyebrow: '02 / The System', headline: 'Placeholder system headline for case study 06.', palette: [{ name: 'Color 1', hex: '#141414' }, { name: 'Color 2', hex: '#f6f1ea' }, { name: 'Color 3', hex: '#c2a07a' }, { name: 'Color 4', hex: '#78685a' }], typography: [{ name: 'Display', sample: 'Aa', spec: 'TBD — Regular / Italic' }, { name: 'Body', sample: 'Aa', spec: 'TBD — Regular / Medium' }] },
-          pages: { eyebrow: '03 / The Pages', headline: 'Placeholder pages headline for case study 06.', slides: [{ image: 'smoova_21_1_assets/webpages/6/tf-01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/6/tf-02-menu.png', caption: '02 — Menu' }, { image: 'smoova_21_1_assets/webpages/6/tf-03-stylists.png', caption: '03 — Stylists' }, { image: 'smoova_21_1_assets/webpages/6/tf-04-vibes.png', caption: '04 — Vibes' }, { image: 'smoova_21_1_assets/webpages/6/tf-05-book.png', caption: '05 — Book' }] },
-          outcome: { eyebrow: '04 / What it became', statement: 'Placeholder outcome statement for case study 06.', liveUrl: '', liveUrlLabel: 'View live site' },
+          hero: { heroImage: 'smoova_21_1_assets/webpages/6/tf-01-hero.png', tagline: 'A Dalston salon that treats Y2K maximalism as the entire personality.', meta: { location: 'Dalston, London', year: '2026', scope: 'Brand, Web, Copy' } },
+          brief: { eyebrow: '01 / The brief', paragraphs: ['East London is full of salons doing the same minimal-Scandi-greige routine. Tutti Frutti came to us with a different bet: lean fully into the early-2000s mall aesthetic that everyone else is too embarrassed to own. Disco balls. Glitter cherries. Hot pink and chartreuse. The works.', 'The brief was nostalgia without irony. Tutti Frutti\'s audience doesn\'t want a wink-wink throwback - they want the actual feeling of getting your hair done before a night out in 2003. We built the brand to match that memory: a wordmark that looks like it belongs on a fruit candy wrapper, copy stuffed with stickers, every surface decorated until it can\'t fit any more.', 'The restraint is in the discipline of the palette. Hot pink, chartreuse, cream, nothing else. Everything else is texture, sticker, disco. The brand earns the noise by limiting the colours doing the noise-making.'], stats: [{ label: 'Location', value: 'Dalston, London' }, { label: 'Year', value: '2026' }, { label: 'Scope', value: 'Brand · Web · Copy' }] },
+          system: { eyebrow: '02 / The system', headline: 'Maximalism, managed.', palette: [{ name: 'Hot Pink', hex: '#E91A6C' }, { name: 'Chartreuse', hex: '#D8E635' }, { name: 'Cream', hex: '#F5EBD8' }, { name: 'Cherry Red', hex: '#D81E2A' }], typography: [{ name: 'Display', sample: 'Where the magic happens.', spec: 'Cooper BT Bold Italic' }, { name: 'Sticker', sample: 'GOOD HAIR. BAD DAYS. NOT TODAY.', spec: 'Hand-drawn / mixed' }] },
+          pages: { eyebrow: '03 / The work', headline: 'Five surfaces. One mood.', slides: [{ image: 'smoova_21_1_assets/webpages/6/tf-01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/6/tf-02-menu.png', caption: '02 — Menu' }, { image: 'smoova_21_1_assets/webpages/6/tf-03-stylists.png', caption: '03 — Stylists' }, { image: 'smoova_21_1_assets/webpages/6/tf-04-vibes.png', caption: '04 — Vibes' }, { image: 'smoova_21_1_assets/webpages/6/tf-05-book.png', caption: '05 — Book' }] },
+          outcome: { eyebrow: '04 / What it became', statement: 'A brand confident enough to put "Be nice or leave" on the wall and trust the right clients to read it as an invitation.', liveUrl: null, liveUrlLabel: 'Visit live concept →' },
           close: { nextProjectId: 7 }
         }
       },
       {
         id: 7, status: 'live',
-        card:  { eyebrow: 'Beauty', headline: 'Placeholder project seven', image: 'smoova_21_1_assets/work/7.png', objectPosition: 'center' },
+        card:  { eyebrow: 'Hair · Brussels', headline: 'Crown · Brussels', image: 'smoova_21_1_assets/work/7.png', objectPosition: 'center' },
         modal: { eyebrow: 'Beauty', headline: 'Project Seven', bodyLead: 'Placeholder lead sentence for project seven.', bodyRest: 'Placeholder body copy for project seven. Replace with real copy when confirmed.', heroImage: 'smoova_21_1_assets/work/7.png', caption: 'Placeholder tools' },
         caseStudy: {
-          hero: { heroImage: 'smoova_21_1_assets/webpages/7/01-hero.png', tagline: 'Placeholder tagline for case study 07.', meta: { role: 'TBD', year: 'TBD', scope: 'TBD' } },
-          brief: { eyebrow: '01 / The Brief', paragraphs: ['Placeholder paragraph one for case study 07.', 'Placeholder paragraph two for case study 07.'], stats: [{ label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }] },
-          system: { eyebrow: '02 / The System', headline: 'Placeholder system headline for case study 07.', palette: [{ name: 'Color 1', hex: '#1e1e1e' }, { name: 'Color 2', hex: '#f3eee7' }, { name: 'Color 3', hex: '#bfa07a' }, { name: 'Color 4', hex: '#7c6e5c' }], typography: [{ name: 'Display', sample: 'Aa', spec: 'TBD — Regular / Italic' }, { name: 'Body', sample: 'Aa', spec: 'TBD — Regular / Medium' }] },
-          pages: { eyebrow: '03 / The Pages', headline: 'Placeholder pages headline for case study 07.', slides: [{ image: 'smoova_21_1_assets/webpages/7/01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/7/02-services.png', caption: '02 — Services' }, { image: 'smoova_21_1_assets/webpages/7/03-lookbook.png', caption: '03 — Lookbook' }, { image: 'smoova_21_1_assets/webpages/7/04-team.png', caption: '04 — Team' }, { image: 'smoova_21_1_assets/webpages/7/05-book.png', caption: '05 — Book' }] },
-          outcome: { eyebrow: '04 / What it became', statement: 'Placeholder outcome statement for case study 07.', liveUrl: '', liveUrlLabel: 'View live site' },
+          hero: { heroImage: 'smoova_21_1_assets/webpages/7/01-hero.png', tagline: 'A Brussels salon for texture work, built as the European chapter of a brand that started in Atlanta.', meta: { location: 'Brussels, BE', year: '2026', scope: 'Brand, Web, Copy' } },
+          brief: { eyebrow: '01 / The brief', paragraphs: ['After Crown Atlanta, the next move was Europe. The brief was specific - keep the brand spine intact (emerald, gold, the crown wordmark, the same reverence for texture work) but translate it for a city that doesn\'t share Atlanta\'s cultural shorthand. Brussels needed Crown to feel rooted, not imported.', 'We kept the architecture - same logo, same emerald, same gold frames - and shifted the rest. Where Atlanta used marigolds and brocade for warmth, Brussels uses houseplants and softer gold for restraint. The headline becomes "Black Excellence Everyday" - a phrase that lands harder in a European context where this kind of salon barely exists yet. The booking flow is calmer, more European-formal: name, phone, service, date.', 'The whole exercise was about showing how a brand holds together across cities without flattening into a chain. Same DNA, different dialect.'], stats: [{ label: 'Location', value: 'Brussels, BE' }, { label: 'Year', value: '2026' }, { label: 'Scope', value: 'Brand · Web · Copy' }] },
+          system: { eyebrow: '02 / The system', headline: 'Same crown, different city.', palette: [{ name: 'Emerald', hex: '#0E3B2E' }, { name: 'Neon Citron', hex: '#F4F02C' }, { name: 'Antique Gold', hex: '#B8943E' }, { name: 'Bone', hex: '#F4EFE3' }], typography: [{ name: 'Display', sample: 'THE HOUSE OF TEXTURE.', spec: 'Druk Wide Bold' }, { name: 'Script', sample: 'Black Excellence Everyday', spec: 'Pinyon Script' }] },
+          pages: { eyebrow: '03 / The work', headline: 'Five surfaces. One crown.', slides: [{ image: 'smoova_21_1_assets/webpages/7/01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/7/02-services.png', caption: '02 — Services' }, { image: 'smoova_21_1_assets/webpages/7/03-lookbook.png', caption: '03 — Lookbook' }, { image: 'smoova_21_1_assets/webpages/7/04-team.png', caption: '04 — Team' }, { image: 'smoova_21_1_assets/webpages/7/05-book.png', caption: '05 — Book' }] },
+          outcome: { eyebrow: '04 / What it became', statement: 'A second chapter that proves a brand can travel without losing the room.', liveUrl: null, liveUrlLabel: 'Visit live concept →' },
           close: { nextProjectId: 8 }
         }
       },
       {
         id: 8, status: 'live',
-        card:  { eyebrow: 'Beauty', headline: 'Placeholder project eight', image: 'smoova_21_1_assets/work/8.png', objectPosition: 'center' },
+        card:  { eyebrow: 'Nails · Paris', headline: 'Velvet & Vine', image: 'smoova_21_1_assets/work/8.png', objectPosition: 'center' },
         modal: { eyebrow: 'Beauty', headline: 'Project Eight', bodyLead: 'Placeholder lead sentence for project eight.', bodyRest: 'Placeholder body copy for project eight. Replace with real copy when confirmed.', heroImage: 'smoova_21_1_assets/work/8.png', caption: 'Placeholder tools' },
         caseStudy: {
-          hero: { heroImage: 'smoova_21_1_assets/webpages/8/01-hero.png', tagline: 'Placeholder tagline for case study 08.', meta: { role: 'TBD', year: 'TBD', scope: 'TBD' } },
-          brief: { eyebrow: '01 / The Brief', paragraphs: ['Placeholder paragraph one for case study 08.', 'Placeholder paragraph two for case study 08.'], stats: [{ label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }] },
-          system: { eyebrow: '02 / The System', headline: 'Placeholder system headline for case study 08.', palette: [{ name: 'Color 1', hex: '#161616' }, { name: 'Color 2', hex: '#f5f0e9' }, { name: 'Color 3', hex: '#c3a47e' }, { name: 'Color 4', hex: '#7a6a56' }], typography: [{ name: 'Display', sample: 'Aa', spec: 'TBD — Regular / Italic' }, { name: 'Body', sample: 'Aa', spec: 'TBD — Regular / Medium' }] },
-          pages: { eyebrow: '03 / The Pages', headline: 'Placeholder pages headline for case study 08.', slides: [{ image: 'smoova_21_1_assets/webpages/8/01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/8/02-carte.png', caption: '02 — Carte' }, { image: 'smoova_21_1_assets/webpages/8/03-nuancier.png', caption: '03 — Nuancier' }, { image: 'smoova_21_1_assets/webpages/8/04-atelier.png', caption: '04 — Atelier' }, { image: 'smoova_21_1_assets/webpages/8/05-book.png', caption: '05 — Book' }] },
-          outcome: { eyebrow: '04 / What it became', statement: 'Placeholder outcome statement for case study 08.', liveUrl: '', liveUrlLabel: 'View live site' },
+          hero: { heroImage: 'smoova_21_1_assets/webpages/8/01-hero.png', tagline: 'A Paris 6e nail atelier where each appointment is a séance and each polish has a Versailles name.', meta: { location: 'Paris, 6e', year: '2026', scope: 'Brand, Web, Copy' } },
+          brief: { eyebrow: '01 / The brief', paragraphs: ['The nail category has been so flattened by clean-girl minimalism that the entire vocabulary of beauty - candles, gilt frames, velvet, ritual - has been abandoned to the wedding industry. Velvet & Vine wanted to reclaim it. Build an atelier in the 6e that treats a manicure the way a perfumer treats a fragrance launch.', 'The whole system reads like a 19th-century apothecary. Deep green velvet, brass candlesticks, dried roses, ornate gold frames, French throughout. The polishes have names - Rouge d\'Opéra, Vert Empire, Bordeaux, Laque Noire, Or Vénitien, Nu Versailles. The booking page says "Reserver une séance." The CTA isn\'t "book now." It\'s "Confirmer."', 'We never broke the register. No English fallback, no winks, no modernist counterweight. The bet was that the audience for this brand wants to be addressed in the language of the thing they came for, and translating it down would betray the whole proposition.'], stats: [{ label: 'Location', value: 'Paris, 6e' }, { label: 'Year', value: '2026' }, { label: 'Scope', value: 'Brand · Web · Copy' }] },
+          system: { eyebrow: '02 / The system', headline: 'A séance, not a service.', palette: [{ name: 'Velvet Green', hex: '#1F3A2E' }, { name: 'Antique Gold', hex: '#C9A24A' }, { name: 'Rouge d\'Opéra', hex: '#7C2230' }, { name: 'Bone', hex: '#EDE4D3' }], typography: [{ name: 'Display', sample: 'Velvet & Vine', spec: 'Didone Italic' }, { name: 'Body / French', sample: 'À la française.', spec: 'Garamond Italic' }] },
+          pages: { eyebrow: '03 / The work', headline: 'Five surfaces. One ceremony.', slides: [{ image: 'smoova_21_1_assets/webpages/8/01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/8/02-carte.png', caption: '02 — Carte' }, { image: 'smoova_21_1_assets/webpages/8/03-nuancier.png', caption: '03 — Nuancier' }, { image: 'smoova_21_1_assets/webpages/8/04-atelier.png', caption: '04 — Atelier' }, { image: 'smoova_21_1_assets/webpages/8/05-book.png', caption: '05 — Book' }] },
+          outcome: { eyebrow: '04 / What it became', statement: 'A brand confident enough to ask its clients to confirm a séance and trust they already know what that means.', liveUrl: null, liveUrlLabel: 'Visit live concept →' },
           close: { nextProjectId: 9 }
         }
       },
       {
         id: 9, status: 'live',
-        card:  { eyebrow: 'Beauty', headline: 'Placeholder project nine', image: 'smoova_21_1_assets/work/9.png', objectPosition: 'center' },
+        card:  { eyebrow: 'Hair · Tokyo', headline: 'Komorebi', image: 'smoova_21_1_assets/work/9.png', objectPosition: 'center' },
         modal: { eyebrow: 'Beauty', headline: 'Project Nine', bodyLead: 'Placeholder lead sentence for project nine.', bodyRest: 'Placeholder body copy for project nine. Replace with real copy when confirmed.', heroImage: 'smoova_21_1_assets/work/9.png', caption: 'Placeholder tools' },
         caseStudy: {
-          hero: { heroImage: 'smoova_21_1_assets/webpages/9/01-hero.png', tagline: 'Placeholder tagline for case study 09.', meta: { role: 'TBD', year: 'TBD', scope: 'TBD' } },
-          brief: { eyebrow: '01 / The Brief', paragraphs: ['Placeholder paragraph one for case study 09.', 'Placeholder paragraph two for case study 09.'], stats: [{ label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }] },
-          system: { eyebrow: '02 / The System', headline: 'Placeholder system headline for case study 09.', palette: [{ name: 'Color 1', hex: '#191919' }, { name: 'Color 2', hex: '#f2ede6' }, { name: 'Color 3', hex: '#ba9b77' }, { name: 'Color 4', hex: '#756658' }], typography: [{ name: 'Display', sample: 'Aa', spec: 'TBD — Regular / Italic' }, { name: 'Body', sample: 'Aa', spec: 'TBD — Regular / Medium' }] },
-          pages: { eyebrow: '03 / The Pages', headline: 'Placeholder pages headline for case study 09.', slides: [{ image: 'smoova_21_1_assets/webpages/9/01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/9/02-menu.png', caption: '02 — Menu' }, { image: 'smoova_21_1_assets/webpages/9/03-spaces.png', caption: '03 — Spaces' }, { image: 'smoova_21_1_assets/webpages/9/04-philosophy.png', caption: '04 — Philosophy' }, { image: 'smoova_21_1_assets/webpages/9/05-book.png', caption: '05 — Book' }] },
-          outcome: { eyebrow: '04 / What it became', statement: 'Placeholder outcome statement for case study 09.', liveUrl: '', liveUrlLabel: 'View live site' },
+          hero: { heroImage: 'smoova_21_1_assets/webpages/9/01-hero.png', tagline: 'A Nakameguro hair salon built around a single Japanese word for the light that filters through trees.', meta: { location: 'Tokyo, Nakameguro', year: '2026', scope: 'Brand, Web, Copy' } },
+          brief: { eyebrow: '01 / The brief', paragraphs: ['Most salon brands try to do too many things at once. Komorebi came to us asking for the opposite: build the entire identity around one untranslatable Japanese word, and trust that the people who get it will get it.', 'Komorebi is the word for sunlight filtering through leaves. We treated it as the brief itself. The whole brand operates at the pace of that image - tatami floors, paper lanterns, a single calligraphic kanji per page, English and Japanese running side by side without explanation. The site never raises its voice.', 'The hardest part was restraint. Every instinct in salon branding pushes toward more colour, more density, more reassurance. Komorebi needed less of everything. The result is a brand that doesn\'t sell a service - it offers a temperature.'], stats: [{ label: 'Location', value: 'Tokyo, Nakameguro' }, { label: 'Year', value: '2026' }, { label: 'Scope', value: 'Brand · Web · Copy' }] },
+          system: { eyebrow: '02 / The system', headline: 'One word. One temperature.', palette: [{ name: 'Sumi Black', hex: '#1A1714' }, { name: 'Tatami Bone', hex: '#EDE4D0' }, { name: 'Lantern Glow', hex: '#D9B26A' }, { name: 'Indigo Noren', hex: '#1F2A3A' }], typography: [{ name: 'Display', sample: 'Hair, washed in light.', spec: 'Garamond Italic' }, { name: 'Kanji', sample: '木漏れ日', spec: 'Yu Mincho' }] },
+          pages: { eyebrow: '03 / The work', headline: 'Five surfaces. One pace.', slides: [{ image: 'smoova_21_1_assets/webpages/9/01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/9/02-menu.png', caption: '02 — Menu' }, { image: 'smoova_21_1_assets/webpages/9/03-spaces.png', caption: '03 — Spaces' }, { image: 'smoova_21_1_assets/webpages/9/04-philosophy.png', caption: '04 — Philosophy' }, { image: 'smoova_21_1_assets/webpages/9/05-book.png', caption: '05 — Book' }] },
+          outcome: { eyebrow: '04 / What it became', statement: 'A brand confident enough to name itself after a word most clients have never said out loud and let them learn it on arrival.', liveUrl: null, liveUrlLabel: 'Visit live concept →' },
           close: { nextProjectId: 10 }
         }
       },
       {
         id: 10, status: 'live',
-        card:  { eyebrow: 'Beauty', headline: 'Placeholder project ten', image: 'smoova_21_1_assets/work/10.png', objectPosition: 'center' },
+        card:  { eyebrow: 'Barbershop · Antwerp', headline: 'Atelier Noir', image: 'smoova_21_1_assets/work/10.png', objectPosition: 'center' },
         modal: { eyebrow: 'Beauty', headline: 'Project Ten', bodyLead: 'Placeholder lead sentence for project ten.', bodyRest: 'Placeholder body copy for project ten. Replace with real copy when confirmed.', heroImage: 'smoova_21_1_assets/work/10.png', caption: 'Placeholder tools' },
         caseStudy: {
-          hero: { heroImage: 'smoova_21_1_assets/webpages/10/01-hero.png', tagline: 'Placeholder tagline for case study 10.', meta: { role: 'TBD', year: 'TBD', scope: 'TBD' } },
-          brief: { eyebrow: '01 / The Brief', paragraphs: ['Placeholder paragraph one for case study 10.', 'Placeholder paragraph two for case study 10.'], stats: [{ label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }] },
-          system: { eyebrow: '02 / The System', headline: 'Placeholder system headline for case study 10.', palette: [{ name: 'Color 1', hex: '#1a1a1a' }, { name: 'Color 2', hex: '#f1ece4' }, { name: 'Color 3', hex: '#c09870' }, { name: 'Color 4', hex: '#77685a' }], typography: [{ name: 'Display', sample: 'Aa', spec: 'TBD — Regular / Italic' }, { name: 'Body', sample: 'Aa', spec: 'TBD — Regular / Medium' }] },
-          pages: { eyebrow: '03 / The Pages', headline: 'Placeholder pages headline for case study 10.', slides: [{ image: 'smoova_21_1_assets/webpages/10/01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/10/02-services.png', caption: '02 — Services' }, { image: 'smoova_21_1_assets/webpages/10/03-gallery.png', caption: '03 — Gallery' }, { image: 'smoova_21_1_assets/webpages/10/04-heritage.png', caption: '04 — Heritage' }, { image: 'smoova_21_1_assets/webpages/10/05-book.png', caption: '05 — Book' }] },
-          outcome: { eyebrow: '04 / What it became', statement: 'Placeholder outcome statement for case study 10.', liveUrl: '', liveUrlLabel: 'View live site' },
+          hero: { heroImage: 'smoova_21_1_assets/webpages/10/01-hero.png', tagline: 'A four-generation Antwerp barbershop built on the same chair since 1924.', meta: { location: 'Antwerp, BE', year: '2026', scope: 'Brand, Web, Copy' } },
+          brief: { eyebrow: '01 / The brief', paragraphs: ['Most barbershop brands fake heritage. Distressed signage, "est. 2019" in a 1920s font, vintage stock photos of strangers nobody knew. Atelier Noir already had the real thing - 102 years of practice, four generations of the same family, the same chair Theo Kochs sat in when he opened the shop on Lange Nieuwstraat. The brief was to stop apologising for any of it.', 'We built a brand that treats the heritage as evidence, not decoration. Brass and leather, deep black, French throughout because Antwerp is French-speaking and the rituals have French names - coupe, rasage, taille de barbe, père et fils. The hero is a single photograph of the chair, lit like a portrait. No models. No B-roll. The shop has been the same for a century. We let it look like it.', 'The hardest call was restraint. Every modern barbershop wants to feel like a speakeasy. Atelier Noir didn\'t need the affectation - it just needed to stop performing newness. The result reads less like a 2026 rebrand and more like a museum signage system for a place that\'s already been here longer than anyone in the city.'], stats: [{ label: 'Location', value: 'Antwerp, BE' }, { label: 'Year', value: '2026' }, { label: 'Scope', value: 'Brand · Web · Copy' }] },
+          system: { eyebrow: '02 / The system', headline: 'Heritage, taken at face value.', palette: [{ name: 'Soot Black', hex: '#0A0907' }, { name: 'Brass', hex: '#B8923C' }, { name: 'Aged Gold', hex: '#8C6A22' }, { name: 'Bone', hex: '#E8E0CB' }], typography: [{ name: 'Display', sample: 'ATELIER NOIR', spec: 'Trajan Bold' }, { name: 'Body / Italic', sample: 'Cut. Shave. Quietly done.', spec: 'Garamond Italic' }] },
+          pages: { eyebrow: '03 / The work', headline: 'Five surfaces. One chair.', slides: [{ image: 'smoova_21_1_assets/webpages/10/01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/10/02-services.png', caption: '02 — Services' }, { image: 'smoova_21_1_assets/webpages/10/03-gallery.png', caption: '03 — Gallery' }, { image: 'smoova_21_1_assets/webpages/10/04-heritage.png', caption: '04 — Heritage' }, { image: 'smoova_21_1_assets/webpages/10/05-book.png', caption: '05 — Book' }] },
+          outcome: { eyebrow: '04 / What it became', statement: 'A brand confident enough to put "Depuis 1924" on the wall and let the date do the work.', liveUrl: null, liveUrlLabel: 'Visit live concept →' },
           close: { nextProjectId: 11 }
         }
       },
       {
         id: 11, status: 'live',
-        card:  { eyebrow: 'Beauty', headline: 'Placeholder project eleven', image: 'smoova_21_1_assets/work/11.png', objectPosition: 'center' },
+        card:  { eyebrow: 'Skincare · Utrecht', headline: 'Bloem & Co', image: 'smoova_21_1_assets/work/11.png', objectPosition: 'center' },
         modal: { eyebrow: 'Beauty', headline: 'Project Eleven', bodyLead: 'Placeholder lead sentence for project eleven.', bodyRest: 'Placeholder body copy for project eleven. Replace with real copy when confirmed.', heroImage: 'smoova_21_1_assets/work/11.png', caption: 'Placeholder tools' },
         caseStudy: {
-          hero: { heroImage: 'smoova_21_1_assets/webpages/11/01-hero.png', tagline: 'Placeholder tagline for case study 11.', meta: { role: 'TBD', year: 'TBD', scope: 'TBD' } },
-          brief: { eyebrow: '01 / The Brief', paragraphs: ['Placeholder paragraph one for case study 11.', 'Placeholder paragraph two for case study 11.'], stats: [{ label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }] },
-          system: { eyebrow: '02 / The System', headline: 'Placeholder system headline for case study 11.', palette: [{ name: 'Color 1', hex: '#1b1b1b' }, { name: 'Color 2', hex: '#f4efe8' }, { name: 'Color 3', hex: '#bd9e7c' }, { name: 'Color 4', hex: '#796a58' }], typography: [{ name: 'Display', sample: 'Aa', spec: 'TBD — Regular / Italic' }, { name: 'Body', sample: 'Aa', spec: 'TBD — Regular / Medium' }] },
-          pages: { eyebrow: '03 / The Pages', headline: 'Placeholder pages headline for case study 11.', slides: [{ image: 'smoova_21_1_assets/webpages/11/01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/11/02-rituals.png', caption: '02 — Rituals' }, { image: 'smoova_21_1_assets/webpages/11/03-apothecary.png', caption: '03 — Apothecary' }, { image: 'smoova_21_1_assets/webpages/11/04-story.png', caption: '04 — Story' }, { image: 'smoova_21_1_assets/webpages/11/05-visit.png', caption: '05 — Visit' }] },
-          outcome: { eyebrow: '04 / What it became', statement: 'Placeholder outcome statement for case study 11.', liveUrl: '', liveUrlLabel: 'View live site' },
+          hero: { heroImage: 'smoova_21_1_assets/webpages/11/01-hero.png', tagline: 'A botanical skincare and ritual studio in Utrecht for people who treat their skin like soil.', meta: { location: 'Utrecht, NL', year: '2026', scope: 'Brand, Web, Copy' } },
+          brief: { eyebrow: '01 / The brief', paragraphs: ['The skincare category has been so colonised by clinical white space and lab-coat language that it\'s easy to forget the field grew out of botany. Bloem & Co came to us asking for the opposite: a brand that puts the plants back at the centre, names them by their Latin names, and refuses to translate the slow part of slow beauty into a quick promise.', 'The whole system is built around real botany. Pressed flowers as decorative marks. Ingredient names hand-written on the apothecary cards - Calendula, Matricaria, Chamomilla. A nav that reads Rituals, Apothecary, Visit, Book - not Services, Shop, Contact. The brand assumes its audience already understands that skincare is agricultural before it\'s cosmetic.', 'The restraint is in the pace. No urgency. No "limited time." No before-and-afters. Just plants, a quiet serif, and one tagline that does the entire emotional job: "Skin, slowly."'], stats: [{ label: 'Location', value: 'Utrecht, NL' }, { label: 'Year', value: '2026' }, { label: 'Scope', value: 'Brand · Web · Copy' }] },
+          system: { eyebrow: '02 / The system', headline: 'Slow is the proposition.', palette: [{ name: 'Forest Ink', hex: '#26382A' }, { name: 'Eucalyptus', hex: '#A8B89C' }, { name: 'Marigold', hex: '#D9892C' }, { name: 'Linen', hex: '#EFE6D6' }], typography: [{ name: 'Display', sample: 'Bloem & Co', spec: 'Fraunces Italic' }, { name: 'Body / Italic', sample: 'Skin, slowly.', spec: 'Recoleta Italic' }] },
+          pages: { eyebrow: '03 / The work', headline: 'Five surfaces. One pace.', slides: [{ image: 'smoova_21_1_assets/webpages/11/01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/11/02-rituals.png', caption: '02 — Rituals' }, { image: 'smoova_21_1_assets/webpages/11/03-apothecary.png', caption: '03 — Apothecary' }, { image: 'smoova_21_1_assets/webpages/11/04-story.png', caption: '04 — Story' }, { image: 'smoova_21_1_assets/webpages/11/05-visit.png', caption: '05 — Visit' }] },
+          outcome: { eyebrow: '04 / What it became', statement: 'A brand confident enough to name its products in Latin and trust the right clients to feel addressed by it.', liveUrl: null, liveUrlLabel: 'Visit live concept →' },
           close: { nextProjectId: 12 }
         }
       },
       {
         id: 12, status: 'live',
-        card:  { eyebrow: 'Beauty', headline: 'Placeholder project twelve', image: 'smoova_21_1_assets/work/12.png', objectPosition: 'center' },
+        card:  { eyebrow: 'Skin Tech · Eindhoven', headline: 'Volta', image: 'smoova_21_1_assets/work/12.png', objectPosition: 'center' },
         modal: { eyebrow: 'Beauty', headline: 'Project Twelve', bodyLead: 'Placeholder lead sentence for project twelve.', bodyRest: 'Placeholder body copy for project twelve. Replace with real copy when confirmed.', heroImage: 'smoova_21_1_assets/work/12.png', caption: 'Placeholder tools' },
         caseStudy: {
-          hero: { heroImage: 'smoova_21_1_assets/webpages/12/01-hero.png', tagline: 'Placeholder tagline for case study 12.', meta: { role: 'TBD', year: 'TBD', scope: 'TBD' } },
-          brief: { eyebrow: '01 / The Brief', paragraphs: ['Placeholder paragraph one for case study 12.', 'Placeholder paragraph two for case study 12.'], stats: [{ label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }, { label: 'TBD', value: 'TBD' }] },
-          system: { eyebrow: '02 / The System', headline: 'Placeholder system headline for case study 12.', palette: [{ name: 'Color 1', hex: '#171717' }, { name: 'Color 2', hex: '#f6f1eb' }, { name: 'Color 3', hex: '#c1a07e' }, { name: 'Color 4', hex: '#7b6b59' }], typography: [{ name: 'Display', sample: 'Aa', spec: 'TBD — Regular / Italic' }, { name: 'Body', sample: 'Aa', spec: 'TBD — Regular / Medium' }] },
-          pages: { eyebrow: '03 / The Pages', headline: 'Placeholder pages headline for case study 12.', slides: [{ image: 'smoova_21_1_assets/webpages/12/01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/12/02-treatments.png', caption: '02 — Treatments' }, { image: 'smoova_21_1_assets/webpages/12/03-science.png', caption: '03 — Science' }, { image: 'smoova_21_1_assets/webpages/12/04-method.png', caption: '04 — Method' }, { image: 'smoova_21_1_assets/webpages/12/05-book.png', caption: '05 — Book' }] },
-          outcome: { eyebrow: '04 / What it became', statement: 'Placeholder outcome statement for case study 12.', liveUrl: '', liveUrlLabel: 'View live site' },
+          hero: { heroImage: 'smoova_21_1_assets/webpages/12/01-hero.png', tagline: 'An Eindhoven beauty studio that treats skin as a system and the appointment as a session.', meta: { location: 'Eindhoven, NL', year: '2026', scope: 'Brand, Web, Copy' } },
+          brief: { eyebrow: '01 / The brief', paragraphs: ['Beauty tech has been hiding behind soft pink gradients and wellness language for a decade. Lasers get called "light therapy." Microcurrent becomes "facial sculpting." Volta came to us asking for the opposite - a brand that names the technology, owns the clinical edge, and treats its audience as adults who already know the science.', 'The system reads more like an Apple product page than a spa site. Geometric sans-serif type. Monospace for technical specifications. Wavelengths and duration printed in the open. Treatments named like devices - Volta One, Volta Pulse, Volta LED. Each one comes with a data card the way a product launch comes with specs.', 'The aesthetic decision was to lean fully chrome. Electric violet accents, polished metal forms, clinical white. No candles, no soft lighting, no "you deserve this." The brand assumes its client booked a session because they wanted a result, and treats the visit as a session, not a ritual.'], stats: [{ label: 'Location', value: 'Eindhoven, NL' }, { label: 'Year', value: '2026' }, { label: 'Scope', value: 'Brand · Web · Copy' }] },
+          system: { eyebrow: '02 / The system', headline: 'A session, not a ritual.', palette: [{ name: 'Volta Violet', hex: '#5B2EFF' }, { name: 'Near Black', hex: '#0F0F0F' }, { name: 'Chrome', hex: '#C5C7CA' }, { name: 'Clinical White', hex: '#FAFAFA' }], typography: [{ name: 'Display', sample: 'Skin science, in session.', spec: 'Neue Haas Grotesk Display' }, { name: 'Mono / Spec', sample: '660nm · 20min · 6 sessions', spec: 'JetBrains Mono' }] },
+          pages: { eyebrow: '03 / The work', headline: 'Five surfaces. One spec.', slides: [{ image: 'smoova_21_1_assets/webpages/12/01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/12/02-treatments.png', caption: '02 — Treatments' }, { image: 'smoova_21_1_assets/webpages/12/03-science.png', caption: '03 — Science' }, { image: 'smoova_21_1_assets/webpages/12/04-method.png', caption: '04 — Method' }, { image: 'smoova_21_1_assets/webpages/12/05-book.png', caption: '05 — Book' }] },
+          outcome: { eyebrow: '04 / What it became', statement: 'A brand confident enough to publish its wavelengths on the homepage and trust the right clients to find that more reassuring than a candle.', liveUrl: null, liveUrlLabel: 'Visit live concept →' },
           close: { nextProjectId: null }
         }
       }
