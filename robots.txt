@@ -61,4 +61,4 @@ Allow: /
 
 # ---------- Sitemap ----------
 
-Sitemap: https://smoova.nl/sitemap.xml
+Sitemap: https://smoova.studio/sitemap.xml

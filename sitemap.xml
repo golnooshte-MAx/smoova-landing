@@ -2,12 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://smoova.nl/</loc>
+    <loc>https://smoova.studio/</loc>
     <lastmod>2026-05-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://smoova.nl/smoova_21_1_assets/hero/hero-2-opera.png</image:loc>
+      <image:loc>https://smoova.studio/smoova_21_1_assets/hero/hero-2-opera.png</image:loc>
       <image:title>Smoova — directe boekingssite voor schoonheidssalons</image:title>
       <image:caption>Een schoonheidssalon-eigenaar in een theatraal opera-decor. Smoova bouwt directe boekingssites voor salons in Nederland.</image:caption>
     </image:image>
