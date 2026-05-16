@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 · Smoova · Pagina niet gevonden</title>
+  <meta name="description" content="Deze pagina bestaat niet. Of bestond niet meer. Terug naar smoova.nl." />
+  <meta name="robots" content="noindex, follow" />
+  <link rel="canonical" href="https://smoova.nl/" />
+
+  <meta name="theme-color" content="#0A0507" />
+
+  <!-- Inline SVG favicon: matches homepage -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232B0810'/%3E%3Ctext x='32' y='44' font-family='Georgia, serif' font-size='38' font-style='italic' font-weight='600' fill='%23F2EBDD' text-anchor='middle'%3Es%3C/text%3E%3Ccircle cx='46' cy='46' r='5' fill='%23D4A857'/%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='34' fill='%232B0810'/%3E%3Ctext x='90' y='124' font-family='Georgia, serif' font-size='108' font-style='italic' font-weight='600' fill='%23F2EBDD' text-anchor='middle'%3Es%3C/text%3E%3Ccircle cx='129' cy='130' r='14' fill='%23D4A857'/%3E%3C/svg%3E" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Tailwind Play CDN: mirrors smoova_24.html palette -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      future: { hoverOnlyWhenSupported: true },
+      theme: {
+        extend: {
+          colors: {
+            ink:       { void: '#0A0507', noir: '#16090C' },
+            rouge:     { profond: '#2B0810', DEFAULT: '#4A0E1A', velours: '#6B1525' },
+            bone:      { DEFAULT: '#F2EBDD', warm: '#E8DCC4', ivory: '#FBF7EF' },
+            gold:      { DEFAULT: '#B8924B', vif: '#D4A857', brule: '#8A6B2E' },
+            champagne: '#E8D4A8',
+          },
+          fontFamily: {
+            display: ['Fraunces', 'Georgia', 'serif'],
+            sans:    ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+            mono:    ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0A0507;
+      color: #F2EBDD;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    h1, h2 { font-optical-sizing: auto; }
+
+    :focus-visible {
+      outline: 2px solid #D4A857;
+      outline-offset: 4px;
+      border-radius: 2px;
+    }
+
+    /* The drench: same family as the closing section's ink-void to rouge bottom,
+       with a soft gold halo behind the 404 numeral so the eye lands there. */
+    .e404-bg {
+      background:
+        radial-gradient(ellipse 70% 55% at 50% 38%, rgba(212, 168, 87, 0.07), transparent 65%),
+        linear-gradient(to bottom, #0A0507 0%, #16090C 38%, #2B0810 82%, #4A0E1A 100%);
+    }
+
+    /* Film grain: subtle atmosphere, same texture as the homepage closing section. */
+    .e404-grain {
+      position: absolute;
+      inset: 0;
+      opacity: 0.04;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+      background-size: 240px 240px;
+    }
+
+    /* The numeral: oversized italic Fraunces with a gold-to-rouge gradient clip.
+       Same drop-shadow vocabulary as the homepage's editorial display moments. */
+    .e404-number {
+      font-family: 'Fraunces', Georgia, serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(6.5rem, 24vw, 20rem);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      background: linear-gradient(135deg, #D4A857 0%, #B8924B 38%, #6B1525 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 10px 38px rgba(212, 168, 87, 0.18));
+    }
+
+    /* CTA halo ring: mirrors the closing CTA pulse, compositor-only. */
+    @keyframes e404Pulse {
+      0%, 100% { transform: scale(1);    opacity: 0;    }
+      50%      { transform: scale(1.22); opacity: 0.55; }
+    }
+    .e404-cta {
+      position: relative;
+      box-shadow: 0 18px 40px -10px rgba(0, 0, 0, 0.5);
+    }
+    .e404-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      box-sizing: border-box;
+      border: 2px solid #D4A857;
+      animation: e404Pulse 3.2s ease-in-out infinite;
+    }
+
+    /* Staggered page-load reveal. */
+    @keyframes e404FadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .e404-reveal {
+      opacity: 0;
+      animation: e404FadeUp 1s both cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .e404-reveal--1 { animation-delay:  80ms; }
+    .e404-reveal--2 { animation-delay: 240ms; }
+    .e404-reveal--3 { animation-delay: 420ms; }
+    .e404-reveal--4 { animation-delay: 600ms; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .e404-cta::before { animation: none !important; opacity: 0 !important; }
+      .e404-reveal      { animation: none !important; opacity: 1 !important; transform: none !important; }
+    }
+  </style>
+</head>
+<body class="e404-bg relative overflow-hidden flex flex-col">
+  <div aria-hidden="true" class="e404-grain"></div>
+
+  <!-- Top wordmark: clickable, returns to home. -->
+  <header class="absolute top-6 left-6 md:top-10 md:left-10 z-20">
+    <a href="/"
+       class="inline-flex items-baseline gap-0.5 text-2xl text-bone hover:text-gold-vif transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-vif rounded-sm"
+       style="font-family: 'Fraunces', Georgia, serif; font-style: italic; font-weight: 500;"
+       data-aria-nl="Smoova, terug naar de homepage"
+       data-aria-en="Smoova, back to the homepage"
+       aria-label="Smoova, terug naar de homepage">
+      <span>smoova</span><span class="text-gold-vif" style="font-style: normal; font-weight: 700;">.</span>
+    </a>
+  </header>
+
+  <main class="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 py-24 text-center">
+
+    <p class="e404-reveal e404-reveal--1 font-mono font-medium text-[10px] md:text-[11px] tracking-[0.4em] uppercase text-gold-vif/85 mb-6">
+      <span data-lang="nl">404 · Pagina niet gevonden</span>
+      <span data-lang="en" hidden>404 · Page not found</span>
+    </p>
+
+    <h1 class="e404-reveal e404-reveal--2 e404-number mb-6"
+        data-aria-nl="Vierhonderdvier, pagina niet gevonden"
+        data-aria-en="Four-zero-four, page not found"
+        aria-label="Vierhonderdvier, pagina niet gevonden">
+      404
+    </h1>
+
+    <p class="e404-reveal e404-reveal--3 font-display font-light leading-snug text-2xl md:text-3xl lg:text-4xl text-bone max-w-2xl mb-10"
+       style="letter-spacing: -0.02em;">
+      <span data-lang="nl">Deze pagina bestaat niet. <span class="italic text-gold-vif">Of bestond niet meer.</span></span>
+      <span data-lang="en" hidden>This page doesn't exist. <span class="italic text-gold-vif">Or doesn't anymore.</span></span>
+    </p>
+
+    <div class="e404-reveal e404-reveal--4 flex flex-col sm:flex-row items-center gap-5 sm:gap-7">
+      <a href="/"
+         class="e404-cta group inline-flex items-center gap-3 pl-8 pr-2 py-2 rounded-full bg-gold-vif text-rouge-profond transition-colors duration-200 hover:bg-champagne focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone">
+        <span class="font-mono text-[12px] tracking-[0.28em] uppercase font-medium py-2">
+          <span data-lang="nl">Terug naar de homepage</span>
+          <span data-lang="en" hidden>Back to the homepage</span>
+        </span>
+        <span aria-hidden="true" class="w-9 h-9 rounded-full bg-rouge-profond text-gold-vif flex items-center justify-center">
+          <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </span>
+      </a>
+
+      <a href="mailto:hi@smoova.nl"
+         class="font-mono text-[11px] tracking-wider text-bone/70 hover:text-gold-vif transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-vif rounded-sm min-h-[44px] inline-flex items-center px-2">
+        <span data-lang="nl">of stuur ons een mail</span>
+        <span data-lang="en" hidden>or send us a mail</span>
+      </a>
+    </div>
+  </main>
+
+  <footer class="relative z-10 pb-6 pt-2 text-center">
+    <p class="font-mono text-[10px] tracking-wider text-bone/40">
+      © 2026 Smoova B.V.
+    </p>
+  </footer>
+
+  <!-- Tiny lang detector: prefer the toggle persisted by the main site,
+       fall back to browser language, default to NL. No dependencies. -->
+  <script>
+    (function () {
+      var stored = null;
+      try { stored = localStorage.getItem('smoovaLang'); } catch (_) {}
+      var lang = (stored === 'en' || stored === 'nl')
+                   ? stored
+                   : ((navigator.language || 'nl').toLowerCase().indexOf('nl') === 0 ? 'nl' : 'en');
+      document.documentElement.lang = lang;
+      var nodes = document.querySelectorAll('[data-lang]');
+      for (var i = 0; i < nodes.length; i++) {
+        nodes[i].hidden = nodes[i].getAttribute('data-lang') !== lang;
+      }
+      var ariaNodes = document.querySelectorAll('[data-aria-' + lang + ']');
+      for (var j = 0; j < ariaNodes.length; j++) {
+        ariaNodes[j].setAttribute('aria-label', ariaNodes[j].getAttribute('data-aria-' + lang));
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# Node / build outputs (not used here, but reserved)
+node_modules/
+*.log
+
+# Claude Code internal
+.claude/
+
+# Impeccable skill sidecar (tooling metadata, not site code)
+.impeccable/
+
+# Work-in-progress HTML drafts (also blocked by robots.txt)
+drafts/
+
+# Backups
+*.bak

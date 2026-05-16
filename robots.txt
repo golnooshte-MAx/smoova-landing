@@ -1,0 +1,64 @@
+# Smoova — robots.txt
+# Open to all general crawlers and explicitly allows the major AI bots
+# so there is no ambiguity about training/citation eligibility.
+
+User-agent: *
+Allow: /
+Disallow: /drafts/
+Disallow: /*.bak$
+
+# ---------- AI crawlers (explicitly allowed) ----------
+
+# OpenAI — training + on-demand fetch
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# Anthropic — Claude
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+# Google — Gemini and AI Overviews
+User-agent: Google-Extended
+Allow: /
+
+# Apple Intelligence
+User-agent: Applebot-Extended
+Allow: /
+
+# Meta AI
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Meta-ExternalFetcher
+Allow: /
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+
+# Common Crawl (feeds many LLM training sets)
+User-agent: CCBot
+Allow: /
+
+# ---------- Sitemap ----------
+
+Sitemap: https://smoova.nl/sitemap.xml
