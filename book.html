@@ -153,19 +153,23 @@
       .anim-fade-up { animation: none !important; opacity: 1 !important; transform: none !important; }
     }
 
-    /* Book card — cream glass with rouge-velours hairline + subtle
-       rouge inner glow so the rouge presence carries onto the cards. */
+    /* Book card — champagne-warm base with a visible rouge-velours
+       hairline + subtle rouge inner wash from the top-right corner.
+       Cards now stand out from the cream page instead of disappearing
+       into it. Inset bone hairline at the top adds depth. */
     .book-card {
       background:
-        radial-gradient(ellipse 100% 60% at 0% 0%, rgba(107, 21, 37, 0.04), transparent 70%),
-        rgba(251, 247, 239, 0.78);
-      border: 1px solid rgba(107, 21, 37, 0.22);
+        radial-gradient(ellipse 90% 70% at 100% 0%, rgba(107, 21, 37, 0.08), transparent 65%),
+        linear-gradient(135deg,
+          rgba(232, 212, 168, 0.75) 0%,
+          rgba(232, 220, 196, 0.55) 100%);
+      border: 1px solid rgba(107, 21, 37, 0.30);
       border-radius: 24px;
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
       box-shadow:
-        0 4px 24px -8px rgba(74, 14, 26, 0.10),
-        inset 0 1px 0 rgba(251, 247, 239, 0.8);
+        0 6px 28px -10px rgba(74, 14, 26, 0.16),
+        inset 0 1px 0 rgba(251, 247, 239, 0.7);
     }
     /* Dark book card — deep rouge-velours for the calendar widget on
        the right column. Cream page + dark calendar = editorial
