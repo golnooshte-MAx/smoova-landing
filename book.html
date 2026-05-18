@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plan een kennismaking — Smoova</title>
+  <meta name="description" content="Plan een vrijblijvend 20-minuten kennismakingsgesprek met Smoova. Geen verkooppraatje. Geen druk. Wij leren over jouw salon, jij leert hoe wij werken." />
+
+  <!-- Critical FOUC shim -->
+  <style>
+    input[type="range"] { opacity: 0 !important; }
+    [x-cloak] { display: none !important; }
+    .hidden { display: none !important; }
+    .sr-only {
+      position: absolute !important; width: 1px !important; height: 1px !important;
+      padding: 0 !important; margin: -1px !important; overflow: hidden !important;
+      clip: rect(0,0,0,0) !important; white-space: nowrap !important; border-width: 0 !important;
+    }
+  </style>
+
+  <link rel="canonical" href="https://smoova.studio/book.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Plan een kennismaking — Smoova" />
+  <meta property="og:description" content="20 minuten. Vrijblijvend. Geen verkooppraatje." />
+  <meta property="og:url" content="https://smoova.studio/book.html" />
+  <meta property="og:image" content="https://smoova.studio/smoova_21_1_assets/hero/hero-2-opera.png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Tailwind via CDN (matches index.html convention; one-file static site rule) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'rouge-profond': '#2B0810',
+            'rouge': '#4A0E1A',
+            'rouge-velours': '#6B1525',
+            'bone': '#F2EBDD',
+            'bone-warm': '#E8DCC4',
+            'gold': '#B8924B',
+            'gold-vif': '#D4A857',
+            'gold-brule': '#8A6B2E',
+            'champagne': '#E8D4A8',
+            'ink-void': '#0A0507',
+          },
+          fontFamily: {
+            display: ['Fraunces', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <!-- Cal.com embed -->
+  <script type="text/javascript">
+    (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+    Cal("init", "smoova-intro", {origin:"https://cal.com"});
+    Cal.ns["smoova-intro"]("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
+  </script>
+
+  <style>
+    :root {
+      --color-rouge-profond: #2B0810;
+      --color-rouge: #4A0E1A;
+      --color-rouge-velours: #6B1525;
+      --color-bone: #F2EBDD;
+      --color-bone-warm: #E8DCC4;
+      --color-gold: #B8924B;
+      --color-gold-vif: #D4A857;
+      --color-champagne: #E8D4A8;
+      --color-ink-void: #0A0507;
+    }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--color-rouge-profond);
+      color: var(--color-bone);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      min-height: 100vh;
+    }
+    :focus-visible { outline: 2px solid var(--color-gold-vif); outline-offset: 3px; border-radius: 4px; }
+
+    /* Atmospheric backdrop */
+    .page-bg {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 90% 60% at 50% 0%, rgba(212, 168, 87, 0.10), transparent 60%),
+        radial-gradient(ellipse 80% 50% at 100% 100%, rgba(107, 21, 37, 0.4), transparent 70%),
+        var(--color-rouge-profond);
+    }
+    .page-grain {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.04;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.5'/></svg>");
+    }
+
+    /* Italic display helper */
+    .italic-display { font-style: italic; font-family: 'Fraunces', serif; font-weight: 400; }
+
+    /* Anim */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    .anim-fade-up { animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    @media (prefers-reduced-motion: reduce) {
+      .anim-fade-up { animation: none !important; opacity: 1 !important; transform: none !important; }
+    }
+
+    /* Book card */
+    .book-card {
+      background: rgba(43, 8, 16, 0.55);
+      border: 1px solid rgba(232, 212, 168, 0.12);
+      border-radius: 24px;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .book-step-num {
+      width: 32px; height: 32px; border-radius: 999px;
+      background: rgba(74, 14, 26, 0.7);
+      border: 1px solid rgba(212, 168, 87, 0.4);
+      color: #D4A857;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px; font-weight: 500;
+      display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .book-check { width: 16px; height: 16px; color: #D4A857; flex-shrink: 0; }
+
+    /* Calendar grid */
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+    .cal-weekday {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(232, 212, 168, 0.55);
+      text-align: center; padding: 8px 0;
+    }
+    .cal-day {
+      aspect-ratio: 1; border-radius: 12px;
+      background: rgba(74, 14, 26, 0.45);
+      border: 1px solid rgba(232, 212, 168, 0.05);
+      color: #E8DCC4;
+      font-family: 'Fraunces', serif; font-weight: 300;
+      font-size: clamp(14px, 1.6vw, 18px);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; position: relative;
+      transition: background 200ms ease-out, transform 150ms ease-out, border-color 200ms ease-out, color 200ms ease-out;
+      text-decoration: none;
+    }
+    .cal-day:hover:not(.cal-day--past):not(.cal-day--out) {
+      background: rgba(107, 21, 37, 0.85);
+      border-color: rgba(212, 168, 87, 0.35);
+      transform: translateY(-1px);
+    }
+    .cal-day--out { color: rgba(232, 220, 196, 0.25); cursor: default; background: transparent; border-color: transparent; }
+    .cal-day--past { color: rgba(232, 220, 196, 0.20); cursor: not-allowed; background: rgba(74, 14, 26, 0.15); }
+    .cal-day--today {
+      background: linear-gradient(135deg, #D4A857, #B8924B);
+      color: #2B0810; font-weight: 500;
+      border-color: rgba(232, 212, 168, 0.8);
+      box-shadow: 0 8px 22px -6px rgba(184, 146, 75, 0.55);
+    }
+    .cal-day--today:hover { background: linear-gradient(135deg, #E8D4A8, #D4A857) !important; transform: translateY(-2px) !important; }
+    .cal-day--today::after {
+      content: ''; position: absolute; bottom: 14%; left: 50%; transform: translateX(-50%);
+      width: 4px; height: 4px; border-radius: 50%; background: #2B0810; opacity: 0.7;
+    }
+    .cal-day-monthstart {
+      position: absolute; top: 4px; left: 50%; transform: translateX(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px; letter-spacing: 0.15em; color: rgba(212, 168, 87, 0.7); line-height: 1;
+    }
+    .cal-day-monthstart + .cal-day-number { margin-top: 6px; }
+    .cal-nav-btn {
+      width: 32px; height: 32px; border-radius: 999px;
+      background: rgba(107, 21, 37, 0.4);
+      border: 1px solid rgba(232, 212, 168, 0.12);
+      color: #E8D4A8;
+      display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+      transition: background 200ms ease-out, border-color 200ms ease-out;
+    }
+    .cal-nav-btn:hover { background: rgba(212, 168, 87, 0.2); border-color: rgba(212, 168, 87, 0.5); }
+    @media (max-width: 767px) {
+      .cal-day { border-radius: 8px; font-size: 13px; }
+      .cal-grid { gap: 4px; }
+    }
+
+    .link-underline {
+      position: relative; display: inline-block;
+    }
+    .link-underline::after {
+      content: ''; position: absolute; left: 0; bottom: -2px;
+      width: 100%; height: 1px; background: currentColor;
+      transform: scaleX(0); transform-origin: right;
+      transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .link-underline:hover::after { transform: scaleX(1); transform-origin: left; }
+  </style>
+</head>
+<body x-data="bookPage()" x-init="init()" :data-lang="lang">
+
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="page-grain" aria-hidden="true"></div>
+
+  <a href="#main" class="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-3 focus-visible:left-3 focus-visible:z-50 focus-visible:px-4 focus-visible:py-2 focus-visible:bg-bone focus-visible:text-rouge-profond focus-visible:rounded-md focus-visible:font-medium">
+    <span x-text="lang === 'en' ? 'Skip to content' : 'Naar inhoud'"></span>
+  </a>
+
+  <!-- ============== NAV ============== -->
+  <nav class="relative z-30 px-6 md:px-12 lg:px-20 py-6 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 group focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-vif rounded-sm">
+      <span class="font-display text-2xl font-medium tracking-tight text-bone">smoova</span>
+      <span aria-hidden="true" class="italic-display text-gold-vif text-2xl">.</span>
+    </a>
+
+    <div class="flex items-center gap-6 md:gap-8">
+      <a href="index.html"
+         class="text-sm text-bone/70 hover:text-bone link-underline transition-colors"
+         x-text="lang === 'nl' ? 'Home' : 'Home'"></a>
+
+      <div role="group" aria-label="Language" class="flex items-center gap-1 text-sm text-bone/60">
+        <button @click="lang = 'nl'"
+                :aria-pressed="lang === 'nl' ? 'true' : 'false'"
+                aria-label="Nederlands"
+                :class="lang === 'nl' ? 'text-bone' : 'hover:text-bone'"
+                class="px-3 py-2 min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors rounded-sm">NL</button>
+        <span aria-hidden="true" class="text-bone/40">/</span>
+        <button @click="lang = 'en'"
+                :aria-pressed="lang === 'en' ? 'true' : 'false'"
+                aria-label="English"
+                :class="lang === 'en' ? 'text-bone' : 'hover:text-bone'"
+                class="px-3 py-2 min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors rounded-sm">EN</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============== MAIN ============== -->
+  <main id="main" class="relative z-10 mx-auto max-w-7xl px-6 md:px-12 lg:px-20 pt-6 md:pt-12 pb-20">
+
+    <!-- Section header -->
+    <div class="max-w-3xl anim-fade-up" style="animation-delay: 80ms;">
+      <p class="font-mono text-[10px] md:text-xs tracking-[0.3em] uppercase text-gold-vif">
+        <span class="inline-block w-6 h-px bg-gold-vif/60 align-middle mr-3"></span>
+        <span x-text="lang === 'nl' ? 'PLAN EEN KENNISMAKING' : 'BOOK A DISCOVERY CALL'"></span>
+      </p>
+
+      <h1 class="mt-5 font-display font-light tracking-[-0.025em] leading-[1.02] text-bone"
+          style="font-size: clamp(2.5rem, 7vw, 5.5rem);">
+        <template x-if="lang === 'nl'">
+          <span>Boek een <span class="italic text-gold-vif">20-min call</span>.</span>
+        </template>
+        <template x-if="lang === 'en'">
+          <span>Book a <span class="italic text-gold-vif">20-min call</span>.</span>
+        </template>
+      </h1>
+
+      <p class="mt-4 max-w-xl text-base md:text-lg leading-relaxed"
+         style="color: rgba(232, 220, 196, 0.7);"
+         x-text="lang === 'nl' ? 'Geen verkooppraatje. Geen druk. Wij leren over jouw salon, jij leert hoe wij werken.' : 'No pitch. No pressure. We learn about your salon, you learn how we work.'"></p>
+    </div>
+
+    <!-- Two-column layout -->
+    <div class="mt-12 md:mt-14 grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-6 md:gap-8 items-start">
+
+      <!-- LEFT: How it works + checkmarks + email -->
+      <div class="space-y-5 anim-fade-up" style="animation-delay: 240ms;">
+
+        <!-- How it works card -->
+        <div class="book-card p-7 md:p-8">
+          <p class="font-mono text-[10px] tracking-[0.28em] uppercase font-medium mb-6"
+             style="color: rgba(232, 220, 196, 0.55);"
+             x-text="lang === 'nl' ? 'Hoe het werkt' : 'How it works'"></p>
+
+          <ol class="space-y-5">
+            <li class="flex items-start gap-4">
+              <span class="book-step-num">1</span>
+              <p class="font-sans text-[15px] leading-relaxed text-bone-warm pt-0.5">
+                <template x-if="lang === 'nl'">
+                  <span><strong class="font-medium text-bone">Kies een tijd.</strong> Direct een agenda-uitnodiging.</span>
+                </template>
+                <template x-if="lang === 'en'">
+                  <span><strong class="font-medium text-bone">Pick a time.</strong> Calendar invite sent instantly.</span>
+                </template>
+              </p>
+            </li>
+            <li class="flex items-start gap-4">
+              <span class="book-step-num">2</span>
+              <p class="font-sans text-[15px] leading-relaxed text-bone-warm pt-0.5">
+                <template x-if="lang === 'nl'">
+                  <span><strong class="font-medium text-bone">20-min gesprek.</strong> Korte chat over jouw salon.</span>
+                </template>
+                <template x-if="lang === 'en'">
+                  <span><strong class="font-medium text-bone">20-min call.</strong> Quick chat about your salon.</span>
+                </template>
+              </p>
+            </li>
+            <li class="flex items-start gap-4">
+              <span class="book-step-num">3</span>
+              <p class="font-sans text-[15px] leading-relaxed text-bone-warm pt-0.5">
+                <template x-if="lang === 'nl'">
+                  <span><strong class="font-medium text-bone">Samen beslissen.</strong> Binnen 24u live als het past.</span>
+                </template>
+                <template x-if="lang === 'en'">
+                  <span><strong class="font-medium text-bone">Decide together.</strong> Live within 24h if it fits.</span>
+                </template>
+              </p>
+            </li>
+          </ol>
+        </div>
+
+        <!-- Checkmark row -->
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-2 px-2 text-[13px] font-medium" style="color: rgba(232, 220, 196, 0.75);">
+          <span class="flex items-center gap-2">
+            <svg class="book-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span x-text="lang === 'nl' ? 'Gratis' : 'Free'"></span>
+          </span>
+          <span class="flex items-center gap-2">
+            <svg class="book-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span x-text="lang === 'nl' ? '20 min, precies' : '20 min, exactly'"></span>
+          </span>
+          <span class="flex items-center gap-2">
+            <svg class="book-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span x-text="lang === 'nl' ? 'Geen verkooppraatje' : 'No sales pitch'"></span>
+          </span>
+        </div>
+
+        <!-- Email card -->
+        <div class="book-card p-6 md:p-7">
+          <p class="font-mono text-[10px] tracking-[0.28em] uppercase font-medium mb-2"
+             style="color: rgba(232, 220, 196, 0.55);"
+             x-text="lang === 'nl' ? 'Liever mailen?' : 'Prefer email?'"></p>
+          <a href="mailto:hi@smoova.studio"
+             class="font-display text-xl md:text-2xl text-gold-vif hover:text-champagne transition-colors duration-200 inline-flex items-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-vif rounded-sm">
+            hi@smoova.studio
+            <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- RIGHT: Calendar -->
+      <div class="book-card p-5 md:p-7 lg:p-8 anim-fade-up" style="animation-delay: 360ms;">
+
+        <!-- Month header + nav -->
+        <div class="flex items-center justify-between mb-5 md:mb-6">
+          <h2 class="font-display font-light text-xl md:text-2xl text-bone">
+            <span x-text="calMonthLabel()"></span>
+            <span class="ml-2 text-gold-vif/70" x-text="calMonth.getFullYear()"></span>
+          </h2>
+          <div class="flex items-center gap-2">
+            <button class="cal-nav-btn"
+                    @click="calPrev()"
+                    :aria-label="lang === 'nl' ? 'Vorige maand' : 'Previous month'">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </button>
+            <button class="cal-nav-btn"
+                    @click="calNext()"
+                    :aria-label="lang === 'nl' ? 'Volgende maand' : 'Next month'">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Day-of-week headers (Mon-Sun European) -->
+        <div class="cal-grid mb-2">
+          <template x-for="(d, i) in (lang === 'nl' ? ['Ma','Di','Wo','Do','Vr','Za','Zo'] : ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'])" :key="i">
+            <span class="cal-weekday" x-text="d"></span>
+          </template>
+        </div>
+
+        <!-- Calendar grid -->
+        <div class="cal-grid">
+          <template x-for="(cell, i) in calGrid" :key="i">
+            <a :href="cell.isPast || !cell.inMonth ? null : 'https://cal.com/smoova/smoova-intro'"
+               :data-cal-namespace="cell.isPast || !cell.inMonth ? null : 'smoova-intro'"
+               :data-cal-link="cell.isPast || !cell.inMonth ? null : 'smoova/smoova-intro'"
+               :data-cal-config="cell.isPast || !cell.inMonth ? null : '{&quot;layout&quot;:&quot;month_view&quot;}'"
+               class="cal-day"
+               :class="{
+                 'cal-day--past': cell.isPast,
+                 'cal-day--out': !cell.inMonth && !cell.isMonthStart,
+                 'cal-day--today': cell.isToday
+               }"
+               :tabindex="cell.isPast || !cell.inMonth ? -1 : 0"
+               :aria-disabled="cell.isPast || !cell.inMonth ? 'true' : 'false'"
+               :aria-label="cell.day + ' ' + (lang === 'nl' ? 'plan een gesprek' : 'book a call')">
+              <template x-if="cell.isMonthStart">
+                <span class="cal-day-monthstart" x-text="calNextMonthShortLabel()"></span>
+              </template>
+              <span class="cal-day-number" x-text="cell.day"></span>
+            </a>
+          </template>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============== FOOTER ============== -->
+  <footer class="relative z-10 mx-auto max-w-7xl px-6 md:px-12 lg:px-20 py-6 flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-6 text-center md:text-left"
+          style="border-top: 1px solid rgba(242, 235, 221, 0.08);">
+    <p class="font-mono text-[11px] tracking-wider text-bone/55">
+      <template x-if="lang === 'nl'">
+        <span>© 2026 Smoova B.V. · Alle rechten voorbehouden</span>
+      </template>
+      <template x-if="lang === 'en'">
+        <span>© 2026 Smoova B.V. · All rights reserved</span>
+      </template>
+    </p>
+
+    <a href="mailto:hi@smoova.studio"
+       class="group inline-flex items-center justify-center md:justify-end gap-2 min-h-[44px] font-mono text-[11px] tracking-wider text-bone/55 hover:text-gold-vif transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-vif rounded-sm">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="5" width="18" height="14" rx="2"/>
+        <path d="M3.5 6l8.5 7 8.5-7"/>
+      </svg>
+      <span>hi@smoova.studio</span>
+    </a>
+  </footer>
+
+  <script>
+    function bookPage() {
+      return {
+        lang: (typeof localStorage !== 'undefined' && ['nl', 'en'].includes(localStorage.getItem('smoovaLang')))
+                ? localStorage.getItem('smoovaLang')
+                : 'nl',
+
+        calMonth: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+        calToday: new Date(),
+
+        init() {
+          this.$watch('lang', v => {
+            try { localStorage.setItem('smoovaLang', v); } catch (_) { /* private mode */ }
+          });
+        },
+
+        get calGrid() {
+          const year = this.calMonth.getFullYear();
+          const month = this.calMonth.getMonth();
+          const firstDay = new Date(year, month, 1);
+          const lastDay = new Date(year, month + 1, 0);
+          const startWeekday = (firstDay.getDay() + 6) % 7;
+          const daysInMonth = lastDay.getDate();
+          const prevMonthLast = new Date(year, month, 0).getDate();
+          const todayKey = this._dateKey(this.calToday);
+
+          const cells = [];
+          for (let i = startWeekday - 1; i >= 0; i--) {
+            const d = new Date(year, month - 1, prevMonthLast - i);
+            cells.push(this._cell(d, false, todayKey));
+          }
+          for (let i = 1; i <= daysInMonth; i++) {
+            const d = new Date(year, month, i);
+            cells.push(this._cell(d, true, todayKey));
+          }
+          let nextDay = 1;
+          while (cells.length < 42) {
+            const d = new Date(year, month + 1, nextDay);
+            const cell = this._cell(d, false, todayKey);
+            cell.isMonthStart = nextDay === 1;
+            cells.push(cell);
+            nextDay++;
+          }
+          return cells;
+        },
+        _dateKey(d) {
+          return d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate();
+        },
+        _cell(d, inMonth, todayKey) {
+          const today = new Date(this.calToday.getFullYear(), this.calToday.getMonth(), this.calToday.getDate());
+          const dDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+          return {
+            date: d, day: d.getDate(), inMonth,
+            isToday: this._dateKey(d) === todayKey,
+            isPast: dDay < today,
+            isWeekend: d.getDay() === 0 || d.getDay() === 6,
+            isMonthStart: false
+          };
+        },
+        calMonthLabel() {
+          const monthsNL = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+          const monthsEN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+          return (this.lang === 'nl' ? monthsNL : monthsEN)[this.calMonth.getMonth()];
+        },
+        calNextMonthShortLabel() {
+          const monthsNL = ['JAN','FEB','MRT','APR','MEI','JUN','JUL','AUG','SEP','OKT','NOV','DEC'];
+          const monthsEN = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+          const nextMonthIdx = (this.calMonth.getMonth() + 1) % 12;
+          return (this.lang === 'nl' ? monthsNL : monthsEN)[nextMonthIdx];
+        },
+        calPrev() {
+          this.calMonth = new Date(this.calMonth.getFullYear(), this.calMonth.getMonth() - 1, 1);
+        },
+        calNext() {
+          this.calMonth = new Date(this.calMonth.getFullYear(), this.calMonth.getMonth() + 1, 1);
+        },
+      };
+    }
+  </script>
+
+</body>
+</html>
