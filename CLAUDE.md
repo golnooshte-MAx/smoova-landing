@@ -1,7 +1,7 @@
 # Smoova landing page - working rules for Claude
 
 ## What this is
-Static single-page marketing site for Smoova, a done-for-you direct-booking website service for Dutch beauty salons. Three tiers: Boutique (€1,299 setup + €99/mo), Studio (€1,999 + €389/mo), Atelier (€3,499 + €699/mo). Competes with Treatwell on the math (no per-booking commission; breakeven at ~€330/mo Treatwell volume on Boutique) and on the principle that salons should own their customer relationships, not rent them.
+Static single-page marketing site for Smoova, a done-for-you direct-booking website service for Dutch beauty salons. Three tiers: Boutique (€1,799 setup + €99/mo, productized landing page), Studio (€2,499 + €389/mo, full marketing-team-as-a-service incl. Google Business + AI visibility), Atelier (€4,499 + €699/mo, multi-location + Retention Engine). Competes with Treatwell on the math (no per-booking commission; breakeven at ~€330/mo Treatwell volume on Boutique) and on the principle that salons should own their customer relationships, not rent them.
 
 ## Audience
 Dutch beauty salon owners. Non-technical. Often solo or 2-3 person teams. They care about: more bookings, escaping Treatwell commission, looking professional. They will read this on a phone.
@@ -43,7 +43,7 @@ Dutch beauty salon owners. Non-technical. Often solo or 2-3 person teams. They c
 
 ## Copy rules
 - Primary language: Dutch (default). English toggle via Alpine `lang` state.
-- Prices: €99 not €99.00. €389, not "389 euros". Use `€` not `EUR`. Dutch convention for thousands (€1.299, not €1,299) in body copy; JSON-LD uses plain numerics.
+- Prices: €99 not €99.00. €389, not "389 euros". Use `€` not `EUR`. Dutch convention for thousands (€1.799, not €1,799) in body copy; JSON-LD uses plain numerics (`"price": "1799"`).
 - Benefit-led, not feature-led. "Take bookings 24/7" beats "Cloud-based scheduling module".
 - No AI filler. No "empower your business", no "unlock the power of", no "in today's digital landscape".
 - Tone: confident, warm, professional. Direct.

@@ -12,9 +12,9 @@ Three packages are available, each with a one-time setup fee and a monthly subsc
 
 | Package  | Setup (one-time) | Monthly fee | Best for                                  |
 |----------|------------------|-------------|-------------------------------------------|
-| Boutique | €1,299           | €99         | Solo salon owners                         |
-| Studio   | €1,999           | €389        | Established salons (2–6 chairs)           |
-| Atelier  | €3,499           | €699        | Premium or multi-location salons          |
+| Boutique | €1,799           | €99         | Solo salon owners                         |
+| Studio   | €2,499           | €389        | Established salons (2–6 chairs)           |
+| Atelier  | €4,499           | €699        | Premium or multi-location salons          |
 
 All prices exclude VAT. Monthly fee can be cancelled at any time. Setup is refundable within 14 days if the salon is not satisfied with the delivered site.
 

@@ -98,11 +98,11 @@
           {
             "@type": "Offer",
             "name": "Boutique",
-            "description": "€1.299 eenmalige setup, daarna €99 per maand. Voor solo salons: 4-pagina website, boekingen met aanbetaling, Google Business setup, automatische emails, AI-zichtbaarheid en hosting.",
+            "description": "€1.799 eenmalige setup, daarna €99 per maand. Voor solo salons: op maat ontworpen landingspagina, boekingen met aanbetaling, automatische emails, veilige hosting en email-support.",
             "priceCurrency": "EUR",
             "price": "99",
             "priceSpecification": [
-              { "@type": "UnitPriceSpecification", "name": "Setup (eenmalig)", "price": "1299", "priceCurrency": "EUR" },
+              { "@type": "UnitPriceSpecification", "name": "Setup (eenmalig)", "price": "1799", "priceCurrency": "EUR" },
               { "@type": "UnitPriceSpecification", "name": "Abonnement", "price": "99", "priceCurrency": "EUR", "unitText": "MONTH" }
             ],
             "availability": "https://schema.org/InStock"
@@ -110,11 +110,11 @@
           {
             "@type": "Offer",
             "name": "Studio",
-            "description": "€1.999 eenmalige setup, daarna €389 per maand. Voor gevestigde salons: 6-pagina maatwerk in 2 talen, 5 automatische emails, maandelijkse SEO-blogpost, WhatsApp Business, AI-zichtbaarheid en kwartaalreview-call.",
+            "description": "€2.499 eenmalige setup, daarna €389 per maand. Voor gevestigde salons: 6-pagina maatwerk in 2 talen, Google Bedrijfsprofiel-beheer, 5 automatische emails, maandelijkse SEO-blogpost, WhatsApp Business, AI-zichtbaarheid en kwartaalreview-call.",
             "priceCurrency": "EUR",
             "price": "389",
             "priceSpecification": [
-              { "@type": "UnitPriceSpecification", "name": "Setup (eenmalig)", "price": "1999", "priceCurrency": "EUR" },
+              { "@type": "UnitPriceSpecification", "name": "Setup (eenmalig)", "price": "2499", "priceCurrency": "EUR" },
               { "@type": "UnitPriceSpecification", "name": "Abonnement", "price": "389", "priceCurrency": "EUR", "unitText": "MONTH" }
             ],
             "availability": "https://schema.org/InStock"
@@ -122,11 +122,11 @@
           {
             "@type": "Offer",
             "name": "Atelier",
-            "description": "€3.499 eenmalige setup, daarna €699 per maand. Voor premium of multi-locatie salons: tot 10 pagina's in 3 talen, 2 SEO-blogposts, brand reels, volledige AI-zichtbaarheid (premium) en Retention Engine inbegrepen.",
+            "description": "€4.499 eenmalige setup, daarna €699 per maand. Voor premium of multi-locatie salons: tot 10 pagina's in 3 talen, 2 SEO-blogposts, brand reels, volledige AI-zichtbaarheid (premium) en Retention Engine inbegrepen.",
             "priceCurrency": "EUR",
             "price": "699",
             "priceSpecification": [
-              { "@type": "UnitPriceSpecification", "name": "Setup (eenmalig)", "price": "3499", "priceCurrency": "EUR" },
+              { "@type": "UnitPriceSpecification", "name": "Setup (eenmalig)", "price": "4499", "priceCurrency": "EUR" },
               { "@type": "UnitPriceSpecification", "name": "Abonnement", "price": "699", "priceCurrency": "EUR", "unitText": "MONTH" }
             ],
             "availability": "https://schema.org/InStock"
@@ -2017,7 +2017,7 @@
      to a styled div so this remains the single semantic H1. -->
 <div class="sr-only">
   <h1>Smoova — directe boekingssite voor schoonheidssalons in Nederland</h1>
-  <p>Smoova bouwt een directe boekingssite voor jouw schoonheidssalon, kapsalon of wellness studio. Eigen domein, eigen klanten, geen commissie aan Treatwell. Drie pakketten vanaf €1.299 setup + €99 per maand, 14 dagen oplevering, 14-daagse geld-terug-garantie. Een direct alternatief voor Treatwell voor salons in Nederland.</p>
+  <p>Smoova bouwt een directe boekingssite voor jouw schoonheidssalon, kapsalon of wellness studio. Eigen domein, eigen klanten, geen commissie aan Treatwell. Drie pakketten vanaf €1.799 setup + €99 per maand, 14 dagen oplevering, 14-daagse geld-terug-garantie. Een direct alternatief voor Treatwell voor salons in Nederland.</p>
 </div>
 
 <noscript>
@@ -2659,7 +2659,7 @@
         <dt>Marketing</dt>
         <dd>Treatwell: hun nieuwsbrief. Smoova: direct contact met eigen klanten.</dd>
       </dl>
-      <p>Smoova is een direct alternatief voor Treatwell voor schoonheidssalons in Nederland. Prijzen vanaf €1.299 setup en €99 per maand voor het Boutique-pakket; €1.999 + €389 voor Studio; €3.499 + €699 voor Atelier. 14-daagse geld-terug-garantie. Live in 14 dagen.</p>
+      <p>Smoova is een direct alternatief voor Treatwell voor schoonheidssalons in Nederland. Prijzen vanaf €1.799 setup en €99 per maand voor het Boutique-pakket; €2.499 + €389 voor Studio; €4.499 + €699 voor Atelier. 14-daagse geld-terug-garantie. Live in 14 dagen.</p>
     </div>
 
     <!-- Rows -->
@@ -2897,14 +2897,16 @@
               x-text="lang === 'nl' ? 'Boutique' : 'Boutique'"></h3>
           <p class="font-sans text-sm text-text-secondary mt-1.5"
              x-text="lang === 'nl' ? 'Solo salon, één stoel' : 'Solo salon, one chair'"></p>
+          <p class="italic-display text-sm text-text-secondary mt-1"
+             x-text="lang === 'nl' ? 'Een professionele plek online' : 'A professional place online'"></p>
           <div class="mt-6 flex items-baseline gap-2 text-rouge-profond">
             <span class="pricing-tier__price">€99</span>
             <span class="font-sans text-sm text-text-secondary"
                   x-text="lang === 'nl' ? '/maand' : '/month'"></span>
           </div>
           <p class="font-mono text-[10px] tracking-[0.22em] uppercase text-text-secondary mt-2">
-            <template x-if="lang === 'nl'"><span>+ <span class="font-medium text-rouge-profond">€1.299</span> eenmalige setup</span></template>
-            <template x-if="lang === 'en'"><span>+ <span class="font-medium text-rouge-profond">€1,299</span> one-time setup</span></template>
+            <template x-if="lang === 'nl'"><span>+ <span class="font-medium text-rouge-profond">€1.799</span> eenmalige setup</span></template>
+            <template x-if="lang === 'en'"><span>+ <span class="font-medium text-rouge-profond">€1,799</span> one-time setup</span></template>
           </p>
         </header>
 
@@ -2914,7 +2916,7 @@
           <li class="flex items-start gap-2.5">
             <svg aria-hidden="true" class="w-4 h-4 mt-0.5 shrink-0 text-gold-vif"><use href="#ic-pricing-check"/></svg>
             <span class="font-sans text-text-primary leading-snug"
-                  x-text="lang === 'nl' ? 'Op maat ontworpen 4-pagina website' : 'Custom-designed 4-page website'"></span>
+                  x-text="lang === 'nl' ? 'Op maat ontworpen landingspagina' : 'Custom-designed landing page'"></span>
           </li>
           <li class="flex items-start gap-2.5">
             <svg aria-hidden="true" class="w-4 h-4 mt-0.5 shrink-0 text-gold-vif"><use href="#ic-pricing-check"/></svg>
@@ -2929,17 +2931,7 @@
           <li class="flex items-start gap-2.5">
             <svg aria-hidden="true" class="w-4 h-4 mt-0.5 shrink-0 text-gold-vif"><use href="#ic-pricing-check"/></svg>
             <span class="font-sans text-text-primary leading-snug"
-                  x-text="lang === 'nl' ? 'Google Bedrijfsprofiel: aanmaken of opschonen' : 'Google Business Profile: create new or polish existing'"></span>
-          </li>
-          <li class="flex items-start gap-2.5">
-            <svg aria-hidden="true" class="w-4 h-4 mt-0.5 shrink-0 text-gold-vif"><use href="#ic-pricing-check"/></svg>
-            <span class="font-sans text-text-primary leading-snug"
-                  x-text="lang === 'nl' ? '2 Google posts per maand' : '2 Google posts per month'"></span>
-          </li>
-          <li class="flex items-start gap-2.5">
-            <svg aria-hidden="true" class="w-4 h-4 mt-0.5 shrink-0 text-gold-vif"><use href="#ic-pricing-check"/></svg>
-            <span class="font-sans text-text-primary leading-snug"
-                  x-text="lang === 'nl' ? '3 automatische emails: bevestiging, herinnering, review' : '3 automatic emails: confirmation, reminder, review'"></span>
+                  x-text="lang === 'nl' ? '3 automatische emails: bevestiging, herinnering, reviewverzoek' : '3 automatic emails: confirmation, reminder, review request'"></span>
           </li>
           <li class="flex items-start gap-2.5">
             <svg aria-hidden="true" class="w-4 h-4 mt-0.5 shrink-0 text-gold-vif"><use href="#ic-pricing-check"/></svg>
@@ -2954,12 +2946,12 @@
           <li class="flex items-start gap-2.5">
             <svg aria-hidden="true" class="w-4 h-4 mt-0.5 shrink-0 text-gold-vif"><use href="#ic-pricing-check"/></svg>
             <span class="font-sans text-text-primary leading-snug"
-                  x-text="lang === 'nl' ? 'Vindbaar via ChatGPT, Google AI en Claude (basis)' : 'Found via ChatGPT, Google AI, and Claude (basic)'"></span>
+                  x-text="lang === 'nl' ? 'Email-support binnen 48 uur' : 'Email support within 48 hours'"></span>
           </li>
           <li class="flex items-start gap-2.5">
             <svg aria-hidden="true" class="w-4 h-4 mt-0.5 shrink-0 text-gold-vif"><use href="#ic-pricing-check"/></svg>
             <span class="font-sans text-text-primary leading-snug"
-                  x-text="lang === 'nl' ? 'Startgesprek + email-support binnen 48 uur' : 'Welcome call + email support within 48 hours'"></span>
+                  x-text="lang === 'nl' ? '14 dagen geld-terug-garantie' : '14-day money-back guarantee'"></span>
           </li>
         </ul>
 
@@ -2980,14 +2972,16 @@
               x-text="lang === 'nl' ? 'Studio' : 'Studio'"></h3>
           <p class="font-sans text-sm text-text-ondarkmuted mt-1.5"
              x-text="lang === 'nl' ? 'Gevestigde salon, 2–4 medewerkers' : 'Established salon, 2–4 staff'"></p>
+          <p class="italic-display text-sm text-text-ondarkmuted mt-1"
+             x-text="lang === 'nl' ? 'Smoova als jouw marketingteam' : 'Smoova as your marketing team'"></p>
           <div class="mt-6 flex items-baseline gap-2 text-bone">
             <span class="pricing-tier__price">€389</span>
             <span class="font-sans text-sm text-text-ondarkmuted"
                   x-text="lang === 'nl' ? '/maand' : '/month'"></span>
           </div>
           <p class="font-mono text-[10px] tracking-[0.22em] uppercase text-text-ondarkmuted mt-2">
-            <template x-if="lang === 'nl'"><span>+ <span class="font-medium text-gold-vif">€1.999</span> eenmalige setup</span></template>
-            <template x-if="lang === 'en'"><span>+ <span class="font-medium text-gold-vif">€1,999</span> one-time setup</span></template>
+            <template x-if="lang === 'nl'"><span>+ <span class="font-medium text-gold-vif">€2.499</span> eenmalige setup</span></template>
+            <template x-if="lang === 'en'"><span>+ <span class="font-medium text-gold-vif">€2,499</span> one-time setup</span></template>
           </p>
         </header>
 
@@ -3000,12 +2994,22 @@
           <li class="flex items-start gap-2.5">
             <svg aria-hidden="true" class="w-4 h-4 mt-0.5 shrink-0 text-gold-vif"><use href="#ic-pricing-check"/></svg>
             <span class="font-sans text-bone leading-snug"
-                  x-text="lang === 'nl' ? '6-pagina maatwerk · 2 talen' : '6-page custom design · 2 languages'"></span>
+                  x-text="lang === 'nl' ? '6-pagina maatwerk website · 2 talen (NL + EN)' : '6-page custom website · 2 languages (NL + EN)'"></span>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <svg aria-hidden="true" class="w-4 h-4 mt-0.5 shrink-0 text-gold-vif"><use href="#ic-pricing-check"/></svg>
+            <span class="font-sans text-bone leading-snug"
+                  x-text="lang === 'nl' ? 'Google Bedrijfsprofiel: aanmaken, optimaliseren en maandelijks beheer' : 'Google Business Profile: setup, optimization, monthly management'"></span>
           </li>
           <li class="flex items-start gap-2.5">
             <svg aria-hidden="true" class="w-4 h-4 mt-0.5 shrink-0 text-gold-vif"><use href="#ic-pricing-check"/></svg>
             <span class="font-sans text-bone leading-snug"
                   x-text="lang === 'nl' ? '4 Google posts per maand · wij volgen je reviews' : '4 Google posts per month · we watch your reviews'"></span>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <svg aria-hidden="true" class="w-4 h-4 mt-0.5 shrink-0 text-gold-vif"><use href="#ic-pricing-check"/></svg>
+            <span class="font-sans text-bone leading-snug"
+                  x-text="lang === 'nl' ? 'Vindbaar via ChatGPT, Google AI en Claude' : 'Found via ChatGPT, Google AI, and Claude'"></span>
           </li>
           <li class="flex items-start gap-2.5">
             <svg aria-hidden="true" class="w-4 h-4 mt-0.5 shrink-0 text-gold-vif"><use href="#ic-pricing-check"/></svg>
@@ -3020,12 +3024,12 @@
           <li class="flex items-start gap-2.5">
             <svg aria-hidden="true" class="w-4 h-4 mt-0.5 shrink-0 text-gold-vif"><use href="#ic-pricing-check"/></svg>
             <span class="font-sans text-bone leading-snug"
-                  x-text="lang === 'nl' ? '4 website-aanpassingen per maand, binnen 24 uur' : '4 website changes per month, within 24 hours'"></span>
+                  x-text="lang === 'nl' ? 'WhatsApp Business met automatische begroeting + standaardantwoorden' : 'WhatsApp Business with auto-greeting + reply templates'"></span>
           </li>
           <li class="flex items-start gap-2.5">
             <svg aria-hidden="true" class="w-4 h-4 mt-0.5 shrink-0 text-gold-vif"><use href="#ic-pricing-check"/></svg>
             <span class="font-sans text-bone leading-snug"
-                  x-text="lang === 'nl' ? 'WhatsApp Business met automatische begroeting + standaardantwoorden' : 'WhatsApp Business with auto-greeting + reply templates'"></span>
+                  x-text="lang === 'nl' ? '4 website-aanpassingen per maand, binnen 24 uur' : '4 website changes per month, within 24 hours'"></span>
           </li>
           <li class="flex items-start gap-2.5">
             <svg aria-hidden="true" class="w-4 h-4 mt-0.5 shrink-0 text-gold-vif"><use href="#ic-pricing-check"/></svg>
@@ -3054,14 +3058,16 @@
               x-text="lang === 'nl' ? 'Atelier' : 'Atelier'"></h3>
           <p class="font-sans text-sm text-text-secondary mt-1.5"
              x-text="lang === 'nl' ? 'Premium of multi-locatie salon' : 'Premium or multi-location salon'"></p>
+          <p class="italic-display text-sm text-text-secondary mt-1"
+             x-text="lang === 'nl' ? 'Smoova als digitale partner' : 'Smoova as your digital partner'"></p>
           <div class="mt-6 flex items-baseline gap-2 text-rouge-profond">
             <span class="pricing-tier__price">€699</span>
             <span class="font-sans text-sm text-text-secondary"
                   x-text="lang === 'nl' ? '/maand' : '/month'"></span>
           </div>
           <p class="font-mono text-[10px] tracking-[0.22em] uppercase text-text-secondary mt-2">
-            <template x-if="lang === 'nl'"><span>+ <span class="font-medium text-rouge-profond">€3.499</span> eenmalige setup</span></template>
-            <template x-if="lang === 'en'"><span>+ <span class="font-medium text-rouge-profond">€3,499</span> one-time setup</span></template>
+            <template x-if="lang === 'nl'"><span>+ <span class="font-medium text-rouge-profond">€4.499</span> eenmalige setup</span></template>
+            <template x-if="lang === 'en'"><span>+ <span class="font-medium text-rouge-profond">€4,499</span> one-time setup</span></template>
           </p>
         </header>
 
@@ -5438,7 +5444,7 @@ function smoova() {
       return Math.round(this.bookings * this.avgPrice * (this.commission / 100));
     },
     get yearlyCommission() { return this.monthlyCommission * 12; },
-    get yearlySmoovaCost() { return 1999 + (389 * 9); /* Studio tier, year 1: €1,999 setup + 9 months × €389 (3 months free) */ },
+    get yearlySmoovaCost() { return 2499 + (389 * 9); /* Studio tier, year 1: €2,499 setup + 9 months × €389 (3 months free) */ },
     get yearlySavings() { return Math.max(0, this.yearlyCommission - this.yearlySmoovaCost); },
 
     formatNum(n) { return new Intl.NumberFormat('nl-NL').format(n); },
@@ -5525,7 +5531,7 @@ function smoova() {
             outMonthly: 'Per maand naar Treatwell',
             outYearly: 'Per jaar naar Treatwell',
             outSavings: 'Met Smoova bespaar je per jaar',
-            outNote: 'Vergelijking tegen Smoova Studio: €1.999 setup + €389/maand. Voor solo salons start je al bij €1.299 + €99/maand met Boutique.'
+            outNote: 'Vergelijking tegen Smoova Studio: €2.499 setup + €389/maand. Voor solo salons start je al bij €1.799 + €99/maand met Boutique.'
           },
           compare: {
             eyebrow: 'Exhibit B · Het verschil',
@@ -5620,7 +5626,7 @@ function smoova() {
             outMonthly: 'Monthly to Treatwell',
             outYearly: 'Yearly to Treatwell',
             outSavings: 'With Smoova you save per year',
-            outNote: 'Compared to Smoova Studio: €1,999 setup + €389/month. For solo salons, Boutique starts at €1,299 + €99/month.'
+            outNote: 'Compared to Smoova Studio: €2,499 setup + €389/month. For solo salons, Boutique starts at €1,799 + €99/month.'
           },
           compare: {
             eyebrow: 'Exhibit B · The difference',
