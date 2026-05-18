@@ -3938,19 +3938,22 @@ function smoova() {
     },
 
     // ===== Selected Work =====
-    // Stored as ID instead of object so language toggling updates the modal
-    // reactively (lookups go through the workCards getter which switches arrays).
+    // activeWorkId stores just the id so the modal can swap languages
+    // reactively — the activeWork getter resolves the id against the
+    // currently-active workCards array (which is rewritten by a $watch
+    // on `lang` in init()).
     activeWorkId: null,
     modalVisible: false,
     workAtStart: true,
     workAtEnd: false,
 
-    // Computed: returns the language-appropriate case-study array
-    get workCards() {
-      return this.lang === 'nl' ? this.workCardsNL : this.workCardsEN;
-    },
+    // Plain array reference (not a getter) so Alpine's x-for treats it as
+    // a stable reactive value. init() wires it to workCardsEN/NL based on
+    // current lang, and watches lang to flip when the toggle fires.
+    workCards: [],
 
-    // Computed: resolves the active card by ID against the current language array
+    // Computed: resolves the active card by id against the current workCards.
+    // Stays a getter (read-only access pattern, not iterated by x-for).
     get activeWork() {
       if (this.activeWorkId == null) return null;
       return this.workCards.find(c => c.id === this.activeWorkId) || null;
@@ -5026,9 +5029,15 @@ function smoova() {
     },
 
     init() {
+      // Wire up the bilingual case-study array: workCards is a plain reactive
+      // array (not a getter) so x-for sees a stable reference. We seed it on
+      // boot, and rewrite it whenever lang flips below.
+      this.workCards = this.lang === 'nl' ? this.workCardsNL : this.workCardsEN;
+
       // Persist lang toggle so reloads and cross-page navigation keep the choice.
-      // 404.html reads this key too.
+      // 404.html reads this key too. Also re-points workCards at the matching array.
       this.$watch('lang', v => {
+        this.workCards = v === 'nl' ? this.workCardsNL : this.workCardsEN;
         try { localStorage.setItem('smoovaLang', v); } catch (_) { /* private mode */ }
       });
 
