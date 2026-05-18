@@ -12,7 +12,7 @@ Three packages are available, each with a one-time setup fee and a monthly subsc
 
 | Package  | Setup (one-time) | Monthly fee | Best for                                  |
 |----------|------------------|-------------|-------------------------------------------|
-| Boutique | €1,299           | €179        | Solo salon owners                         |
+| Boutique | €1,299           | €99         | Solo salon owners                         |
 | Studio   | €1,999           | €389        | Established salons (2–6 chairs)           |
 | Atelier  | €3,499           | €699        | Premium or multi-location salons          |
 
@@ -62,7 +62,7 @@ Beauty salons, hair salons, nail studios, brow studios, and wellness studios in 
 ## Frequently asked
 
 **Is Smoova a Treatwell replacement?**
-Yes. Most Smoova salons stop renewing Treatwell after they're live. The math: 25–35% commission on each booking versus a fixed monthly fee of €179–€699.
+Yes. Most Smoova salons stop renewing Treatwell after they're live. The math: 25–35% commission on each booking versus a fixed monthly fee of €99–€699.
 
 **How long does it take to go live?**
 14 days from the kickoff call to a live booking site.
