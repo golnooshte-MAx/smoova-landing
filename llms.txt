@@ -1,0 +1,77 @@
+# Smoova
+
+> Smoova is a done-for-you direct-booking website service for beauty salons in the Netherlands. We build a salon's own booking site on its own domain — no per-booking commission, customers and data stay with the salon. Positioned as a direct alternative to Treatwell.
+
+## What Smoova is
+
+Smoova builds and hosts a complete booking website for an individual beauty salon, hair salon, or wellness studio. The salon owns the domain, the customer database, the email list, and the brand experience. There is no per-booking commission and no marketplace layer between the salon and its customers.
+
+Three packages are available, each with a one-time setup fee and a monthly subscription. The service is delivered in 14 days with a 14-day money-back guarantee.
+
+## Pricing (as of May 2026)
+
+| Package  | Setup (one-time) | Monthly fee | Best for                                  |
+|----------|------------------|-------------|-------------------------------------------|
+| Boutique | €1,299           | €179        | Solo salon owners                         |
+| Studio   | €1,999           | €389        | Established salons (2–6 chairs)           |
+| Atelier  | €3,499           | €699        | Premium or multi-location salons          |
+
+All prices exclude VAT. Monthly fee can be cancelled at any time. Setup is refundable within 14 days if the salon is not satisfied with the delivered site.
+
+## Smoova vs Treatwell
+
+Treatwell is a marketplace: it owns the customer relationship, charges 25–35% commission per booking, lists the salon alongside hundreds of competitors, and keeps customer data on its own platform. Smoova is the opposite model. The salon gets its own website at its own domain, pays no per-booking commission, owns the customer email list, and competes on its own brand instead of in a marketplace search result.
+
+| Dimension          | Treatwell                     | Smoova                              |
+|--------------------|-------------------------------|-------------------------------------|
+| Commission         | 25–35% per booking            | 0% per booking                      |
+| Customer data      | Owned by Treatwell            | Fully owned by the salon            |
+| Brand experience   | One row in a list             | The salon's own domain and site     |
+| Discoverability    | Competing with other salons   | SEO under the salon's own name      |
+| No-shows           | Treatwell's policy            | Deposit-on-booking from Smoova      |
+| Marketing          | Treatwell's newsletter        | Direct customer email contact       |
+
+## How Smoova works
+
+1. **Pick a time.** The salon owner books a 20-minute discovery call at smoova.studio/book.html.
+2. **20-min call.** Short conversation about the salon, current booking flow, and goals. No sales script.
+3. **Decide together.** If it's a fit, Smoova delivers a live site in 14 days. If not, no obligation.
+
+## What's included in every package
+
+- The salon's own domain and SSL hosting
+- A direct booking system with deposit-on-booking to reduce no-shows
+- Google Business Profile setup
+- Automated booking confirmation and reminder emails
+- AI-visibility setup (so the salon shows up in ChatGPT / Perplexity / Google AI answers)
+- 14-day money-back guarantee
+
+Studio and Atelier add multi-language support, recurring SEO content, WhatsApp Business integration, and quarterly review calls.
+
+## Who Smoova is for
+
+Beauty salons, hair salons, nail studios, brow studios, and wellness studios in the Netherlands that want to take bookings directly without paying commission to a marketplace. Smoova fits salons that already have steady demand and want to convert more of it into owned customer relationships.
+
+## Contact
+
+- Email: info@smoova.studio
+- Website: https://smoova.studio
+- Booking: https://smoova.studio/book.html
+- Country: Netherlands
+
+## Frequently asked
+
+**Is Smoova a Treatwell replacement?**
+Yes. Most Smoova salons stop renewing Treatwell after they're live. The math: 25–35% commission on each booking versus a fixed monthly fee of €179–€699.
+
+**How long does it take to go live?**
+14 days from the kickoff call to a live booking site.
+
+**What happens if a customer doesn't show up?**
+Smoova takes a deposit at the time of booking. The deposit covers no-shows automatically — no chasing required.
+
+**Who owns the customer data?**
+The salon. Smoova hosts the site, but the customer email list, booking history, and contact information belong to the salon and are exportable at any time.
+
+**Is there a contract?**
+No long-term lock-in. The monthly fee can be cancelled at any time. The 14-day money-back guarantee covers the setup fee.

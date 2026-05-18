@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smoova · Jouw salon. Jouw boekingen. Geen commissie.</title>
+  <title>Directe boekingssite voor schoonheidssalons — Smoova</title>
 
   <!-- Critical FOUC shim: applied before Tailwind CDN boots. Only covers
        utilities that are NEVER animated (range inputs, x-cloak, hidden,
@@ -66,10 +66,19 @@
         "name": "Smoova",
         "legalName": "Smoova B.V.",
         "url": "https://smoova.studio/",
-        "logo": "https://smoova.studio/smoova_21_1_assets/hero/hero-2-opera.png",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://smoova.studio/smoova_21_1_assets/smoova-logo.svg",
+          "width": 512,
+          "height": 512
+        },
         "image": "https://smoova.studio/smoova_21_1_assets/hero/hero-2-opera.png",
         "description": "Een directe boekingssite voor schoonheidssalons in Nederland. Geen commissie aan Treatwell, eigen klantrelatie.",
-        "email": "hi@smoova.studio",
+        "email": "info@smoova.studio",
+        "address": {
+          "@type": "PostalAddress",
+          "addressCountry": "NL"
+        },
         "areaServed": { "@type": "Country", "name": "Netherlands" },
         "knowsLanguage": ["nl", "en"]
       },
@@ -121,6 +130,57 @@
               { "@type": "UnitPriceSpecification", "name": "Abonnement", "price": "699", "priceCurrency": "EUR", "unitText": "MONTH" }
             ],
             "availability": "https://schema.org/InStock"
+          }
+        ]
+      },
+      {
+        "@type": "DefinedTermSet",
+        "@id": "https://smoova.studio/#glossary",
+        "name": "Smoova begrippenlijst — directe boekingen voor salons",
+        "description": "Korte definities van de termen die Smoova hanteert voor directe boekingssites, marketplace-commissies, no-show beleid en AI-zichtbaarheid voor schoonheidssalons.",
+        "inLanguage": "nl",
+        "hasDefinedTerm": [
+          {
+            "@type": "DefinedTerm",
+            "@id": "https://smoova.studio/#term-directe-boekingssite",
+            "name": "Directe boekingssite",
+            "description": "Een eigen website met ingebouwd boekingssysteem dat draait op het domein van de salon zelf. Geen marketplace ertussen. Klanten boeken direct; de salon bezit de domeinnaam, het ontwerp en de klantenlijst.",
+            "inDefinedTermSet": "https://smoova.studio/#glossary"
+          },
+          {
+            "@type": "DefinedTerm",
+            "@id": "https://smoova.studio/#term-marketplace-commissie",
+            "name": "Marketplace-commissie",
+            "description": "Een percentage dat platforms zoals Treatwell of Fresha inhouden op elke boeking — meestal 25 tot 35 procent. Bij een directe boekingssite is dat percentage nul.",
+            "inDefinedTermSet": "https://smoova.studio/#glossary"
+          },
+          {
+            "@type": "DefinedTerm",
+            "@id": "https://smoova.studio/#term-aanbetaling",
+            "name": "Aanbetaling bij boeking",
+            "description": "Een vooraf betaald bedrag dat de klant afrekent op het moment van boeken. Compenseert no-shows automatisch en filtert klanten die niet komen opdagen. Standaard op elke Smoova-site.",
+            "inDefinedTermSet": "https://smoova.studio/#glossary"
+          },
+          {
+            "@type": "DefinedTerm",
+            "@id": "https://smoova.studio/#term-eigen-klantgegevens",
+            "name": "Eigen klantgegevens",
+            "description": "De volledige eigendom van naam, e-mailadres, telefoonnummer en boekingshistorie van elke klant. Bij Smoova staan deze data op de eigen site van de salon en zijn op elk moment exporteerbaar.",
+            "inDefinedTermSet": "https://smoova.studio/#glossary"
+          },
+          {
+            "@type": "DefinedTerm",
+            "@id": "https://smoova.studio/#term-ai-zichtbaarheid",
+            "name": "AI-zichtbaarheid",
+            "description": "De mate waarin een salon wordt geciteerd in antwoorden van AI-zoekmachines zoals ChatGPT, Perplexity en Google AI Overviews. Vereist gestructureerde data, citeerbare feiten en machine-leesbare opmaak.",
+            "inDefinedTermSet": "https://smoova.studio/#glossary"
+          },
+          {
+            "@type": "DefinedTerm",
+            "@id": "https://smoova.studio/#term-retention-engine",
+            "name": "Retention Engine",
+            "description": "Smoova's geautomatiseerde follow-up systeem: review-verzoeken na elke afspraak, herinneringen voor jaarlijkse behandelingen, en e-mails om vaste klanten terug te brengen. Inbegrepen in het Atelier-pakket.",
+            "inDefinedTermSet": "https://smoova.studio/#glossary"
           }
         ]
       },
@@ -257,14 +317,14 @@
         media="(min-width: 769px)"
         fetchpriority="high">
   <link rel="preload" as="image"
-        href="smoova_21_1_assets/hero/hero-2-opera-mobile.jpeg"
-        type="image/jpeg"
+        href="smoova_21_1_assets/hero/hero-2-opera-mobile.png"
+        type="image/png"
         media="(max-width: 768px)"
         fetchpriority="high">
 
-  <!-- GSAP + ScrollTrigger (case study pin-scroll) -->
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <!-- GSAP + ScrollTrigger (case study pin-scroll) — deferred so they don't block render -->
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 
   <!-- Alpine.js -->
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -1950,12 +2010,22 @@
   class="relative min-h-screen overflow-x-hidden"
 >
 
+<!-- Static SEO heading + intro. Rendered before any JS executes so
+     Googlebot, Perplexity, ChatGPT and other crawlers always see a
+     keyword-rich H1 and description. The cinematic animated H1 inside
+     the hero (rendered by Alpine for language toggling) is downgraded
+     to a styled div so this remains the single semantic H1. -->
+<div class="sr-only">
+  <h1>Smoova — directe boekingssite voor schoonheidssalons in Nederland</h1>
+  <p>Smoova bouwt een directe boekingssite voor jouw schoonheidssalon, kapsalon of wellness studio. Eigen domein, eigen klanten, geen commissie aan Treatwell. Drie pakketten vanaf €1.299 setup + €179 per maand, 14 dagen oplevering, 14-daagse geld-terug-garantie. Een direct alternatief voor Treatwell voor salons in Nederland.</p>
+</div>
+
 <noscript>
   <div style="position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; padding:24px; background:#0A0507; color:#F2EBDD; font-family:'Inter',system-ui,sans-serif; text-align:center;">
     <div style="max-width:520px;">
       <h1 style="font-family:'Fraunces','Georgia',serif; font-size:28px; line-height:1.15; margin:0 0 16px; color:#F2EBDD;">JavaScript staat uit.</h1>
       <p style="font-size:15px; line-height:1.6; margin:0 0 20px; color:#BFA89A;">Deze pagina gebruikt lichte interactiviteit om vragen open te klappen, de taal te wisselen en de Treatwell-rekening te berekenen. Zet JavaScript aan in je browserinstellingen om de volledige pagina te zien.</p>
-      <p style="font-size:13px; line-height:1.6; margin:0; color:#BFA89A;">Liever direct contact? Mail <a href="mailto:hi@smoova.studio" style="color:#D4A857; text-decoration:underline;">hi@smoova.studio</a>.</p>
+      <p style="font-size:13px; line-height:1.6; margin:0; color:#BFA89A;">Liever direct contact? Mail <a href="mailto:info@smoova.studio" style="color:#D4A857; text-decoration:underline;">info@smoova.studio</a>.</p>
     </div>
   </div>
 </noscript>
@@ -1968,7 +2038,7 @@
 
 <!-- ============== NAV ============== -->
 <nav class="absolute top-0 left-0 right-0 z-30 px-6 md:px-12 lg:px-20 py-6 flex items-center justify-between">
-  <a href="#" class="flex items-center gap-2 group">
+  <a href="/" class="flex items-center gap-2 group" aria-label="Smoova — home">
     <span class="font-display text-2xl font-medium tracking-tight text-text-ondark">smoova</span>
     <span aria-hidden="true" class="italic-display text-gold-vif text-2xl">.</span>
   </a>
@@ -2000,7 +2070,7 @@
   <!-- Full-bleed cinematic storefront: emotional anchor, not the reading surface. -->
   <div class="absolute inset-0 z-0">
     <picture>
-      <source media="(max-width: 768px)" srcset="smoova_21_1_assets/hero/hero-2-opera-mobile.jpeg" />
+      <source media="(max-width: 768px)" srcset="smoova_21_1_assets/hero/hero-2-opera-mobile.png" />
       <img src="smoova_21_1_assets/hero/hero-2-opera.png"
            class="hero-slide hero-slide-1"
            width="1920" height="1080"
@@ -2057,7 +2127,8 @@
 
     <!-- Headline (top of viewport on mobile, top of the bottom-stacked block on desktop) -->
     <div class="md:max-w-[46%] lg:max-w-[42%]">
-      <h1 :key="lang"
+      <div :key="lang"
+          role="presentation"
           class="font-display font-medium text-5xl sm:text-6xl md:text-6xl lg:text-7xl leading-[1.02] tracking-tight text-text-ondark md:mb-10">
         <template x-if="lang === 'nl'">
           <div>
@@ -2073,7 +2144,7 @@
             <span class="line-mask"><span class="italic-display text-gold-vif third-line-rotate" style="animation-delay: 0.50s" x-text="heroVariants[lang][heroVariantIndex]"></span></span>
           </div>
         </template>
-      </h1>
+      </div>
     </div>
 
     <!-- Subhead + CTAs (bottom of viewport on mobile, directly below headline on desktop) -->
@@ -2154,6 +2225,27 @@
     </template>
   </div>
   </div><!-- /.work-row-bleed -->
+
+  <!-- Static AEO mirror of the case studies: visible to crawlers and synchronous
+       LLM fetchers (Perplexity, ChatGPT browsing) that don't render the Alpine
+       work data. The interactive cards above are the visual surface. -->
+  <div class="sr-only" aria-hidden="true">
+    <h3>Smoova case studies — geselecteerde projecten</h3>
+    <ul>
+      <li><strong>Freaky Darling</strong> — kapsalon in Parijs (10e), 2026. Scope: merk, web, copy. Een Parijse kapsalon voor klanten die liever opvallen dan opgaan in de massa.</li>
+      <li><strong>Rouge</strong> — nagelstudio in Parijs (3e), 2026. Scope: merk, web, copy. Een Parijse nagelstudio die de hand behandelt als een stilleven.</li>
+      <li><strong>Honey &amp; Halo</strong> — haar- en beautyatelier in Parijs (3e), 2026. Scope: merk, web, copy. Een Parijs haar- en beautyatelier dat zich niet verontschuldigt voor zachtheid.</li>
+      <li><strong>Casa Solana</strong> — spa in Palma de Mallorca, 2026. Scope: merk, web, copy. Een slow-living spa op Mallorca voor mensen die de stad verlieten om te stoppen met excuses maken voor rust.</li>
+      <li><strong>Crown Salon</strong> — kapsalon in Atlanta, GA, 2026. Scope: merk, web, copy. Een Atlanta-textuursalon voor klanten die het zat zijn als bijzaak behandeld te worden.</li>
+      <li><strong>Tutti Frutti Studio</strong> — kapsalon in Dalston, London, 2026. Scope: merk, web, copy. Een Dalston-salon die Y2K-maximalisme tot de hele persoonlijkheid maakt.</li>
+      <li><strong>Crown · Brussels</strong> — kapsalon in Brussel, BE, 2026. Scope: merk, web, copy. Het Europese hoofdstuk van een merk dat begon in Atlanta — texturen, in Brussel.</li>
+      <li><strong>Velvet &amp; Vine</strong> — nagelatelier in Parijs (6e), 2026. Scope: merk, web, copy. Een Parijs 6e nagelatelier waar elke afspraak een séance is.</li>
+      <li><strong>Komorebi</strong> — kapsalon in Tokyo, Nakameguro, 2026. Scope: merk, web, copy. Een Nakameguro-kapsalon gebouwd rond één Japans woord voor het licht dat door de bomen filtert.</li>
+      <li><strong>Atelier Noir</strong> — barbershop in Antwerpen, BE, 2026. Scope: merk, web, copy. Een vier generaties oude Antwerpse barbershop, op dezelfde stoel sinds 1924.</li>
+      <li><strong>Bloem &amp; Co</strong> — botanische skincare studio in Utrecht, NL, 2026. Scope: merk, web, copy. Een botanische skincare- en ritueelstudio in Utrecht voor mensen die hun huid als grond behandelen.</li>
+      <li><strong>Volta</strong> — skin-tech studio in Eindhoven, NL, 2026. Scope: merk, web, copy. Een Eindhovense beautystudio die de huid als systeem behandelt en de afspraak als sessie.</li>
+    </ul>
+  </div>
 
   <!-- Prev/next chevrons: desktop only (mobile uses swipe) -->
   <!-- hidden md:flex: responsive display toggle (Tailwind). Layout handled by .work-chevron-row (justify-end not in purged build). -->
@@ -2546,6 +2638,28 @@
         <span class="inline-block px-1.5 py-0.5 rounded-sm" style="background: var(--color-rouge-profond); color: var(--color-champagne); font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.3em;"
               x-text="lang === 'nl' ? 'AANBEVOLEN' : 'RECOMMENDED'"></span>
       </div>
+    </div>
+
+    <!-- Static AEO mirror of the comparison: visible to crawlers and synchronous
+         LLM fetchers (Perplexity, ChatGPT browsing) that may not execute Alpine.
+         The animated Alpine table below is the visual surface. -->
+    <div class="sr-only" aria-hidden="true">
+      <h3>Treatwell vs Smoova — vergelijking</h3>
+      <dl>
+        <dt>Commissie per boeking</dt>
+        <dd>Treatwell: 25–35%. Smoova: 0%.</dd>
+        <dt>Klantgegevens</dt>
+        <dd>Treatwell: eigendom van Treatwell. Smoova: volledig eigendom van de salon.</dd>
+        <dt>Merkbeleving</dt>
+        <dd>Treatwell: één regel in een lijst. Smoova: eigen domein, eigen verhaal.</dd>
+        <dt>Vindbaarheid</dt>
+        <dd>Treatwell: concurreren met andere salons. Smoova: SEO op de eigen naam van de salon.</dd>
+        <dt>No-shows</dt>
+        <dd>Treatwell: hun beleid. Smoova: aanbetaling vooraf bij elke boeking.</dd>
+        <dt>Marketing</dt>
+        <dd>Treatwell: hun nieuwsbrief. Smoova: direct contact met eigen klanten.</dd>
+      </dl>
+      <p>Smoova is een direct alternatief voor Treatwell voor schoonheidssalons in Nederland. Prijzen vanaf €1.299 setup en €179 per maand voor het Boutique-pakket; €1.999 + €389 voor Studio; €3.499 + €699 voor Atelier. 14-daagse geld-terug-garantie. Live in 14 dagen.</p>
     </div>
 
     <!-- Rows -->
@@ -3052,6 +3166,35 @@
          class="relative z-10 px-6 md:px-12 lg:px-20 py-20 md:py-28 bg-bone"
          x-data="{ open: 1, showAll: false }"
          aria-labelledby="faq-heading">
+  <!-- Static AEO mirror of the FAQ: visible to crawlers and synchronous LLM
+       fetchers (Perplexity, ChatGPT browsing) that don't render the Alpine
+       accordion. Mirrors the FAQPage JSON-LD verbatim in plain HTML so LLMs
+       can extract Q&A pairs from the body content, not only from the script
+       tag. The interactive accordion below is the visual surface. -->
+  <div class="sr-only" aria-hidden="true">
+    <h3>Veelgestelde vragen over Smoova</h3>
+    <dl>
+      <dt>Wat gebeurt er met mijn Treatwell-account?</dt>
+      <dd>Niets. Tenzij je dat zelf wilt. We vragen je niet om te vertrekken. Ons systeem draait naast Treatwell, dus je behoudt zichtbaarheid op de marktplaats voor nieuwe klanten terwijl je vaste klanten direct gaan boeken.</dd>
+      <dt>Verlies ik mijn bestaande reviews?</dt>
+      <dd>Treatwell-reviews blijven op Treatwell. Dat is hun data. Maar we zetten je site zo op dat je vanaf dag één automatisch reviews verzamelt na elke afspraak. Binnen een paar maanden heb je een reviewpresentie die echt van jou is.</dd>
+      <dt>Wat als ik niet technisch ben?</dt>
+      <dd>De meeste van onze klanten zijn dat niet. Dat hoeft ook niet. Wij doen 95% van het werk. Jij levert de foto's, keurt de tekst goed, en leert in één uur training hoe je het boekingssysteem gebruikt.</dd>
+      <dt>Wat als mijn vaste klanten niet willen overstappen?</dt>
+      <dd>Dat doen ze wel, als je het ze vraagt. De meeste vaste klanten boeken liever direct: het is sneller, ze betalen geen fees, en het voelt persoonlijker. We geven je een kant-en-klare e-mailtemplate voor wanneer je zover bent.</dd>
+      <dt>Wat als ik niet tevreden ben met het ontwerp?</dt>
+      <dd>We blijven aanpassen tot je tevreden bent. Onderdeel van de 14-daagse oplevering. Als we de deadline missen, krijg je je geld terug.</dd>
+      <dt>Kan ik de maandelijkse fee opzeggen?</dt>
+      <dd>Ja, op elk moment. Geen contract. De website blijft van jou: jouw domein, jouw code, jouw data.</dd>
+      <dt>Hoe verschilt dit van Salonized of Fresha?</dt>
+      <dd>Salonized en Fresha zijn software die je huurt. De boekingswidget leeft op hun platform. Smoova is van jou. Je boekingssysteem draait op je eigen website, je eigen domein, en je klantenlijst is van jou. Geen enkel platform kan het afnemen.</dd>
+      <dt>Wat zit er in het maandabonnement?</dt>
+      <dd>Drie pakketten — Boutique (€179/mnd), Studio (€389/mnd) en Atelier (€699/mnd). Elk dekt hosting, security, backups, automatische emails, Google Business posts, maandelijkse website-aanpassingen en zichtbaarheid in AI-zoekresultaten. Studio en Atelier voegen meertaligheid, SEO-blogposts, WhatsApp Business en review-calls toe. Atelier bevat de premium AI-zichtbaarheid plus Retention Engine.</dd>
+      <dt>Waarom zou ik Smoova vertrouwen?</dt>
+      <dd>Eerlijke vraag. We zijn een kleine studio. We hebben nog geen honderd case studies. Wat we wel bieden: een 14-daagse geld-terug-garantie, drie maanden gratis support zodat je het systeem ervaart voordat je doorbetaalt, en de mogelijkheid om de fee elk moment op te zeggen. Wij nemen het risico, zodat jij dat niet hoeft te doen.</dd>
+    </dl>
+  </div>
+
   <div class="relative max-w-4xl mx-auto">
     <div class="faq-frame">
 
@@ -3409,6 +3552,166 @@
   </div>
 </section>
 
+<!-- ============== GLOSSARY — short definitions for AEO + reader reference ============== -->
+<style id="glossary-styles">
+  #glossary {
+    content-visibility: auto;
+    contain-intrinsic-size: 720px;
+  }
+  .glossary-item {
+    position: relative;
+    padding-top: 24px;
+    border-top: 1px solid rgba(107, 21, 37, 0.14);
+  }
+  .glossary-num {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #8A6B2E;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .glossary-term {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.5rem, 2.2vw, 1.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: #6B1525;
+    margin-bottom: 14px;
+  }
+  .glossary-def {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    color: rgba(10, 5, 7, 0.78);
+  }
+</style>
+
+<section id="glossary"
+         class="relative z-10 px-6 md:px-12 lg:px-20 py-20 md:py-28 bg-bone"
+         aria-labelledby="glossary-heading">
+  <div class="max-w-6xl mx-auto">
+
+    <!-- Header -->
+    <header class="mb-14 md:mb-20 max-w-3xl">
+      <p class="font-mono text-[10px] uppercase tracking-[0.32em] text-rouge-velours mb-5">
+        <span x-text="lang === 'nl' ? 'Begrippenlijst' : 'Glossary'"></span>
+      </p>
+      <h2 id="glossary-heading"
+          class="font-display font-medium text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight text-ink-void">
+        <template x-if="lang === 'nl'">
+          <span>De taal van directe boekingen<span class="text-gold-vif">.</span></span>
+        </template>
+        <template x-if="lang === 'en'">
+          <span>The language of direct booking<span class="text-gold-vif">.</span></span>
+        </template>
+      </h2>
+      <p class="font-sans text-base md:text-lg leading-relaxed text-text-secondary mt-5 max-w-xl"
+         x-text="lang === 'nl'
+           ? 'Korte definities van de termen die we het meest gebruiken — en die AI-zoekmachines ons het vaakst vragen.'
+           : 'Short definitions of the terms we use most often — and the ones AI search engines ask us about most.'"></p>
+    </header>
+
+    <!-- Definition grid -->
+    <dl class="grid md:grid-cols-2 gap-x-12 lg:gap-x-20 gap-y-10 md:gap-y-12">
+
+      <div class="glossary-item">
+        <span class="glossary-num">01</span>
+        <dt class="glossary-term">
+          <span x-text="lang === 'nl' ? 'Directe boekingssite' : 'Direct booking site'"></span>
+        </dt>
+        <dd class="glossary-def">
+          <template x-if="lang === 'nl'">
+            <span>Een eigen website met ingebouwd boekingssysteem dat draait op het domein van de salon zelf. Geen marketplace ertussen. Klanten boeken direct; de salon bezit de domeinnaam, het ontwerp en de klantenlijst.</span>
+          </template>
+          <template x-if="lang === 'en'">
+            <span>A salon's own website with an integrated booking system, hosted on the salon's own domain. No marketplace in between. Clients book directly; the salon owns the domain, the design, and the customer list.</span>
+          </template>
+        </dd>
+      </div>
+
+      <div class="glossary-item">
+        <span class="glossary-num">02</span>
+        <dt class="glossary-term">
+          <span x-text="lang === 'nl' ? 'Marketplace-commissie' : 'Marketplace commission'"></span>
+        </dt>
+        <dd class="glossary-def">
+          <template x-if="lang === 'nl'">
+            <span>Een percentage dat platforms zoals Treatwell of Fresha inhouden op elke boeking — meestal 25 tot 35 procent. Bij een directe boekingssite is dat percentage nul.</span>
+          </template>
+          <template x-if="lang === 'en'">
+            <span>The percentage that platforms like Treatwell or Fresha take on each booking — typically 25 to 35 percent. On a direct booking site, that percentage is zero.</span>
+          </template>
+        </dd>
+      </div>
+
+      <div class="glossary-item">
+        <span class="glossary-num">03</span>
+        <dt class="glossary-term">
+          <span x-text="lang === 'nl' ? 'Aanbetaling bij boeking' : 'Deposit on booking'"></span>
+        </dt>
+        <dd class="glossary-def">
+          <template x-if="lang === 'nl'">
+            <span>Een vooraf betaald bedrag dat de klant afrekent op het moment van boeken. Compenseert no-shows automatisch en filtert klanten die niet komen opdagen. Standaard op elke Smoova-site.</span>
+          </template>
+          <template x-if="lang === 'en'">
+            <span>An upfront payment the client makes at the moment of booking. Automatically covers no-shows and filters out clients who won't show up. Standard on every Smoova site.</span>
+          </template>
+        </dd>
+      </div>
+
+      <div class="glossary-item">
+        <span class="glossary-num">04</span>
+        <dt class="glossary-term">
+          <span x-text="lang === 'nl' ? 'Eigen klantgegevens' : 'Owned customer data'"></span>
+        </dt>
+        <dd class="glossary-def">
+          <template x-if="lang === 'nl'">
+            <span>De volledige eigendom van naam, e-mailadres, telefoonnummer en boekingshistorie van elke klant. Bij Smoova staan deze data op de eigen site van de salon en zijn op elk moment exporteerbaar.</span>
+          </template>
+          <template x-if="lang === 'en'">
+            <span>Full ownership of every client's name, email, phone, and booking history. On Smoova, this data lives on the salon's own site and is exportable at any time.</span>
+          </template>
+        </dd>
+      </div>
+
+      <div class="glossary-item">
+        <span class="glossary-num">05</span>
+        <dt class="glossary-term">
+          <span x-text="lang === 'nl' ? 'AI-zichtbaarheid' : 'AI visibility'"></span>
+        </dt>
+        <dd class="glossary-def">
+          <template x-if="lang === 'nl'">
+            <span>De mate waarin een salon wordt geciteerd in antwoorden van AI-zoekmachines zoals ChatGPT, Perplexity en Google AI Overviews. Vereist gestructureerde data, citeerbare feiten en machine-leesbare opmaak. Smoova zet dit standaard op.</span>
+          </template>
+          <template x-if="lang === 'en'">
+            <span>How often a salon is cited in answers from AI search engines like ChatGPT, Perplexity, and Google AI Overviews. Requires structured data, citable facts, and machine-readable markup. Smoova configures this by default.</span>
+          </template>
+        </dd>
+      </div>
+
+      <div class="glossary-item">
+        <span class="glossary-num">06</span>
+        <dt class="glossary-term">
+          <span>Retention Engine</span>
+        </dt>
+        <dd class="glossary-def">
+          <template x-if="lang === 'nl'">
+            <span>Smoova's geautomatiseerde follow-up systeem: review-verzoeken na elke afspraak, herinneringen voor jaarlijkse behandelingen, en e-mails om vaste klanten terug te brengen. Inbegrepen in het Atelier-pakket.</span>
+          </template>
+          <template x-if="lang === 'en'">
+            <span>Smoova's automated follow-up system: review requests after each appointment, reminders for annual treatments, and emails to bring regulars back. Included in the Atelier package.</span>
+          </template>
+        </dd>
+      </div>
+
+    </dl>
+  </div>
+</section>
+
 <!-- FINAL CTA moved into the CLOSING section below (rendered after </main>) -->
 
 </main>
@@ -3427,7 +3730,7 @@
      class="work-modal-backdrop"
      role="dialog"
      :aria-modal="modalVisible ? 'true' : 'false'"
-     aria-labelledby="work-modal-title">
+     :aria-labelledby="activeWork?.status === 'live' ? 'case-study-modal-title' : 'work-modal-title'">
 
   <!-- Modal container. When showing a case study, padding is removed via
        work-modal--case-study so each section bleeds to the edges. -->
@@ -3462,7 +3765,7 @@
       <div>
 
         <!-- SECTION 1: HERO — full viewport, image behind gradient, tagline + meta -->
-        <section class="cs-hero cs-section-fade" aria-labelledby="work-modal-title">
+        <section class="cs-hero cs-section-fade" aria-labelledby="case-study-modal-title">
           <img :src="activeCase.hero.heroImage"
                :alt="activeWork.card.headline"
                class="cs-hero-img"
@@ -3470,7 +3773,7 @@
           <div class="cs-hero-gradient" aria-hidden="true"></div>
           <div class="cs-hero-content">
             <div class="cs-hero-eyebrow" x-text="activeWork.card.eyebrow"></div>
-            <h2 id="work-modal-title" class="cs-hero-tagline"
+            <h2 id="case-study-modal-title" class="cs-hero-tagline"
                 x-text="activeCase.hero.tagline"></h2>
             <div class="cs-hero-meta">
               <div class="cs-hero-meta-item">
@@ -4046,13 +4349,13 @@
       </template>
     </p>
 
-    <a href="mailto:hi@smoova.studio"
+    <a href="mailto:info@smoova.studio"
        class="group inline-flex items-center justify-center md:justify-end gap-2 min-h-[44px] font-mono text-[11px] tracking-wider text-text-ondarkmuted hover:text-gold-vif transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-vif rounded-sm">
       <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <rect x="3" y="5" width="18" height="14" rx="2"/>
         <path d="M3.5 6l8.5 7 8.5-7"/>
       </svg>
-      <span>hi@smoova.studio</span>
+      <span>info@smoova.studio</span>
     </a>
   </div>
 </section>
