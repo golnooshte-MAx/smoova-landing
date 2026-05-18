@@ -63,11 +63,30 @@
   <!-- Alpine.js -->
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-  <!-- Cal.com embed -->
+  <!-- Cal.com embed: inline mode renders the full booking flow inside
+       #cal-inline on this page (date picker, time slots, form, and
+       confirmation all happen here). Theme is dark to harmonize with
+       the rouge-profond page background; brand color is gold-vif so
+       the primary buttons and selected-state highlights match the
+       Theatre Rouge palette. -->
   <script type="text/javascript">
     (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
     Cal("init", "smoova-intro", {origin:"https://cal.com"});
-    Cal.ns["smoova-intro"]("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
+    Cal.ns["smoova-intro"]("inline", {
+      elementOrSelector: "#cal-inline",
+      calLink: "smoova/smoova-intro",
+      layout: "month_view",
+      config: { layout: "month_view" }
+    });
+    Cal.ns["smoova-intro"]("ui", {
+      theme: "dark",
+      cssVarsPerTheme: {
+        light: { "cal-brand": "#D4A857" },
+        dark:  { "cal-brand": "#D4A857" }
+      },
+      hideEventTypeDetails: false,
+      layout: "month_view"
+    });
   </script>
 
   <style>
@@ -352,63 +371,16 @@
         </div>
       </div>
 
-      <!-- RIGHT: Calendar -->
-      <div class="book-card p-5 md:p-7 lg:p-8 anim-fade-up" style="animation-delay: 360ms;">
-
-        <!-- Month header + nav -->
-        <div class="flex items-center justify-between mb-5 md:mb-6">
-          <h2 class="font-display font-light text-xl md:text-2xl text-bone">
-            <span x-text="calMonthLabel()"></span>
-            <span class="ml-2 text-gold-vif/70" x-text="calMonth.getFullYear()"></span>
-          </h2>
-          <div class="flex items-center gap-2">
-            <button class="cal-nav-btn"
-                    @click="calPrev()"
-                    :aria-label="lang === 'nl' ? 'Vorige maand' : 'Previous month'">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <polyline points="15 18 9 12 15 6"/>
-              </svg>
-            </button>
-            <button class="cal-nav-btn"
-                    @click="calNext()"
-                    :aria-label="lang === 'nl' ? 'Volgende maand' : 'Next month'">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <polyline points="9 18 15 12 9 6"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- Day-of-week headers (Mon-Sun European) -->
-        <div class="cal-grid mb-2">
-          <template x-for="(d, i) in (lang === 'nl' ? ['Ma','Di','Wo','Do','Vr','Za','Zo'] : ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'])" :key="i">
-            <span class="cal-weekday" x-text="d"></span>
-          </template>
-        </div>
-
-        <!-- Calendar grid -->
-        <div class="cal-grid">
-          <template x-for="(cell, i) in calGrid" :key="i">
-            <a :href="cell.isPast || !cell.inMonth ? null : 'https://cal.com/smoova/smoova-intro'"
-               :data-cal-namespace="cell.isPast || !cell.inMonth ? null : 'smoova-intro'"
-               :data-cal-link="cell.isPast || !cell.inMonth ? null : 'smoova/smoova-intro'"
-               :data-cal-config="cell.isPast || !cell.inMonth ? null : '{&quot;layout&quot;:&quot;month_view&quot;}'"
-               class="cal-day"
-               :class="{
-                 'cal-day--past': cell.isPast,
-                 'cal-day--out': !cell.inMonth && !cell.isMonthStart,
-                 'cal-day--today': cell.isToday
-               }"
-               :tabindex="cell.isPast || !cell.inMonth ? -1 : 0"
-               :aria-disabled="cell.isPast || !cell.inMonth ? 'true' : 'false'"
-               :aria-label="cell.day + ' ' + (lang === 'nl' ? 'plan een gesprek' : 'book a call')">
-              <template x-if="cell.isMonthStart">
-                <span class="cal-day-monthstart" x-text="calNextMonthShortLabel()"></span>
-              </template>
-              <span class="cal-day-number" x-text="cell.day"></span>
-            </a>
-          </template>
-        </div>
+      <!-- RIGHT: Cal.com inline booking — full flow renders on this page
+           (date + time slot + form + confirmation), no popup. The embed
+           reads its locale from the data-cal-language attribute, which
+           updates reactively when the lang toggle flips. Brand color
+           gold-vif (#D4A857) is propagated to the embed's primary
+           controls via the ui call below. -->
+      <div class="book-card p-2 md:p-3 anim-fade-up overflow-hidden" style="animation-delay: 360ms;">
+        <div id="cal-inline"
+             :data-cal-language="lang"
+             style="min-height: 720px; height: 100%; width: 100%;"></div>
       </div>
     </div>
   </main>
