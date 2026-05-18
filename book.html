@@ -75,8 +75,8 @@
     Cal.ns["smoova-intro"]("inline", {
       elementOrSelector: "#cal-inline",
       calLink: "smoova/smoova-intro",
-      layout: "month_view",
-      config: { layout: "month_view" }
+      layout: "column_view",
+      config: { "layout": "column_view", "theme": "dark" }
     });
     Cal.ns["smoova-intro"]("ui", {
       theme: "dark",
@@ -84,8 +84,8 @@
         light: { "cal-brand": "#D4A857" },
         dark:  { "cal-brand": "#D4A857" }
       },
-      hideEventTypeDetails: false,
-      layout: "month_view"
+      hideEventTypeDetails: true,
+      layout: "column_view"
     });
   </script>
 
@@ -260,18 +260,23 @@
     </div>
   </nav>
 
-  <!-- ============== MAIN ============== -->
-  <main id="main" class="relative z-10 mx-auto max-w-7xl px-6 md:px-12 lg:px-20 pt-6 md:pt-12 pb-20">
+  <!-- ============== MAIN — calendar-dominant layout (Velocity-pattern)
+       Calendar takes 65% on desktop; info column compact at 35%.
+       On mobile: calendar appears FIRST (order-1) so a phone visitor
+       lands on the headline + calendar above the fold. Info column
+       sits below the calendar (order-2). ============== -->
+  <main id="main" class="relative z-10 mx-auto max-w-6xl px-5 md:px-12 lg:px-16 pt-6 md:pt-10 pb-12">
 
-    <!-- Section header -->
-    <div class="max-w-3xl anim-fade-up" style="animation-delay: 80ms;">
-      <p class="font-mono text-[10px] md:text-xs tracking-[0.3em] uppercase text-gold-vif">
-        <span class="inline-block w-6 h-px bg-gold-vif/60 align-middle mr-3"></span>
-        <span x-text="lang === 'nl' ? 'PLAN EEN KENNISMAKING' : 'BOOK A DISCOVERY CALL'"></span>
-      </p>
-
-      <h1 class="mt-5 font-display font-light tracking-[-0.025em] leading-[1.02] text-bone"
-          style="font-size: clamp(2.5rem, 7vw, 5.5rem);">
+    <!-- COMPACT HEADER — small enough that desktop visitors see the
+         entire header + full calendar in one viewport. -->
+    <div class="text-center md:text-left mb-6 md:mb-8 anim-fade-up" style="animation-delay: 80ms;">
+      <div class="flex items-center justify-center md:justify-start gap-[10px] mb-3">
+        <div class="w-[24px] h-[1px] bg-gold-vif"></div>
+        <div class="text-gold-vif text-[10px] font-bold tracking-[0.2em] uppercase font-mono"
+             x-text="lang === 'nl' ? 'PLAN EEN KENNISMAKING' : 'START TODAY'"></div>
+        <div class="w-[24px] h-[1px] bg-gold-vif"></div>
+      </div>
+      <h1 class="font-display text-bone text-[26px] md:text-[34px] lg:text-[40px] leading-[1.1] tracking-[-0.02em] font-light mb-2">
         <template x-if="lang === 'nl'">
           <span>Boek een <span class="italic text-gold-vif">20-min call</span>.</span>
         </template>
@@ -279,108 +284,91 @@
           <span>Book a <span class="italic text-gold-vif">20-min call</span>.</span>
         </template>
       </h1>
-
-      <p class="mt-4 max-w-xl text-base md:text-lg leading-relaxed"
-         style="color: rgba(232, 220, 196, 0.7);"
+      <p class="text-bone/55 text-[13px] md:text-[14px] leading-[1.5] max-w-[540px] mx-auto md:mx-0"
          x-text="lang === 'nl' ? 'Geen verkooppraatje. Geen druk. Wij leren over jouw salon, jij leert hoe wij werken.' : 'No pitch. No pressure. We learn about your salon, you learn how we work.'"></p>
     </div>
 
-    <!-- Two-column layout -->
-    <div class="mt-12 md:mt-14 grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-6 md:gap-8 items-start">
+    <!-- 2-COLUMN LAYOUT: 35/65 on desktop, stacked on mobile -->
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-6 lg:gap-8 items-start">
 
-      <!-- LEFT: How it works + checkmarks + email -->
-      <div class="space-y-5 anim-fade-up" style="animation-delay: 240ms;">
+      <!-- LEFT: compact info column (35% desktop / order-2 mobile) -->
+      <div class="order-2 lg:order-1 space-y-5 anim-fade-up" style="animation-delay: 320ms;">
 
-        <!-- How it works card -->
-        <div class="book-card p-7 md:p-8">
-          <p class="font-mono text-[10px] tracking-[0.28em] uppercase font-medium mb-6"
-             style="color: rgba(232, 220, 196, 0.55);"
-             x-text="lang === 'nl' ? 'Hoe het werkt' : 'How it works'"></p>
-
-          <ol class="space-y-5">
-            <li class="flex items-start gap-4">
-              <span class="book-step-num">1</span>
-              <p class="font-sans text-[15px] leading-relaxed text-bone-warm pt-0.5">
+        <!-- How it works — 3 quick steps as compact pills -->
+        <div class="bg-ink-void/55 border border-bone/[0.08] rounded-[12px] p-5">
+          <div class="text-bone/40 text-[10px] font-bold tracking-[0.2em] uppercase font-mono mb-4"
+               x-text="lang === 'nl' ? 'Hoe het werkt' : 'How it works'"></div>
+          <div class="space-y-3">
+            <div class="flex items-start gap-3">
+              <div class="flex-shrink-0 w-6 h-6 rounded-full bg-rouge-velours/40 border border-gold-vif/40 flex items-center justify-center text-gold-vif font-bold text-[11px] mt-[1px] font-mono">1</div>
+              <div class="text-bone/80 text-[13px] leading-[1.45]">
                 <template x-if="lang === 'nl'">
-                  <span><strong class="font-medium text-bone">Kies een tijd.</strong> Direct een agenda-uitnodiging.</span>
+                  <span><span class="text-bone font-semibold">Kies een tijd.</span> Direct agenda-uitnodiging.</span>
                 </template>
                 <template x-if="lang === 'en'">
-                  <span><strong class="font-medium text-bone">Pick a time.</strong> Calendar invite sent instantly.</span>
+                  <span><span class="text-bone font-semibold">Pick a time.</span> Calendar invite sent.</span>
                 </template>
-              </p>
-            </li>
-            <li class="flex items-start gap-4">
-              <span class="book-step-num">2</span>
-              <p class="font-sans text-[15px] leading-relaxed text-bone-warm pt-0.5">
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="flex-shrink-0 w-6 h-6 rounded-full bg-rouge-velours/40 border border-gold-vif/40 flex items-center justify-center text-gold-vif font-bold text-[11px] mt-[1px] font-mono">2</div>
+              <div class="text-bone/80 text-[13px] leading-[1.45]">
                 <template x-if="lang === 'nl'">
-                  <span><strong class="font-medium text-bone">20-min gesprek.</strong> Korte chat over jouw salon.</span>
+                  <span><span class="text-bone font-semibold">20-min gesprek.</span> Korte chat over jouw salon.</span>
                 </template>
                 <template x-if="lang === 'en'">
-                  <span><strong class="font-medium text-bone">20-min call.</strong> Quick chat about your salon.</span>
+                  <span><span class="text-bone font-semibold">20-min call.</span> Quick chat about your salon.</span>
                 </template>
-              </p>
-            </li>
-            <li class="flex items-start gap-4">
-              <span class="book-step-num">3</span>
-              <p class="font-sans text-[15px] leading-relaxed text-bone-warm pt-0.5">
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="flex-shrink-0 w-6 h-6 rounded-full bg-rouge-velours/40 border border-gold-vif/40 flex items-center justify-center text-gold-vif font-bold text-[11px] mt-[1px] font-mono">3</div>
+              <div class="text-bone/80 text-[13px] leading-[1.45]">
                 <template x-if="lang === 'nl'">
-                  <span><strong class="font-medium text-bone">Samen beslissen.</strong> Binnen 24u live als het past.</span>
+                  <span><span class="text-bone font-semibold">Samen beslissen.</span> Binnen 24u live als het past.</span>
                 </template>
                 <template x-if="lang === 'en'">
-                  <span><strong class="font-medium text-bone">Decide together.</strong> Live within 24h if it fits.</span>
+                  <span><span class="text-bone font-semibold">Decide together.</span> Live within 24h if it fits.</span>
                 </template>
-              </p>
-            </li>
-          </ol>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- Checkmark row -->
-        <div class="flex flex-wrap items-center gap-x-5 gap-y-2 px-2 text-[13px] font-medium" style="color: rgba(232, 220, 196, 0.75);">
-          <span class="flex items-center gap-2">
-            <svg class="book-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <polyline points="20 6 9 17 4 12"/>
-            </svg>
+        <!-- Trust pills (single row) -->
+        <div class="flex flex-wrap gap-x-4 gap-y-2 text-bone/55 text-[12px]">
+          <div class="flex items-center gap-1.5">
+            <span class="text-gold-vif">✓</span>
             <span x-text="lang === 'nl' ? 'Gratis' : 'Free'"></span>
-          </span>
-          <span class="flex items-center gap-2">
-            <svg class="book-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <polyline points="20 6 9 17 4 12"/>
-            </svg>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-gold-vif">✓</span>
             <span x-text="lang === 'nl' ? '20 min, precies' : '20 min, exactly'"></span>
-          </span>
-          <span class="flex items-center gap-2">
-            <svg class="book-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <polyline points="20 6 9 17 4 12"/>
-            </svg>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-gold-vif">✓</span>
             <span x-text="lang === 'nl' ? 'Geen verkooppraatje' : 'No sales pitch'"></span>
-          </span>
+          </div>
         </div>
 
-        <!-- Email card -->
-        <div class="book-card p-6 md:p-7">
-          <p class="font-mono text-[10px] tracking-[0.28em] uppercase font-medium mb-2"
-             style="color: rgba(232, 220, 196, 0.55);"
-             x-text="lang === 'nl' ? 'Liever mailen?' : 'Prefer email?'"></p>
-          <a href="mailto:hi@smoova.studio"
-             class="font-display text-xl md:text-2xl text-gold-vif hover:text-champagne transition-colors duration-200 inline-flex items-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-vif rounded-sm">
-            hi@smoova.studio
-            <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </a>
-        </div>
+        <!-- Email fallback — compact -->
+        <a href="mailto:hi@smoova.studio"
+           class="block bg-ink-void/55 border border-bone/[0.08] rounded-[10px] p-3 hover:border-gold-vif/30 transition-colors group focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-vif">
+          <div class="text-bone/40 text-[10px] uppercase tracking-wider mb-1 font-mono"
+               x-text="lang === 'nl' ? 'Liever mailen?' : 'Prefer email?'"></div>
+          <div class="text-gold-vif text-[13px] font-medium group-hover:text-bone transition-colors">hi@smoova.studio →</div>
+        </a>
+
       </div>
 
-      <!-- RIGHT: Cal.com inline booking — full flow renders on this page
-           (date + time slot + form + confirmation), no popup. The embed
-           reads its locale from the data-cal-language attribute, which
-           updates reactively when the lang toggle flips. Brand color
-           gold-vif (#D4A857) is propagated to the embed's primary
-           controls via the ui call below. -->
-      <div class="book-card p-2 md:p-3 anim-fade-up overflow-hidden" style="animation-delay: 360ms;">
+      <!-- RIGHT: Cal.com inline booking — full flow on this page
+           (date picker, time slots, form, confirmation, all inline).
+           Uses column_view + hideEventTypeDetails so the embed is
+           compact and fits without scrolling on desktop. -->
+      <div class="order-1 lg:order-2 bg-ink-void/55 border border-bone/[0.08] rounded-[14px] p-2 md:p-3 overflow-hidden anim-fade-up" style="animation-delay: 200ms;">
         <div id="cal-inline"
              :data-cal-language="lang"
-             style="min-height: 720px; height: 100%; width: 100%;"></div>
+             style="width:100%; min-height:580px; height:auto;"></div>
       </div>
     </div>
   </main>
