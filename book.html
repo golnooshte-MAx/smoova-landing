@@ -81,7 +81,7 @@
     Cal.ns["smoova-intro"]("ui", {
       theme: "dark",
       cssVarsPerTheme: {
-        light: { "cal-brand": "#D4A857" },
+        light: { "cal-brand": "#4A0E1A" },
         dark:  { "cal-brand": "#D4A857" }
       },
       hideEventTypeDetails: true,
@@ -103,24 +103,25 @@
     }
     body {
       font-family: 'Inter', system-ui, sans-serif;
-      background: var(--color-rouge-profond);
-      color: var(--color-bone);
+      background: var(--color-bone);
+      color: var(--color-rouge-profond);
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
       min-height: 100vh;
     }
     :focus-visible { outline: 2px solid var(--color-gold-vif); outline-offset: 3px; border-radius: 4px; }
 
-    /* Atmospheric backdrop */
+    /* Atmospheric backdrop — warm cream with subtle gold + rouge washes */
     .page-bg {
       position: fixed; inset: 0; z-index: 0; pointer-events: none;
       background:
-        radial-gradient(ellipse 90% 60% at 50% 0%, rgba(212, 168, 87, 0.10), transparent 60%),
-        radial-gradient(ellipse 80% 50% at 100% 100%, rgba(107, 21, 37, 0.4), transparent 70%),
-        var(--color-rouge-profond);
+        radial-gradient(ellipse 100% 60% at 50% 0%, rgba(212, 168, 87, 0.14), transparent 65%),
+        radial-gradient(ellipse 80% 50% at 100% 100%, rgba(107, 21, 37, 0.10), transparent 70%),
+        radial-gradient(ellipse 70% 50% at 0% 50%, rgba(184, 146, 75, 0.06), transparent 70%),
+        var(--color-bone);
     }
     .page-grain {
-      position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.04;
+      position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.06; mix-blend-mode: multiply;
       background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.5'/></svg>");
     }
 
@@ -134,24 +135,40 @@
       .anim-fade-up { animation: none !important; opacity: 1 !important; transform: none !important; }
     }
 
-    /* Book card */
+    /* Book card — cream glass with rouge-tinted hairline (left column) */
     .book-card {
-      background: rgba(43, 8, 16, 0.55);
-      border: 1px solid rgba(232, 212, 168, 0.12);
+      background: rgba(251, 247, 239, 0.7);
+      border: 1px solid rgba(74, 14, 26, 0.12);
       border-radius: 24px;
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
+      box-shadow: 0 4px 24px -8px rgba(74, 14, 26, 0.08);
+    }
+    /* Dark book card — deep rouge-velours for the calendar widget on
+       the right column. Cream page + dark calendar = editorial
+       contrast, like a velvet booking section on parchment. */
+    .book-card-dark {
+      background:
+        radial-gradient(ellipse 100% 80% at 50% 0%, rgba(212, 168, 87, 0.08), transparent 60%),
+        linear-gradient(135deg, #2B0810 0%, #4A0E1A 100%);
+      border: 1px solid rgba(232, 212, 168, 0.18);
+      border-radius: 24px;
+      box-shadow:
+        0 20px 50px -20px rgba(43, 8, 16, 0.45),
+        0 4px 16px -6px rgba(74, 14, 26, 0.25),
+        inset 0 1px 0 rgba(232, 212, 168, 0.08);
     }
     .book-step-num {
       width: 32px; height: 32px; border-radius: 999px;
-      background: rgba(74, 14, 26, 0.7);
-      border: 1px solid rgba(212, 168, 87, 0.4);
-      color: #D4A857;
+      background: linear-gradient(135deg, #D4A857, #B8924B);
+      border: 1px solid rgba(74, 14, 26, 0.15);
+      color: #2B0810;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 13px; font-weight: 500;
+      font-size: 13px; font-weight: 600;
       display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+      box-shadow: 0 2px 8px -2px rgba(184, 146, 75, 0.4);
     }
-    .book-check { width: 16px; height: 16px; color: #D4A857; flex-shrink: 0; }
+    .book-check { width: 16px; height: 16px; color: #8A6B2E; flex-shrink: 0; }
 
     /* Calendar grid */
     .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
@@ -235,26 +252,26 @@
   <!-- ============== NAV ============== -->
   <nav class="relative z-30 px-6 md:px-12 lg:px-20 py-6 flex items-center justify-between">
     <a href="index.html" class="flex items-center gap-2 group focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-vif rounded-sm">
-      <span class="font-display text-2xl font-medium tracking-tight text-bone">smoova</span>
+      <span class="font-display text-2xl font-medium tracking-tight text-rouge-profond">smoova</span>
       <span aria-hidden="true" class="italic-display text-gold-vif text-2xl">.</span>
     </a>
 
     <div class="flex items-center gap-6 md:gap-8">
       <a href="index.html"
-         class="text-sm text-bone/70 hover:text-bone link-underline transition-colors"
+         class="text-sm text-rouge-profond/70 hover:text-rouge-profond link-underline transition-colors"
          x-text="lang === 'nl' ? 'Home' : 'Home'"></a>
 
-      <div role="group" aria-label="Language" class="flex items-center gap-1 text-sm text-bone/60">
+      <div role="group" aria-label="Language" class="flex items-center gap-1 text-sm text-rouge-profond/55">
         <button @click="lang = 'nl'"
                 :aria-pressed="lang === 'nl' ? 'true' : 'false'"
                 aria-label="Nederlands"
-                :class="lang === 'nl' ? 'text-bone' : 'hover:text-bone'"
+                :class="lang === 'nl' ? 'text-rouge-profond' : 'hover:text-rouge-profond'"
                 class="px-3 py-2 min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors rounded-sm">NL</button>
-        <span aria-hidden="true" class="text-bone/40">/</span>
+        <span aria-hidden="true" class="text-rouge-profond/30">/</span>
         <button @click="lang = 'en'"
                 :aria-pressed="lang === 'en' ? 'true' : 'false'"
                 aria-label="English"
-                :class="lang === 'en' ? 'text-bone' : 'hover:text-bone'"
+                :class="lang === 'en' ? 'text-rouge-profond' : 'hover:text-rouge-profond'"
                 class="px-3 py-2 min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors rounded-sm">EN</button>
       </div>
     </div>
@@ -271,20 +288,20 @@
          entire header + full calendar in one viewport. -->
     <div class="text-center md:text-left mb-6 md:mb-8 anim-fade-up" style="animation-delay: 80ms;">
       <div class="flex items-center justify-center md:justify-start gap-[10px] mb-3">
-        <div class="w-[24px] h-[1px] bg-gold-vif"></div>
-        <div class="text-gold-vif text-[10px] font-bold tracking-[0.2em] uppercase font-mono"
-             x-text="lang === 'nl' ? 'PLAN EEN KENNISMAKING' : 'START TODAY'"></div>
-        <div class="w-[24px] h-[1px] bg-gold-vif"></div>
+        <div class="w-[24px] h-[1px] bg-gold-brule"></div>
+        <div class="text-gold-brule text-[10px] font-bold tracking-[0.2em] uppercase font-mono"
+             x-text="lang === 'nl' ? 'PLAN EEN KENNISMAKING' : 'BOOK A DISCOVERY CALL'"></div>
+        <div class="w-[24px] h-[1px] bg-gold-brule"></div>
       </div>
-      <h1 class="font-display text-bone text-[26px] md:text-[34px] lg:text-[40px] leading-[1.1] tracking-[-0.02em] font-light mb-2">
+      <h1 class="font-display text-rouge-profond text-[26px] md:text-[34px] lg:text-[40px] leading-[1.1] tracking-[-0.02em] font-light mb-2">
         <template x-if="lang === 'nl'">
-          <span>Boek een <span class="italic text-gold-vif">20-min call</span>.</span>
+          <span>Boek een <span class="italic text-rouge">20-min call</span>.</span>
         </template>
         <template x-if="lang === 'en'">
-          <span>Book a <span class="italic text-gold-vif">20-min call</span>.</span>
+          <span>Book a <span class="italic text-rouge">20-min call</span>.</span>
         </template>
       </h1>
-      <p class="text-bone/55 text-[13px] md:text-[14px] leading-[1.5] max-w-[540px] mx-auto md:mx-0"
+      <p class="text-rouge-profond/65 text-[13px] md:text-[14px] leading-[1.5] max-w-[540px] mx-auto md:mx-0"
          x-text="lang === 'nl' ? 'Geen verkooppraatje. Geen druk. Wij leren over jouw salon, jij leert hoe wij werken.' : 'No pitch. No pressure. We learn about your salon, you learn how we work.'"></p>
     </div>
 
@@ -295,40 +312,40 @@
       <div class="order-2 lg:order-1 space-y-5 anim-fade-up" style="animation-delay: 320ms;">
 
         <!-- How it works — 3 quick steps as compact pills -->
-        <div class="bg-ink-void/55 border border-bone/[0.08] rounded-[12px] p-5">
-          <div class="text-bone/40 text-[10px] font-bold tracking-[0.2em] uppercase font-mono mb-4"
+        <div class="book-card p-5">
+          <div class="text-gold-brule text-[10px] font-bold tracking-[0.2em] uppercase font-mono mb-4"
                x-text="lang === 'nl' ? 'Hoe het werkt' : 'How it works'"></div>
           <div class="space-y-3">
             <div class="flex items-start gap-3">
-              <div class="flex-shrink-0 w-6 h-6 rounded-full bg-rouge-velours/40 border border-gold-vif/40 flex items-center justify-center text-gold-vif font-bold text-[11px] mt-[1px] font-mono">1</div>
-              <div class="text-bone/80 text-[13px] leading-[1.45]">
+              <div class="book-step-num text-[11px]" style="width:24px;height:24px;">1</div>
+              <div class="text-rouge-profond/75 text-[13px] leading-[1.45]">
                 <template x-if="lang === 'nl'">
-                  <span><span class="text-bone font-semibold">Kies een tijd.</span> Direct agenda-uitnodiging.</span>
+                  <span><span class="text-rouge-profond font-semibold">Kies een tijd.</span> Direct agenda-uitnodiging.</span>
                 </template>
                 <template x-if="lang === 'en'">
-                  <span><span class="text-bone font-semibold">Pick a time.</span> Calendar invite sent.</span>
+                  <span><span class="text-rouge-profond font-semibold">Pick a time.</span> Calendar invite sent.</span>
                 </template>
               </div>
             </div>
             <div class="flex items-start gap-3">
-              <div class="flex-shrink-0 w-6 h-6 rounded-full bg-rouge-velours/40 border border-gold-vif/40 flex items-center justify-center text-gold-vif font-bold text-[11px] mt-[1px] font-mono">2</div>
-              <div class="text-bone/80 text-[13px] leading-[1.45]">
+              <div class="book-step-num text-[11px]" style="width:24px;height:24px;">2</div>
+              <div class="text-rouge-profond/75 text-[13px] leading-[1.45]">
                 <template x-if="lang === 'nl'">
-                  <span><span class="text-bone font-semibold">20-min gesprek.</span> Korte chat over jouw salon.</span>
+                  <span><span class="text-rouge-profond font-semibold">20-min gesprek.</span> Korte chat over jouw salon.</span>
                 </template>
                 <template x-if="lang === 'en'">
-                  <span><span class="text-bone font-semibold">20-min call.</span> Quick chat about your salon.</span>
+                  <span><span class="text-rouge-profond font-semibold">20-min call.</span> Quick chat about your salon.</span>
                 </template>
               </div>
             </div>
             <div class="flex items-start gap-3">
-              <div class="flex-shrink-0 w-6 h-6 rounded-full bg-rouge-velours/40 border border-gold-vif/40 flex items-center justify-center text-gold-vif font-bold text-[11px] mt-[1px] font-mono">3</div>
-              <div class="text-bone/80 text-[13px] leading-[1.45]">
+              <div class="book-step-num text-[11px]" style="width:24px;height:24px;">3</div>
+              <div class="text-rouge-profond/75 text-[13px] leading-[1.45]">
                 <template x-if="lang === 'nl'">
-                  <span><span class="text-bone font-semibold">Samen beslissen.</span> Live in 14 dagen.</span>
+                  <span><span class="text-rouge-profond font-semibold">Samen beslissen.</span> Live in 14 dagen.</span>
                 </template>
                 <template x-if="lang === 'en'">
-                  <span><span class="text-bone font-semibold">Decide together.</span> Live in 14 days.</span>
+                  <span><span class="text-rouge-profond font-semibold">Decide together.</span> Live in 14 days.</span>
                 </template>
               </div>
             </div>
@@ -336,36 +353,43 @@
         </div>
 
         <!-- Trust pills (single row) -->
-        <div class="flex flex-wrap gap-x-4 gap-y-2 text-bone/55 text-[12px]">
+        <div class="flex flex-wrap gap-x-4 gap-y-2 text-rouge-profond/65 text-[12px]">
           <div class="flex items-center gap-1.5">
-            <span class="text-gold-vif">✓</span>
+            <svg class="book-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
             <span x-text="lang === 'nl' ? 'Gratis' : 'Free'"></span>
           </div>
           <div class="flex items-center gap-1.5">
-            <span class="text-gold-vif">✓</span>
+            <svg class="book-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
             <span x-text="lang === 'nl' ? '20 min, precies' : '20 min, exactly'"></span>
           </div>
           <div class="flex items-center gap-1.5">
-            <span class="text-gold-vif">✓</span>
+            <svg class="book-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
             <span x-text="lang === 'nl' ? 'Geen verkooppraatje' : 'No sales pitch'"></span>
           </div>
         </div>
 
         <!-- Email fallback — compact -->
         <a href="mailto:hi@smoova.studio"
-           class="block bg-ink-void/55 border border-bone/[0.08] rounded-[10px] p-3 hover:border-gold-vif/30 transition-colors group focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-vif">
-          <div class="text-bone/40 text-[10px] uppercase tracking-wider mb-1 font-mono"
+           class="block book-card rounded-[10px] p-3 hover:border-rouge-velours/30 transition-colors group focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-vif">
+          <div class="text-gold-brule text-[10px] uppercase tracking-wider mb-1 font-mono"
                x-text="lang === 'nl' ? 'Liever mailen?' : 'Prefer email?'"></div>
-          <div class="text-gold-vif text-[13px] font-medium group-hover:text-bone transition-colors">hi@smoova.studio →</div>
+          <div class="text-rouge text-[13px] font-medium group-hover:text-rouge-profond transition-colors">hi@smoova.studio →</div>
         </a>
 
       </div>
 
       <!-- RIGHT: Cal.com inline booking — full flow on this page
            (date picker, time slots, form, confirmation, all inline).
-           Uses column_view + hideEventTypeDetails so the embed is
-           compact and fits without scrolling on desktop. -->
-      <div class="order-1 lg:order-2 bg-ink-void/55 border border-bone/[0.08] rounded-[14px] p-2 md:p-3 overflow-hidden anim-fade-up" style="animation-delay: 200ms;">
+           Dark card on cream page = editorial contrast. The Cal.com
+           embed inside uses dark theme so it harmonizes with the
+           rouge-velours wrapper. -->
+      <div class="order-1 lg:order-2 book-card-dark p-2 md:p-3 overflow-hidden anim-fade-up" style="animation-delay: 200ms;">
         <div id="cal-inline"
              :data-cal-language="lang"
              style="width:100%; min-height:580px; height:auto;"></div>
