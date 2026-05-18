@@ -3540,7 +3540,7 @@
             <!-- Header: floats above slides on desktop via position:absolute -->
             <div class="cs-pages-header">
               <div class="cs-eyebrow" x-text="activeCase.pages.eyebrow"></div>
-              <span class="cs-pages-scroll-hint" aria-hidden="true">Scroll to explore →</span>
+              <span class="cs-pages-scroll-hint" aria-hidden="true" x-text="lang === 'nl' ? 'Scroll om te ontdekken →' : 'Scroll to explore →'"></span>
             </div>
 
             <!-- Slides track: 500% wide on desktop, stacks vertically on mobile -->
