@@ -3938,12 +3938,25 @@ function smoova() {
     },
 
     // ===== Selected Work =====
-    activeWork: null,
+    // Stored as ID instead of object so language toggling updates the modal
+    // reactively (lookups go through the workCards getter which switches arrays).
+    activeWorkId: null,
     modalVisible: false,
     workAtStart: true,
     workAtEnd: false,
 
-    workCards: [
+    // Computed: returns the language-appropriate case-study array
+    get workCards() {
+      return this.lang === 'nl' ? this.workCardsNL : this.workCardsEN;
+    },
+
+    // Computed: resolves the active card by ID against the current language array
+    get activeWork() {
+      if (this.activeWorkId == null) return null;
+      return this.workCards.find(c => c.id === this.activeWorkId) || null;
+    },
+
+    workCardsEN: [
       {
         id: 1, status: 'live',
         card:  { eyebrow: 'Hair · Paris', headline: 'Freaky Darling', image: 'smoova_21_1_assets/work/1.png', objectPosition: 'center' },
@@ -4102,6 +4115,170 @@ function smoova() {
       }
     ],
 
+    // Dutch translations of the 12 case studies. Brand names, image paths,
+    // hex codes, font specs, and palette names are kept in English (design
+    // industry standard). Editorial copy, taglines, statements, eyebrows,
+    // and stat labels are translated. Modal placeholder fields are never
+    // shown for live cards but kept structurally identical to avoid breaks.
+    workCardsNL: [
+      {
+        id: 1, status: 'live',
+        card:  { eyebrow: 'Haar · Parijs', headline: 'Freaky Darling', image: 'smoova_21_1_assets/work/1.png', objectPosition: 'center' },
+        modal: { eyebrow: 'Fintech', headline: 'Eurotrader', bodyLead: 'A complete brand identity and product design system for a European retail trading platform.', bodyRest: 'We defined the visual language from the ground up — logo, type scale, colour system, and component library — then applied it across the web platform, onboarding flow, and marketing site.', heroImage: 'smoova_21_1_assets/work/1.png', caption: 'Figma, Framer, custom design system' },
+        caseStudy: {
+          hero: { heroImage: 'smoova_21_1_assets/webpages/1/fd-01-hero.png', tagline: 'Een Parijse kapsalon voor klanten die liever bekeken worden dan opgaan in de massa.', meta: { location: 'Parijs, 10e', year: '2026', scope: 'Merk, Web, Tekst' } },
+          brief: { eyebrow: '01 / De opdracht', paragraphs: ['De meeste salonwebsites verontschuldigen zich voor hun bestaan. Zachte grijzen, voorzichtige witruimte, fotografie die net zo goed voor skincare als voor banken kan zijn. Wij kregen de opdracht om het tegenovergestelde te bouwen.', 'Freaky Darling kwam met één instructie: bouw een merk dat geen auditie doet voor wie dan ook. De salon bedient klanten die al weten wat ze willen — meestal een kleur die hun moeder zou opmerken. Onze taak was om de site bij de stoel te laten passen.', 'We behandelden het als een platenlabel, niet als een dienstverlener. Lette typografie, één dominante kleur, copy die klinkt als een mens en niet als een brochure. De site probeert niemand te overtuigen. Hij gaat ervan uit dat je het al weet.'], stats: [{ label: 'Locatie', value: 'Parijs, 10e' }, { label: 'Jaar', value: '2026' }, { label: 'Scope', value: 'Merk · Web · Tekst' }] },
+          system: { eyebrow: '02 / Het systeem', headline: 'Hard is de briefing.', palette: [{ name: 'Hot Pink', hex: '#F4A8C8' }, { name: 'Cobalt', hex: '#1E1FB8' }, { name: 'Acid Lime', hex: '#D8F26B' }, { name: 'Bone', hex: '#F5F1EA' }], typography: [{ name: 'Display', sample: 'Wees een freak.', spec: 'Recoleta Bold Italic' }, { name: 'UI / Caption', sample: '02 / DIENSTEN', spec: 'JetBrains Mono' }] },
+          pages: { eyebrow: '03 / Het werk', headline: 'Vijf vlakken. Eén stem.', slides: [{ image: 'smoova_21_1_assets/webpages/1/fd-01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/1/fd-02-services.png', caption: '02 — Diensten' }, { image: 'smoova_21_1_assets/webpages/1/fd-03-lookbook.png', caption: '03 — Lookbook' }, { image: 'smoova_21_1_assets/webpages/1/fd-04-stylists.png', caption: '04 — Stylisten' }, { image: 'smoova_21_1_assets/webpages/1/fd-05-book.png', caption: '05 — Boeken' }] },
+          outcome: { eyebrow: '04 / Wat het werd', statement: 'Een merk dat zelfverzekerd genoeg is om "Walk-ins worden liefdevol beoordeeld" in de footer te zetten en het ook te menen.', liveUrl: null, liveUrlLabel: 'Bekijk live concept →' },
+          close: { nextProjectId: 2 }
+        }
+      },
+      {
+        id: 2, status: 'live',
+        card:  { eyebrow: 'Nagels · Parijs', headline: 'Rouge', image: 'smoova_21_1_assets/work/2.png', objectPosition: 'center' },
+        modal: { eyebrow: 'Fintech', headline: 'VLT Invest', bodyLead: 'Brand identity and UX design for a Dutch retail investment platform targeting first-time investors.', bodyRest: 'We built a visual system that balances trustworthiness with warmth — dark-on-light typography, restrained colour, and an onboarding flow designed to reduce cognitive load at every step.', heroImage: 'smoova_21_1_assets/work/2.png', caption: 'Figma, Principle, Lottie' },
+        caseStudy: {
+          hero: { heroImage: 'smoova_21_1_assets/webpages/2/rg-01-hero.png', tagline: 'Een nagelstudio in Parijs die de hand behandelt als een stilleven.', meta: { location: 'Parijs, 3e', year: '2026', scope: 'Merk, Web, Tekst' } },
+          brief: { eyebrow: '01 / De opdracht', paragraphs: ['De meeste nagelsalons verkopen snelheid. Erin en eruit, twee kleuren, kies uit een waaier. Rouge kwam met het tegenovergestelde voorstel: een studio waar de nagel als een kunstobject wordt behandeld en de afspraak als een zitting.', 'Het merk moest minder als dienst aanvoelen en meer als een galerie. We bouwden het op rond één dominante kleur, één display-gewicht, en taal die weigerde zichzelf te vertalen. De site is in het Frans. De prijslijst is onverontschuldigend. De objecten heten Chrome, Pearl en Leaf, omdat dat is wat ze zijn.', 'Het hele systeem draait op terughoudendheid. Twee kleuren. Eén lettertype. Eén roze stip als enige accent. Die discipline is het punt — het is hoe je laat zien dat het werk binnen het wachten waard is.', 'Conceptstuk. Gebouwd om te bewijzen dat een stillere toon nog steeds aandacht kan vasthouden.'], stats: [{ label: 'Locatie', value: 'Parijs, 3e' }, { label: 'Jaar', value: '2026' }, { label: 'Scope', value: 'Merk · Web · Tekst' }] },
+          system: { eyebrow: '02 / Het systeem', headline: 'Terughoudendheid als standpunt.', palette: [{ name: 'Oxblood', hex: '#7A1F2A' }, { name: 'Bone', hex: '#F5F1EA' }, { name: 'Magenta', hex: '#E91E63' }, { name: 'Ink', hex: '#1A1A1A' }], typography: [{ name: 'Display', sample: 'ROUGE', spec: 'Druk Wide Bold' }, { name: 'Body / Italic', sample: 'Sur rendez-vous uniquement.', spec: 'Newsreader Italic' }] },
+          pages: { eyebrow: '03 / Het werk', headline: 'Eén kleur. Eén stelling.', slides: [{ image: 'smoova_21_1_assets/webpages/2/rg-01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/2/rg-02-manifesto.png', caption: '02 — Manifest' }, { image: 'smoova_21_1_assets/webpages/2/rg-03-objects.png', caption: '03 — Objecten' }, { image: 'smoova_21_1_assets/webpages/2/rg-04-services.png', caption: '04 — Diensten' }, { image: 'smoova_21_1_assets/webpages/2/rg-05-book.png', caption: '05 — Boeken' }] },
+          outcome: { eyebrow: '04 / Wat het werd', statement: 'Een merk dat zelfverzekerd genoeg is om zijn prijslijst in één gewicht te drukken en de stilte eromheen het werk te laten doen.', liveUrl: null, liveUrlLabel: 'Bekijk live concept →' },
+          close: { nextProjectId: 3 }
+        }
+      },
+      {
+        id: 3, status: 'live',
+        card:  { eyebrow: 'Haar & Beauty · Parijs', headline: 'Honey & Halo', image: 'smoova_21_1_assets/work/3.png', objectPosition: 'center' },
+        modal: { eyebrow: 'Crypto', headline: 'Bitsgap', bodyLead: 'Product design and design system for a crypto trading automation platform used by over 500,000 traders.', bodyRest: 'We introduced a component-based design system with strict information hierarchy rules, allowing the product team to ship new features while maintaining visual consistency.', heroImage: 'smoova_21_1_assets/work/3.png', caption: 'Figma, React component library, Storybook' },
+        caseStudy: {
+          hero: { heroImage: 'smoova_21_1_assets/webpages/3/hh-01-hero.png', tagline: 'Een Parijs atelier voor haar en beauty dat weigert zich te verontschuldigen voor zachtheid.', meta: { location: 'Parijs, 3e', year: '2026', scope: 'Merk, Web, Tekst' } },
+          brief: { eyebrow: '01 / De opdracht', paragraphs: ['De markt zit vol salons die wegrennen van zachtheid. Beige muren, sans-serif logo\'s, dezelfde vijf foto\'s van een marmeren balie. Honey & Halo wilde het tegenovergestelde: helemaal leunen in het register dat de markt blijft behandelen als een schuldig genot.', 'De briefing was om een beauty-atelier-merk te bouwen dat schoonheid serieus neemt. Parels. Vergulde spiegels. Lavendelwolken. Scriptlogo met hartjes. Een neonbord met "you belong in the clouds" zonder ironie. Het hele systeem is afgesteld om aan te voelen als een parfumadvertentie uit een decennium dat nog niet heeft plaatsgevonden.', 'We hebben de romantiek harder gepusht dan veilig voelde, want de markt beloont hier geen halve maatregelen. Het resultaat is een merk dat geen toestemming vraagt om zacht te zijn — het maakt zachtheid tot het standpunt.'], stats: [{ label: 'Locatie', value: 'Parijs, 3e' }, { label: 'Jaar', value: '2026' }, { label: 'Scope', value: 'Merk · Web · Tekst' }] },
+          system: { eyebrow: '02 / Het systeem', headline: 'Zacht, met opzet.', palette: [{ name: 'Plum', hex: '#4A2A45' }, { name: 'Lavender Cloud', hex: '#D4B8D8' }, { name: 'Blush', hex: '#F4DDDB' }, { name: 'Pearl', hex: '#F8F1EC' }], typography: [{ name: 'Display', sample: 'Step into the cloud.', spec: 'Recoleta Italic' }, { name: 'Script', sample: 'Honey & Halo', spec: 'Tan Pearl' }] },
+          pages: { eyebrow: '03 / Het werk', headline: 'Een romance die niet knippert.', slides: [{ image: 'smoova_21_1_assets/webpages/3/hh-01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/3/hh-02-menu.png', caption: '02 — Menu' }, { image: 'smoova_21_1_assets/webpages/3/hh-03-gallery.png', caption: '03 — Galerij' }, { image: 'smoova_21_1_assets/webpages/3/hh-04-story.png', caption: '04 — Verhaal' }, { image: 'smoova_21_1_assets/webpages/3/hh-05-book.png', caption: '05 — Boeken' }] },
+          outcome: { eyebrow: '04 / Wat het werd', statement: 'Een merk dat zelfverzekerd genoeg is om "You\'re like really pretty" in neon te zetten en het als statement te behandelen.', liveUrl: null, liveUrlLabel: 'Bekijk live concept →' },
+          close: { nextProjectId: 4 }
+        }
+      },
+      {
+        id: 4, status: 'live',
+        card:  { eyebrow: 'Spa · Mallorca', headline: 'Casa Solana', image: 'smoova_21_1_assets/work/4.png', objectPosition: 'center' },
+        modal: { eyebrow: 'Beauty', headline: 'Project Four', bodyLead: 'Placeholder lead sentence for project four.', bodyRest: 'Placeholder body copy for project four. Replace with real copy when confirmed.', heroImage: 'smoova_21_1_assets/work/4.png', caption: 'Placeholder tools' },
+        caseStudy: {
+          hero: { heroImage: 'smoova_21_1_assets/webpages/4/cs-01-hero.png', tagline: 'Een slow-living spa op Mallorca, gebouwd voor mensen die de stad verlieten om te stoppen met zich te verontschuldigen voor rust.', meta: { location: 'Palma, Mallorca', year: '2026', scope: 'Merk, Web, Tekst' } },
+          brief: { eyebrow: '01 / De opdracht', paragraphs: ['De wellness-categorie is zo grondig gekoloniseerd door klinische witruimte en citroengras-stockfotografie dat het onmogelijk is geworden twee spa\'s uit elkaar te houden. Casa Solana vroeg ons om het tegenovergestelde: een merk geworteld in een specifieke plek, met de textuur van die plek op elk vlak.', 'Het werk putte direct uit Mallorca — terracotta muren, olijfschaduw, ruw linnen, handgedraaide keramiek, water dat in stenen bekkens druppelt. De site leest tegelijk in het Spaans en Engels, niet omdat het moet, maar omdat de doelgroep al tussen beide beweegt. We behandelden tweetalige copy als merkstem, niet als bijzaak.', 'Het hele systeem draait op traagheid. Royale witruimte. Handgetekende lijnillustraties in plaats van iconen. Copy die niet verkoopt — die alleen beschrijft wat er is. De site probeert je niet te ontspannen. Hij gaat ervan uit dat je hier kwam omdat je dat al wilde.'], stats: [{ label: 'Locatie', value: 'Palma, Mallorca' }, { label: 'Jaar', value: '2026' }, { label: 'Scope', value: 'Merk · Web · Tekst' }] },
+          system: { eyebrow: '02 / Het systeem', headline: 'Plek is het merk.', palette: [{ name: 'Terracotta', hex: '#A85339' }, { name: 'Clay', hex: '#C68B6A' }, { name: 'Linen', hex: '#EFE6D6' }, { name: 'Olive Ink', hex: '#3A3528' }], typography: [{ name: 'Display', sample: 'Casa Solana', spec: 'Canela Deck Light' }, { name: 'Body / Italic', sample: 'Huid, zon, traagheid.', spec: 'Canela Italic' }] },
+          pages: { eyebrow: '03 / Het werk', headline: 'Vijf vlakken. Eén tempo.', slides: [{ image: 'smoova_21_1_assets/webpages/4/cs-01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/4/cs-02-rituals.png', caption: '02 — Rituelen' }, { image: 'smoova_21_1_assets/webpages/4/cs-03-spaces.png', caption: '03 — Ruimtes' }, { image: 'smoova_21_1_assets/webpages/4/cs-04-philosophy.png', caption: '04 — Filosofie' }, { image: 'smoova_21_1_assets/webpages/4/cs-05-book.png', caption: '05 — Boeken' }] },
+          outcome: { eyebrow: '04 / Wat het werd', statement: 'Een merk dat zelfverzekerd genoeg is om zijn filosofie in twee talen te drukken en de lezer er één te laten kiezen.', liveUrl: null, liveUrlLabel: 'Bekijk live concept →' },
+          close: { nextProjectId: 5 }
+        }
+      },
+      {
+        id: 5, status: 'live',
+        card:  { eyebrow: 'Haar · Atlanta', headline: 'Crown Salon', image: 'smoova_21_1_assets/work/5.png', objectPosition: 'center' },
+        modal: { eyebrow: 'Beauty', headline: 'Project Five', bodyLead: 'Placeholder lead sentence for project five.', bodyRest: 'Placeholder body copy for project five. Replace with real copy when confirmed.', heroImage: 'smoova_21_1_assets/work/5.png', caption: 'Placeholder tools' },
+        caseStudy: {
+          hero: { heroImage: 'smoova_21_1_assets/webpages/5/cr-01-hero.png', tagline: 'Een Atlanta-salon voor textuurwerk, voor klanten die het beu zijn om als bijzaak te worden behandeld.', meta: { location: 'Atlanta, GA', year: '2026', scope: 'Merk, Web, Tekst' } },
+          brief: { eyebrow: '01 / De opdracht', paragraphs: ['De saloncategorie is al zo lang opgebouwd rond één haartype dat de meeste "premium" merken textuurhaar nog steeds als specialdienst behandelen — als ze het al aanbieden. Crown kwam met de vraag om een merk dat de default omdraait: textuur is niet de uitzondering, het is de hele praktijk.', 'Het werk moest gewicht dragen. We behandelden het merk als een modehuis, niet als een salon — diepgroene smaragd, antiek goud, goudsbloemen, brokaat, typografie die gaat zitten en de kamer beheerst. De functietitels zijn geen "stylist" — het zijn Texture Specialist, Wave Sculptor, Precision Cutter, Color Architect. Elk signaleert vakmanschap.', 'De copy weigert zichzelf te verzachten. "Worship the texture." "Texture is our language. Beauty is our crown." Het merk gaat ervan uit dat het publiek al overtuigd is — het verkoopt ze niet aan zichzelf, het matcht het zelfvertrouwen waarmee ze binnenliepen.'], stats: [{ label: 'Locatie', value: 'Atlanta, GA' }, { label: 'Jaar', value: '2026' }, { label: 'Scope', value: 'Merk · Web · Tekst' }] },
+          system: { eyebrow: '02 / Het systeem', headline: 'Een kroon, serieus genomen.', palette: [{ name: 'Emerald', hex: '#0E3B2E' }, { name: 'Gold', hex: '#D4A017' }, { name: 'Marigold', hex: '#E8852A' }, { name: 'Bone', hex: '#F4EFE3' }], typography: [{ name: 'Display', sample: 'WORSHIP THE TEXTURE.', spec: 'Druk Wide Bold' }, { name: 'Body', sample: 'Textuur in volle glorie.', spec: 'Canela Deck' }] },
+          pages: { eyebrow: '03 / Het werk', headline: 'Vijf vlakken. Eén kroon.', slides: [{ image: 'smoova_21_1_assets/webpages/5/cr-01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/5/cr-02-services.png', caption: '02 — Diensten' }, { image: 'smoova_21_1_assets/webpages/5/cr-03-lookbook.png', caption: '03 — Lookbook' }, { image: 'smoova_21_1_assets/webpages/5/cr-04-team.png', caption: '04 — Team' }, { image: 'smoova_21_1_assets/webpages/5/cr-05-book.png', caption: '05 — Boeken' }] },
+          outcome: { eyebrow: '04 / Wat het werd', statement: 'Een merk dat zelfverzekerd genoeg is om zijn stylisten Color Architects te noemen — en het werk dat ook waarmaakt.', liveUrl: null, liveUrlLabel: 'Bekijk live concept →' },
+          close: { nextProjectId: 6 }
+        }
+      },
+      {
+        id: 6, status: 'live',
+        card:  { eyebrow: 'Haar · Londen', headline: 'Tutti Frutti Studio', image: 'smoova_21_1_assets/work/6.png', objectPosition: 'center' },
+        modal: { eyebrow: 'Beauty', headline: 'Project Six', bodyLead: 'Placeholder lead sentence for project six.', bodyRest: 'Placeholder body copy for project six. Replace with real copy when confirmed.', heroImage: 'smoova_21_1_assets/work/6.png', caption: 'Placeholder tools' },
+        caseStudy: {
+          hero: { heroImage: 'smoova_21_1_assets/webpages/6/tf-01-hero.png', tagline: 'Een Dalston-salon die Y2K-maximalisme als de hele persoonlijkheid behandelt.', meta: { location: 'Dalston, Londen', year: '2026', scope: 'Merk, Web, Tekst' } },
+          brief: { eyebrow: '01 / De opdracht', paragraphs: ['East London zit vol salons die dezelfde minimale Scandi-greige routine doen. Tutti Frutti kwam met een andere weddenschap: volledig leunen in de vroeg-2000s mall-esthetiek waar iedereen zich te ongemakkelijk bij voelt. Discobollen. Glitterkersen. Hot pink en chartreuse. Het hele pakket.', 'De opdracht was nostalgie zonder ironie. Het publiek van Tutti Frutti wil geen knipoog-throwback — ze willen het echte gevoel van je haar laten doen voor een avondje uit in 2003. We bouwden het merk om die herinnering te matchen: een wordmark die thuishoort op een fruitsnoepwikkel, copy volgepropt met stickers, elk vlak gedecoreerd tot er niets meer bij kan.', 'De terughoudendheid zit in de discipline van het palet. Hot pink, chartreuse, crème, niets anders. Alles erbuiten is textuur, sticker, disco. Het merk verdient het lawaai door de kleuren die het lawaai maken te beperken.'], stats: [{ label: 'Locatie', value: 'Dalston, Londen' }, { label: 'Jaar', value: '2026' }, { label: 'Scope', value: 'Merk · Web · Tekst' }] },
+          system: { eyebrow: '02 / Het systeem', headline: 'Maximalisme, gemanaged.', palette: [{ name: 'Hot Pink', hex: '#E91A6C' }, { name: 'Chartreuse', hex: '#D8E635' }, { name: 'Cream', hex: '#F5EBD8' }, { name: 'Cherry Red', hex: '#D81E2A' }], typography: [{ name: 'Display', sample: 'Where the magic happens.', spec: 'Cooper BT Bold Italic' }, { name: 'Sticker', sample: 'GOOD HAIR. BAD DAYS. NOT TODAY.', spec: 'Hand-drawn / mixed' }] },
+          pages: { eyebrow: '03 / Het werk', headline: 'Vijf vlakken. Eén mood.', slides: [{ image: 'smoova_21_1_assets/webpages/6/tf-01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/6/tf-02-menu.png', caption: '02 — Menu' }, { image: 'smoova_21_1_assets/webpages/6/tf-03-stylists.png', caption: '03 — Stylisten' }, { image: 'smoova_21_1_assets/webpages/6/tf-04-vibes.png', caption: '04 — Vibes' }, { image: 'smoova_21_1_assets/webpages/6/tf-05-book.png', caption: '05 — Boeken' }] },
+          outcome: { eyebrow: '04 / Wat het werd', statement: 'Een merk dat zelfverzekerd genoeg is om "Be nice or leave" op de muur te zetten en de juiste klanten erop te vertrouwen dat ze het als uitnodiging lezen.', liveUrl: null, liveUrlLabel: 'Bekijk live concept →' },
+          close: { nextProjectId: 7 }
+        }
+      },
+      {
+        id: 7, status: 'live',
+        card:  { eyebrow: 'Haar · Brussel', headline: 'Crown · Brussel', image: 'smoova_21_1_assets/work/7.png', objectPosition: 'center' },
+        modal: { eyebrow: 'Beauty', headline: 'Project Seven', bodyLead: 'Placeholder lead sentence for project seven.', bodyRest: 'Placeholder body copy for project seven. Replace with real copy when confirmed.', heroImage: 'smoova_21_1_assets/work/7.png', caption: 'Placeholder tools' },
+        caseStudy: {
+          hero: { heroImage: 'smoova_21_1_assets/webpages/7/01-hero.png', tagline: 'Een Brusselse salon voor textuurwerk, gebouwd als het Europese hoofdstuk van een merk dat in Atlanta begon.', meta: { location: 'Brussel, BE', year: '2026', scope: 'Merk, Web, Tekst' } },
+          brief: { eyebrow: '01 / De opdracht', paragraphs: ['Na Crown Atlanta was de volgende zet Europa. De opdracht was specifiek — houd de merkruggengraat intact (smaragd, goud, het kroon-wordmark, dezelfde eerbied voor textuurwerk) maar vertaal het voor een stad die Atlanta\'s culturele kortschrift niet deelt. Brussel moest Crown geworteld laten voelen, niet geïmporteerd.', 'We hielden de architectuur — zelfde logo, zelfde smaragd, zelfde gouden lijsten — en verschoven de rest. Waar Atlanta goudsbloemen en brokaat gebruikte voor warmte, gebruikt Brussel kamerplanten en zachter goud voor terughoudendheid. De headline wordt "Black Excellence Everyday" — een zin die zwaarder landt in een Europese context waar dit soort salons nog nauwelijks bestaat. De boekingsflow is rustiger, formeler-Europees: naam, telefoon, dienst, datum.', 'De hele oefening ging erom te laten zien hoe een merk samenhangt over steden heen zonder af te vlakken tot een keten. Hetzelfde DNA, ander dialect.'], stats: [{ label: 'Locatie', value: 'Brussel, BE' }, { label: 'Jaar', value: '2026' }, { label: 'Scope', value: 'Merk · Web · Tekst' }] },
+          system: { eyebrow: '02 / Het systeem', headline: 'Zelfde kroon, andere stad.', palette: [{ name: 'Emerald', hex: '#0E3B2E' }, { name: 'Neon Citron', hex: '#F4F02C' }, { name: 'Antique Gold', hex: '#B8943E' }, { name: 'Bone', hex: '#F4EFE3' }], typography: [{ name: 'Display', sample: 'THE HOUSE OF TEXTURE.', spec: 'Druk Wide Bold' }, { name: 'Script', sample: 'Black Excellence Everyday', spec: 'Pinyon Script' }] },
+          pages: { eyebrow: '03 / Het werk', headline: 'Vijf vlakken. Eén kroon.', slides: [{ image: 'smoova_21_1_assets/webpages/7/01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/7/02-services.png', caption: '02 — Diensten' }, { image: 'smoova_21_1_assets/webpages/7/03-lookbook.png', caption: '03 — Lookbook' }, { image: 'smoova_21_1_assets/webpages/7/04-team.png', caption: '04 — Team' }, { image: 'smoova_21_1_assets/webpages/7/05-book.png', caption: '05 — Boeken' }] },
+          outcome: { eyebrow: '04 / Wat het werd', statement: 'Een tweede hoofdstuk dat bewijst dat een merk kan reizen zonder de ruimte te verliezen.', liveUrl: null, liveUrlLabel: 'Bekijk live concept →' },
+          close: { nextProjectId: 8 }
+        }
+      },
+      {
+        id: 8, status: 'live',
+        card:  { eyebrow: 'Nagels · Parijs', headline: 'Velvet & Vine', image: 'smoova_21_1_assets/work/8.png', objectPosition: 'center' },
+        modal: { eyebrow: 'Beauty', headline: 'Project Eight', bodyLead: 'Placeholder lead sentence for project eight.', bodyRest: 'Placeholder body copy for project eight. Replace with real copy when confirmed.', heroImage: 'smoova_21_1_assets/work/8.png', caption: 'Placeholder tools' },
+        caseStudy: {
+          hero: { heroImage: 'smoova_21_1_assets/webpages/8/01-hero.png', tagline: 'Een nagel-atelier in Parijs 6e waar elke afspraak een séance is en elke lak een Versailles-naam draagt.', meta: { location: 'Parijs, 6e', year: '2026', scope: 'Merk, Web, Tekst' } },
+          brief: { eyebrow: '01 / De opdracht', paragraphs: ['De nagelcategorie is zo afgeplat door clean-girl-minimalisme dat het hele vocabulaire van schoonheid — kaarsen, vergulde lijsten, fluweel, ritueel — is overgelaten aan de bruiloftsindustrie. Velvet & Vine wilde het terugclaimen. Bouw een atelier in de 6e dat een manicure behandelt zoals een parfumeur een geurlancering behandelt.', 'Het hele systeem leest als een 19e-eeuwse apotheek. Diepgroen fluweel, koperen kandelaars, gedroogde rozen, ornate goudkleurige lijsten, Frans overal. De lakken hebben namen — Rouge d\'Opéra, Vert Empire, Bordeaux, Laque Noire, Or Vénitien, Nu Versailles. De boekingspagina zegt "Réserver une séance." De CTA is niet "book now." Het is "Confirmer."', 'We hebben het register nooit doorbroken. Geen Engelse fallback, geen knipogen, geen modernistisch tegenwicht. De weddenschap was dat het publiek voor dit merk aangesproken wil worden in de taal van het ding waarvoor ze kwamen, en dat het naar beneden vertalen de hele propositie zou verraden.'], stats: [{ label: 'Locatie', value: 'Parijs, 6e' }, { label: 'Jaar', value: '2026' }, { label: 'Scope', value: 'Merk · Web · Tekst' }] },
+          system: { eyebrow: '02 / Het systeem', headline: 'Een séance, geen dienst.', palette: [{ name: 'Velvet Green', hex: '#1F3A2E' }, { name: 'Antique Gold', hex: '#C9A24A' }, { name: 'Rouge d\'Opéra', hex: '#7C2230' }, { name: 'Bone', hex: '#EDE4D3' }], typography: [{ name: 'Display', sample: 'Velvet & Vine', spec: 'Didone Italic' }, { name: 'Body / Frans', sample: 'À la française.', spec: 'Garamond Italic' }] },
+          pages: { eyebrow: '03 / Het werk', headline: 'Vijf vlakken. Eén ceremonie.', slides: [{ image: 'smoova_21_1_assets/webpages/8/01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/8/02-carte.png', caption: '02 — Carte' }, { image: 'smoova_21_1_assets/webpages/8/03-nuancier.png', caption: '03 — Nuancier' }, { image: 'smoova_21_1_assets/webpages/8/04-atelier.png', caption: '04 — Atelier' }, { image: 'smoova_21_1_assets/webpages/8/05-book.png', caption: '05 — Boeken' }] },
+          outcome: { eyebrow: '04 / Wat het werd', statement: 'Een merk dat zelfverzekerd genoeg is om zijn klanten een séance te laten bevestigen en erop te vertrouwen dat ze al weten wat dat betekent.', liveUrl: null, liveUrlLabel: 'Bekijk live concept →' },
+          close: { nextProjectId: 9 }
+        }
+      },
+      {
+        id: 9, status: 'live',
+        card:  { eyebrow: 'Haar · Tokyo', headline: 'Komorebi', image: 'smoova_21_1_assets/work/9.png', objectPosition: 'center' },
+        modal: { eyebrow: 'Beauty', headline: 'Project Nine', bodyLead: 'Placeholder lead sentence for project nine.', bodyRest: 'Placeholder body copy for project nine. Replace with real copy when confirmed.', heroImage: 'smoova_21_1_assets/work/9.png', caption: 'Placeholder tools' },
+        caseStudy: {
+          hero: { heroImage: 'smoova_21_1_assets/webpages/9/01-hero.png', tagline: 'Een Nakameguro-kapsalon gebouwd rond één Japans woord voor het licht dat door de bomen filtert.', meta: { location: 'Tokyo, Nakameguro', year: '2026', scope: 'Merk, Web, Tekst' } },
+          brief: { eyebrow: '01 / De opdracht', paragraphs: ['De meeste salonmerken proberen te veel tegelijk te doen. Komorebi kwam met de tegenovergestelde vraag: bouw de hele identiteit rond één onvertaalbaar Japans woord, en vertrouw erop dat de mensen die het snappen het zullen snappen.', 'Komorebi is het woord voor zonlicht dat door bladeren filtert. We behandelden het als de briefing zelf. Het hele merk werkt op het tempo van dat beeld — tatami-vloeren, papieren lantaarns, één kalligrafische kanji per pagina, Engels en Japans naast elkaar zonder uitleg. De site verheft nooit zijn stem.', 'Het moeilijkste was de terughoudendheid. Elk instinct in salonbranding pusht naar meer kleur, meer dichtheid, meer geruststelling. Komorebi had minder van alles nodig. Het resultaat is een merk dat geen dienst verkoopt — het biedt een temperatuur.'], stats: [{ label: 'Locatie', value: 'Tokyo, Nakameguro' }, { label: 'Jaar', value: '2026' }, { label: 'Scope', value: 'Merk · Web · Tekst' }] },
+          system: { eyebrow: '02 / Het systeem', headline: 'Eén woord. Eén temperatuur.', palette: [{ name: 'Sumi Black', hex: '#1A1714' }, { name: 'Tatami Bone', hex: '#EDE4D0' }, { name: 'Lantern Glow', hex: '#D9B26A' }, { name: 'Indigo Noren', hex: '#1F2A3A' }], typography: [{ name: 'Display', sample: 'Haar, gewassen in licht.', spec: 'Garamond Italic' }, { name: 'Kanji', sample: '木漏れ日', spec: 'Yu Mincho' }] },
+          pages: { eyebrow: '03 / Het werk', headline: 'Vijf vlakken. Eén tempo.', slides: [{ image: 'smoova_21_1_assets/webpages/9/01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/9/02-menu.png', caption: '02 — Menu' }, { image: 'smoova_21_1_assets/webpages/9/03-spaces.png', caption: '03 — Ruimtes' }, { image: 'smoova_21_1_assets/webpages/9/04-philosophy.png', caption: '04 — Filosofie' }, { image: 'smoova_21_1_assets/webpages/9/05-book.png', caption: '05 — Boeken' }] },
+          outcome: { eyebrow: '04 / Wat het werd', statement: 'Een merk dat zelfverzekerd genoeg is om zichzelf te vernoemen naar een woord dat de meeste klanten nooit hardop hebben gezegd — en hen het bij aankomst te laten leren.', liveUrl: null, liveUrlLabel: 'Bekijk live concept →' },
+          close: { nextProjectId: 10 }
+        }
+      },
+      {
+        id: 10, status: 'live',
+        card:  { eyebrow: 'Barbershop · Antwerpen', headline: 'Atelier Noir', image: 'smoova_21_1_assets/work/10.png', objectPosition: 'center' },
+        modal: { eyebrow: 'Beauty', headline: 'Project Ten', bodyLead: 'Placeholder lead sentence for project ten.', bodyRest: 'Placeholder body copy for project ten. Replace with real copy when confirmed.', heroImage: 'smoova_21_1_assets/work/10.png', caption: 'Placeholder tools' },
+        caseStudy: {
+          hero: { heroImage: 'smoova_21_1_assets/webpages/10/01-hero.png', tagline: 'Een Antwerpse barbershop in zijn vierde generatie, gebouwd op dezelfde stoel sinds 1924.', meta: { location: 'Antwerpen, BE', year: '2026', scope: 'Merk, Web, Tekst' } },
+          brief: { eyebrow: '01 / De opdracht', paragraphs: ['De meeste barbershop-merken faken erfgoed. Verweerde signage, "est. 2019" in een 1920s lettertype, vintage stockfoto\'s van vreemden die niemand kende. Atelier Noir had het echte werk — 102 jaar praktijk, vier generaties van dezelfde familie, dezelfde stoel waar Theo Kochs in zat toen hij de zaak opende aan de Lange Nieuwstraat. De opdracht was om daarmee te stoppen met verontschuldigen.', 'We bouwden een merk dat het erfgoed als bewijs behandelt, niet als decoratie. Koper en leer, diepzwart, Frans overal omdat Antwerpen Franstalig is en de rituelen Franse namen dragen — coupe, rasage, taille de barbe, père et fils. De hero is één foto van de stoel, belicht als een portret. Geen modellen. Geen B-roll. De zaak is al een eeuw hetzelfde. We lieten het er ook zo uitzien.', 'De moeilijkste keuze was terughoudendheid. Elke moderne barbershop wil aanvoelen als een speakeasy. Atelier Noir had de pose niet nodig — het hoefde alleen maar te stoppen met nieuwheid te performen. Het resultaat leest minder als een 2026-rebrand en meer als een museum-signage-systeem voor een plek die al langer in de stad is dan iemand anders.'], stats: [{ label: 'Locatie', value: 'Antwerpen, BE' }, { label: 'Jaar', value: '2026' }, { label: 'Scope', value: 'Merk · Web · Tekst' }] },
+          system: { eyebrow: '02 / Het systeem', headline: 'Erfgoed, voor wat het is.', palette: [{ name: 'Soot Black', hex: '#0A0907' }, { name: 'Brass', hex: '#B8923C' }, { name: 'Aged Gold', hex: '#8C6A22' }, { name: 'Bone', hex: '#E8E0CB' }], typography: [{ name: 'Display', sample: 'ATELIER NOIR', spec: 'Trajan Bold' }, { name: 'Body / Italic', sample: 'Geknipt. Geschoren. Rustig klaar.', spec: 'Garamond Italic' }] },
+          pages: { eyebrow: '03 / Het werk', headline: 'Vijf vlakken. Eén stoel.', slides: [{ image: 'smoova_21_1_assets/webpages/10/01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/10/02-services.png', caption: '02 — Diensten' }, { image: 'smoova_21_1_assets/webpages/10/03-gallery.png', caption: '03 — Galerij' }, { image: 'smoova_21_1_assets/webpages/10/04-heritage.png', caption: '04 — Erfgoed' }, { image: 'smoova_21_1_assets/webpages/10/05-book.png', caption: '05 — Boeken' }] },
+          outcome: { eyebrow: '04 / Wat het werd', statement: 'Een merk dat zelfverzekerd genoeg is om "Depuis 1924" op de muur te zetten en de datum het werk te laten doen.', liveUrl: null, liveUrlLabel: 'Bekijk live concept →' },
+          close: { nextProjectId: 11 }
+        }
+      },
+      {
+        id: 11, status: 'live',
+        card:  { eyebrow: 'Skincare · Utrecht', headline: 'Bloem & Co', image: 'smoova_21_1_assets/work/11.png', objectPosition: 'center' },
+        modal: { eyebrow: 'Beauty', headline: 'Project Eleven', bodyLead: 'Placeholder lead sentence for project eleven.', bodyRest: 'Placeholder body copy for project eleven. Replace with real copy when confirmed.', heroImage: 'smoova_21_1_assets/work/11.png', caption: 'Placeholder tools' },
+        caseStudy: {
+          hero: { heroImage: 'smoova_21_1_assets/webpages/11/01-hero.png', tagline: 'Een botanische skincare- en ritueelstudio in Utrecht voor mensen die hun huid behandelen als grond.', meta: { location: 'Utrecht, NL', year: '2026', scope: 'Merk, Web, Tekst' } },
+          brief: { eyebrow: '01 / De opdracht', paragraphs: ['De skincare-categorie is zo gekoloniseerd door klinische witruimte en labjas-taal dat het makkelijk is te vergeten dat het vakgebied uit de plantkunde is gegroeid. Bloem & Co kwam met de tegenovergestelde vraag: een merk dat de planten terug centraal zet, ze bij hun Latijnse namen noemt, en weigert het langzame deel van slow beauty te vertalen naar een snelle belofte.', 'Het hele systeem is gebouwd rond echte plantkunde. Geperste bloemen als decoratieve markeringen. Ingrediëntnamen handgeschreven op de apotheekkaarten — Calendula, Matricaria, Chamomilla. Een navigatie die Rituelen, Apotheek, Bezoek, Boeken zegt — niet Diensten, Shop, Contact. Het merk gaat ervan uit dat zijn publiek al begrijpt dat skincare landbouwkundig is voordat het cosmetisch is.', 'De terughoudendheid zit in het tempo. Geen urgentie. Geen "beperkte tijd." Geen voor-en-na\'s. Alleen planten, een rustige schreef, en één tagline die het hele emotionele werk doet: "Huid, langzaam."'], stats: [{ label: 'Locatie', value: 'Utrecht, NL' }, { label: 'Jaar', value: '2026' }, { label: 'Scope', value: 'Merk · Web · Tekst' }] },
+          system: { eyebrow: '02 / Het systeem', headline: 'Langzaam is de propositie.', palette: [{ name: 'Forest Ink', hex: '#26382A' }, { name: 'Eucalyptus', hex: '#A8B89C' }, { name: 'Marigold', hex: '#D9892C' }, { name: 'Linen', hex: '#EFE6D6' }], typography: [{ name: 'Display', sample: 'Bloem & Co', spec: 'Fraunces Italic' }, { name: 'Body / Italic', sample: 'Huid, langzaam.', spec: 'Recoleta Italic' }] },
+          pages: { eyebrow: '03 / Het werk', headline: 'Vijf vlakken. Eén tempo.', slides: [{ image: 'smoova_21_1_assets/webpages/11/01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/11/02-rituals.png', caption: '02 — Rituelen' }, { image: 'smoova_21_1_assets/webpages/11/03-apothecary.png', caption: '03 — Apotheek' }, { image: 'smoova_21_1_assets/webpages/11/04-story.png', caption: '04 — Verhaal' }, { image: 'smoova_21_1_assets/webpages/11/05-visit.png', caption: '05 — Bezoek' }] },
+          outcome: { eyebrow: '04 / Wat het werd', statement: 'Een merk dat zelfverzekerd genoeg is om zijn producten in het Latijn te benoemen en de juiste klanten erop te vertrouwen zich erdoor aangesproken te voelen.', liveUrl: null, liveUrlLabel: 'Bekijk live concept →' },
+          close: { nextProjectId: 12 }
+        }
+      },
+      {
+        id: 12, status: 'live',
+        card:  { eyebrow: 'Skin Tech · Eindhoven', headline: 'Volta', image: 'smoova_21_1_assets/work/12.png', objectPosition: 'center' },
+        modal: { eyebrow: 'Beauty', headline: 'Project Twelve', bodyLead: 'Placeholder lead sentence for project twelve.', bodyRest: 'Placeholder body copy for project twelve. Replace with real copy when confirmed.', heroImage: 'smoova_21_1_assets/work/12.png', caption: 'Placeholder tools' },
+        caseStudy: {
+          hero: { heroImage: 'smoova_21_1_assets/webpages/12/01-hero.png', tagline: 'Een Eindhovense beautystudio die huid behandelt als systeem en de afspraak als sessie.', meta: { location: 'Eindhoven, NL', year: '2026', scope: 'Merk, Web, Tekst' } },
+          brief: { eyebrow: '01 / De opdracht', paragraphs: ['Beauty-tech verbergt zich al een decennium achter zachte roze gradiënten en wellness-taal. Lasers heten "lichttherapie." Microcurrent wordt "facial sculpting." Volta kwam met de tegenovergestelde vraag — een merk dat de technologie benoemt, de klinische rand omarmt, en zijn publiek behandelt als volwassenen die de wetenschap al kennen.', 'Het systeem leest meer als een Apple-productpagina dan als een spa-site. Geometrische sans-serif-typografie. Monospace voor technische specs. Golflengtes en duur open gedrukt. Behandelingen genoemd als apparaten — Volta One, Volta Pulse, Volta LED. Elk komt met een datakaart zoals een productlancering met specs komt.', 'De esthetische keuze was om volledig in chroom te leunen. Elektrische violette accenten, gepolijste metalen vormen, klinisch wit. Geen kaarsen, geen zacht licht, geen "you deserve this." Het merk gaat ervan uit dat zijn klant een sessie boekte omdat ze een resultaat wilden, en behandelt het bezoek als sessie, niet als ritueel.'], stats: [{ label: 'Locatie', value: 'Eindhoven, NL' }, { label: 'Jaar', value: '2026' }, { label: 'Scope', value: 'Merk · Web · Tekst' }] },
+          system: { eyebrow: '02 / Het systeem', headline: 'Een sessie, geen ritueel.', palette: [{ name: 'Volta Violet', hex: '#5B2EFF' }, { name: 'Near Black', hex: '#0F0F0F' }, { name: 'Chrome', hex: '#C5C7CA' }, { name: 'Clinical White', hex: '#FAFAFA' }], typography: [{ name: 'Display', sample: 'Huid-wetenschap, in sessie.', spec: 'Neue Haas Grotesk Display' }, { name: 'Mono / Spec', sample: '660nm · 20min · 6 sessies', spec: 'JetBrains Mono' }] },
+          pages: { eyebrow: '03 / Het werk', headline: 'Vijf vlakken. Eén spec.', slides: [{ image: 'smoova_21_1_assets/webpages/12/01-hero.png', caption: '01 — Hero' }, { image: 'smoova_21_1_assets/webpages/12/02-treatments.png', caption: '02 — Behandelingen' }, { image: 'smoova_21_1_assets/webpages/12/03-science.png', caption: '03 — Wetenschap' }, { image: 'smoova_21_1_assets/webpages/12/04-method.png', caption: '04 — Methode' }, { image: 'smoova_21_1_assets/webpages/12/05-book.png', caption: '05 — Boeken' }] },
+          outcome: { eyebrow: '04 / Wat het werd', statement: 'Een merk dat zelfverzekerd genoeg is om zijn golflengtes op de homepage te publiceren en de juiste klanten erop te vertrouwen dat ze dat geruststellender vinden dan een kaars.', liveUrl: null, liveUrlLabel: 'Bekijk live concept →' },
+          close: { nextProjectId: null }
+        }
+      }
+    ],
+
     _lastFocus: null,    // element that opened modal — receives focus on close
     _savedScrollY: 0,    // page scroll position captured before body lock
     _boundTouchMove: null, // non-passive touchmove listener ref (removed on close)
@@ -4124,7 +4301,7 @@ function smoova() {
       if (this.$refs.workModalEl) this.$refs.workModalEl.style.transform = '';
 
       this._lastFocus = event?.currentTarget || null;
-      this.activeWork = card;
+      this.activeWorkId = card.id;
       this.modalVisible = true;
 
       // Scroll lock: position:fixed + top prevents iOS Safari body scroll-through.
@@ -4208,7 +4385,7 @@ function smoova() {
           document.documentElement.style.scrollBehavior = '';
         });
 
-        this.activeWork = null;
+        this.activeWorkId = null;
         this._lastFocus = null;
         this.currentSlideIndex = 0;
         if (returnTarget) returnTarget.focus();
@@ -4332,7 +4509,7 @@ function smoova() {
         modal.style.transition = 'none';
         modal.style.transform = `translateX(${enterX})`;
         modal.scrollTop = 0; // reset scroll for new card
-        this.activeWork = this.workCards[newIdx];
+        this.activeWorkId = this.workCards[newIdx].id;
 
         // 3. After Alpine renders new content, slide to center — 350ms ease-out
         this.$nextTick(() => {
@@ -4414,7 +4591,7 @@ function smoova() {
       // Brief fade-out
       if (modal) { modal.style.transition = 'opacity 150ms ease-out'; modal.style.opacity = '0'; }
       setTimeout(() => {
-        this.activeWork = nextCard;
+        this.activeWorkId = nextCard.id;
         this.currentSlideIndex = 0;
         if (modal) modal.scrollTop = 0;
         if (modal) { modal.style.transition = 'opacity 150ms ease-in'; modal.style.opacity = '1';
@@ -4462,7 +4639,7 @@ function smoova() {
           document.documentElement.style.scrollBehavior = '';
         });
 
-        this.activeWork = null;
+        this.activeWorkId = null;
         this._lastFocus = null;
         this.currentSlideIndex = 0;
         if (returnTarget) returnTarget.focus();
