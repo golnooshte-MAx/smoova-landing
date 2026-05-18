@@ -397,11 +397,15 @@
     .ledger-rule { background: #0A0507; height: 1px; }
     .tabular { font-variant-numeric: tabular-nums; }
 
-    /* ===== Range slider ===== */
+    /* ===== Range slider =====
+       The calculator uses an overlay-input pattern: input is opacity-0 and
+       sits absolute inset-0 over a 44px-tall container so clicks anywhere
+       in the row register. A custom .calc-slider-thumb div provides the
+       visual handle. Forcing `height: 2px` here used to break that — the
+       input collapsed to 2px and only the middle strip caught drags. */
     input[type="range"] {
       -webkit-appearance: none; appearance: none;
-      width: 100%; height: 2px;
-      background: rgba(10, 5, 7, 0.12);
+      background: transparent;
       outline: none; cursor: pointer;
     }
     input[type="range"]::-webkit-slider-thumb {
