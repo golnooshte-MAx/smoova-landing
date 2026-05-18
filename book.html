@@ -111,14 +111,32 @@
     }
     :focus-visible { outline: 2px solid var(--color-gold-vif); outline-offset: 3px; border-radius: 4px; }
 
-    /* Atmospheric backdrop — warm cream with subtle gold + rouge washes */
+    /* Atmospheric backdrop — vertical fade from warm cream at top into
+       rouge-velours at the bottom. Page reads as a Theatre Rouge
+       editorial: cream parchment that bleeds into wine as the eye
+       moves down. Top-right gold-rouge radial adds atmosphere; the
+       bottom rouge IS the brand presence. */
     .page-bg {
       position: fixed; inset: 0; z-index: 0; pointer-events: none;
       background:
-        radial-gradient(ellipse 100% 60% at 50% 0%, rgba(212, 168, 87, 0.14), transparent 65%),
-        radial-gradient(ellipse 80% 50% at 100% 100%, rgba(107, 21, 37, 0.10), transparent 70%),
-        radial-gradient(ellipse 70% 50% at 0% 50%, rgba(184, 146, 75, 0.06), transparent 70%),
-        var(--color-bone);
+        radial-gradient(ellipse 90% 50% at 100% 0%, rgba(212, 168, 87, 0.14), transparent 60%),
+        linear-gradient(to bottom,
+          #F2EBDD 0%,
+          #E8DCC4 35%,
+          rgba(184, 130, 110, 0.55) 65%,
+          rgba(107, 21, 37, 0.85) 88%,
+          #4A0E1A 100%);
+    }
+    /* Rouge accent rule — a single visible rouge-velours hairline below
+       the nav, anchoring the rouge presence at the top of the content
+       area. Cheap detail, big brand payoff. */
+    .rouge-rule {
+      height: 1px;
+      background: linear-gradient(to right,
+        transparent 0%,
+        rgba(107, 21, 37, 0.4) 20%,
+        rgba(107, 21, 37, 0.4) 80%,
+        transparent 100%);
     }
     .page-grain {
       position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.06; mix-blend-mode: multiply;
@@ -135,14 +153,19 @@
       .anim-fade-up { animation: none !important; opacity: 1 !important; transform: none !important; }
     }
 
-    /* Book card — cream glass with rouge-tinted hairline (left column) */
+    /* Book card — cream glass with rouge-velours hairline + subtle
+       rouge inner glow so the rouge presence carries onto the cards. */
     .book-card {
-      background: rgba(251, 247, 239, 0.7);
-      border: 1px solid rgba(74, 14, 26, 0.12);
+      background:
+        radial-gradient(ellipse 100% 60% at 0% 0%, rgba(107, 21, 37, 0.04), transparent 70%),
+        rgba(251, 247, 239, 0.78);
+      border: 1px solid rgba(107, 21, 37, 0.22);
       border-radius: 24px;
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
-      box-shadow: 0 4px 24px -8px rgba(74, 14, 26, 0.08);
+      box-shadow:
+        0 4px 24px -8px rgba(74, 14, 26, 0.10),
+        inset 0 1px 0 rgba(251, 247, 239, 0.8);
     }
     /* Dark book card — deep rouge-velours for the calendar widget on
        the right column. Cream page + dark calendar = editorial
