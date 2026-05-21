@@ -827,7 +827,7 @@
                 Op je website gevonden: <span x-text="bookingLinkedPlatforms.join(', ')"></span> (25–35% commissie per boeking)
               </p>
             </template>
-            <template x-if="result.on_treatwell === true && !reportedTreatwell">
+            <template x-if="isTruthy(result.on_treatwell) && !reportedTreatwell">
               <p style="color: #A6543A; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 6px;">
                 Ook vermeld op Treatwell.nl
               </p>
@@ -1090,12 +1090,12 @@
           const data = r || {};
           if (!data.website) return 1;
           let score = 1; // baseline: site exists
-          if (data.seo_has_title === true)     score += 2;
-          if (data.seo_has_meta_desc === true) score += 1;
-          if (data.seo_has_viewport === true)  score += 1;
-          if (data.seo_has_schema === true)    score += 2;
-          if (data.seo_has_og_tags === true)   score += 1;
-          if (data.seo_has_h1 === true)        score += 1;
+          if (this.isTruthy(data.seo_has_title))     score += 2;
+          if (this.isTruthy(data.seo_has_meta_desc)) score += 1;
+          if (this.isTruthy(data.seo_has_viewport))  score += 1;
+          if (this.isTruthy(data.seo_has_schema))    score += 2;
+          if (this.isTruthy(data.seo_has_og_tags))   score += 1;
+          if (this.isTruthy(data.seo_has_h1))        score += 1;
           return Math.min(9, score);
         },
 
@@ -1106,14 +1106,14 @@
         // Returns null when nothing commission-platform-shaped is detected.
         get primaryCommissionPlatform() {
           const r = this.result || {};
-          if (r.booking_links_to_treatwell  === true) return 'Treatwell';
-          if (r.booking_links_to_fresha     === true) return 'Fresha';
-          if (r.booking_links_to_planity    === true) return 'Planity';
-          if (r.booking_links_to_salonized  === true) return 'Salonized';
-          if (r.booking_links_to_simplybook === true) return 'SimplyBook';
-          if (r.booking_links_to_timma      === true) return 'Timma';
-          if (r.on_treatwell === true) return 'Treatwell';
-          const wIsPlatform = r.website_is_platform === true
+          if (this.isTruthy(r.booking_links_to_treatwell))  return 'Treatwell';
+          if (this.isTruthy(r.booking_links_to_fresha))     return 'Fresha';
+          if (this.isTruthy(r.booking_links_to_planity))    return 'Planity';
+          if (this.isTruthy(r.booking_links_to_salonized))  return 'Salonized';
+          if (this.isTruthy(r.booking_links_to_simplybook)) return 'SimplyBook';
+          if (this.isTruthy(r.booking_links_to_timma))      return 'Timma';
+          if (this.isTruthy(r.on_treatwell)) return 'Treatwell';
+          const wIsPlatform = this.isTruthy(r.website_is_platform)
             || (r.website_is_platform == null && this.isPlatformUrl(r.website));
           if (wIsPlatform) {
             const w = String(r.website || '').toLowerCase();
@@ -1126,6 +1126,19 @@
           if (reported.includes('fresha'))    return 'Fresha';
           if (reported.includes('planity'))   return 'Planity';
           return null;
+        },
+
+        // Defensive coercion for webhook booleans. Make scenarios sometimes serialise
+        // boolean outputs as strings ("true"/"false") or numbers (1/0) depending on
+        // how the field was configured. Strict v === true checks then reject real
+        // signals and the UI mis-renders. This helper accepts any common shape.
+        isTruthy(v) {
+          if (v === true || v === 1) return true;
+          if (typeof v === 'string') {
+            const s = v.trim().toLowerCase();
+            return s === 'true' || s === '1' || s === 'yes' || s === 'ja';
+          }
+          return false;
         },
 
         // Capitalize first letter (kept for any future use; the booking row now uses
@@ -1154,7 +1167,8 @@
 
         // True if the salon owner already told us they're on Treatwell — either in
         // the chip group or via the webhook's echo. Gates the on_treatwell warning
-        // so we don't tell them what they already volunteered.
+        // so we don't tell them what they already volunteered. (Not webhook-bool
+        // dependent, so unaffected by the string-vs-bool normalisation.)
         get reportedTreatwell() {
           const reported = String((this.result && this.result.booking_system_reported) || '').toLowerCase();
           const formArr = (this.form.booking_system || []).map(v => String(v).toLowerCase());
@@ -1168,12 +1182,12 @@
         get bookingLinkedPlatforms() {
           const r = this.result || {};
           const list = [];
-          if (r.booking_links_to_treatwell  === true) list.push('Treatwell');
-          if (r.booking_links_to_fresha     === true) list.push('Fresha');
-          if (r.booking_links_to_planity    === true) list.push('Planity');
-          if (r.booking_links_to_salonized  === true) list.push('Salonized');
-          if (r.booking_links_to_simplybook === true) list.push('SimplyBook');
-          if (r.booking_links_to_timma      === true) list.push('Timma');
+          if (this.isTruthy(r.booking_links_to_treatwell))  list.push('Treatwell');
+          if (this.isTruthy(r.booking_links_to_fresha))     list.push('Fresha');
+          if (this.isTruthy(r.booking_links_to_planity))    list.push('Planity');
+          if (this.isTruthy(r.booking_links_to_salonized))  list.push('Salonized');
+          if (this.isTruthy(r.booking_links_to_simplybook)) list.push('SimplyBook');
+          if (this.isTruthy(r.booking_links_to_timma))      list.push('Timma');
           return list;
         },
 
@@ -1184,23 +1198,23 @@
         get websiteIsOwnDomain() {
           const r = this.result || {};
           if (!r.website) return false;
-          if (r.website_is_platform != null) return r.website_is_platform !== true;
+          if (r.website_is_platform != null) return !this.isTruthy(r.website_is_platform);
           return !this.isPlatformUrl(r.website);
         },
 
         // The website-row booking verdict: text + color. Three states.
-        // 1) Has booking button AND it routes through a commission platform → amber
+        // 1) Has booking button AND it routes through a commission platform → rust
         //    diagnostic with the platform name (Smoova selling point: money leak).
         // 2) Has booking button AND it stays on the salon's own domain → green confirm.
         // 3) No booking button at all → rust failure marker.
         get bookingSignal() {
           const r = this.result || {};
-          if (r.website_has_booking !== true) {
+          if (!this.isTruthy(r.website_has_booking)) {
             return { text: 'Geen boekknop ✗', color: '#A6543A' };
           }
           const platforms = this.bookingLinkedPlatforms;
           if (platforms.length > 0) {
-            return { text: `Boekknop ✓ maar linkt naar ${platforms[0]}`, color: '#B8860B' };
+            return { text: `Boekknop linkt naar ${platforms[0]} (commissie)`, color: '#A6543A' };
           }
           return { text: 'Eigen boekknop ✓', color: '#5B7F5B' };
         },
@@ -1253,18 +1267,20 @@
           const mark = (ok) => ok ? '✓' : '✗';
           const photos = Number.isFinite(Number(r.photo_count)) ? Number(r.photo_count) : 0;
           const photosLabel = photos === 1 ? '1 foto' : `${photos.toLocaleString('nl-NL')} foto's`;
-          const gbpScore = this.scoreGBP(r.has_phone === true, r.has_hours === true, photos);
-          const gbpDetail = `Telefoon ${mark(r.has_phone === true)} · Openingstijden ${mark(r.has_hours === true)} · ${photosLabel}`;
+          const hasPhone = this.isTruthy(r.has_phone);
+          const hasHours = this.isTruthy(r.has_hours);
+          const gbpScore = this.scoreGBP(hasPhone, hasHours, photos);
+          const gbpDetail = `Telefoon ${mark(hasPhone)} · Openingstijden ${mark(hasHours)} · ${photosLabel}`;
 
           // 3. Eigen website — score from website + website_is_platform + website_loads
           //    + website_has_https + website_has_booking. Webhook's is_platform wins;
           //    URL sniff is the fallback when the webhook didn't return that flag.
           const wIsPlatform = r.website_is_platform != null
-            ? r.website_is_platform === true
+            ? this.isTruthy(r.website_is_platform)
             : this.isPlatformUrl(r.website);
-          const wLoads = r.website_loads === true;
-          const wHttps = r.website_has_https === true;
-          const wBooking = r.website_has_booking === true;
+          const wLoads = this.isTruthy(r.website_loads);
+          const wHttps = this.isTruthy(r.website_has_https);
+          const wBooking = this.isTruthy(r.website_has_booking);
           const bookingViaPlatform = this.bookingLinkedPlatforms.length > 0;
           const websiteScore = this.scoreWebsite(r.website, wIsPlatform, wLoads, wHttps, wBooking, bookingViaPlatform);
 
@@ -1306,7 +1322,7 @@
           //    lists each signal as ✓ / ✗ so the salon can see exactly what's
           //    missing. Caps at 9; rendered as X/9.
           const seoScore = this.scoreSEO(r);
-          const mk = (v) => v === true ? '✓' : '✗';
+          const mk = (v) => this.isTruthy(v) ? '✓' : '✗';
           const seoDetail = r.website
             ? `Paginatitel ${mk(r.seo_has_title)} · Meta beschrijving ${mk(r.seo_has_meta_desc)} · Mobiel ${mk(r.seo_has_viewport)} · Structured data ${mk(r.seo_has_schema)} · Social tags ${mk(r.seo_has_og_tags)} · H1 ${mk(r.seo_has_h1)}`
             : 'Geen eigen website om te analyseren';
@@ -1316,7 +1332,7 @@
           const mapsPass = !!r.google_maps_url;
 
           // 5. AI-zichtbaarheid — score from ai_mentioned bool.
-          const aiMentioned = r.ai_mentioned === true;
+          const aiMentioned = this.isTruthy(r.ai_mentioned);
           const aiScore = this.scoreAI(aiMentioned);
           const aiDetail = aiMentioned ? 'ChatGPT noemt je salon' : 'ChatGPT noemt je niet. Jouw concurrenten mogelijk wel.';
 
