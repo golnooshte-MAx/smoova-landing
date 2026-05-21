@@ -707,6 +707,10 @@
                    :style="resultsRevealed ? `width: ${(pillars.website.score / pillars.website.maxScore) * 100}%; background: ${scoreColorFor(pillars.website.score)};` : `width: 0; background: ${scoreColorFor(pillars.website.score)};`"></div>
             </div>
             <p class="check-detail mt-3" x-text="pillars.website.detail"></p>
+            <template x-if="websiteIsOwnDomain">
+              <p :style="`color: ${bookingSignal.color}; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 6px;`"
+                 x-text="bookingSignal.text"></p>
+            </template>
           </div>
         </div>
 
@@ -716,9 +720,14 @@
           <div class="flex-1 min-w-0">
             <p class="check-label">Boekingssysteem</p>
             <p class="check-detail mt-3" x-text="pillars.booking.detail"></p>
+            <template x-if="bookingLinkedPlatforms.length > 0">
+              <p style="color: #A6543A; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 8px;">
+                Op je website gevonden: <span x-text="bookingLinkedPlatforms.join(', ')"></span> (25–35% commissie per boeking)
+              </p>
+            </template>
             <template x-if="result.on_treatwell === true && !reportedTreatwell">
-              <p style="color: #A6543A; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 10px;">
-                Ook gevonden op Treatwell (25–35% commissie)
+              <p style="color: #A6543A; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 6px;">
+                Ook vermeld op Treatwell.nl
               </p>
             </template>
           </div>
@@ -967,14 +976,16 @@
 
         // Website: uses homepage-fetch booleans. Own domain starts at 4 and earns
         // up to +4 from loads / HTTPS / booking signals. Marketplace URL is a
-        // hard 3; no site is a hard 1.
-        scoreWebsite(website, isPlatform, loads, hasHttps, hasBooking) {
+        // hard 3; no site is a hard 1. A booking button that routes through a
+        // commission platform (Treatwell / Fresha / etc.) earns no points — the
+        // value of the booking flow is leaking off the salon's own site.
+        scoreWebsite(website, isPlatform, loads, hasHttps, hasBooking, bookingViaPlatform) {
           if (!website) return 1;
           if (isPlatform) return 3;
           let score = 4;
           if (loads) score += 1;
           if (hasHttps) score += 1;
-          if (hasBooking) score += 2;
+          if (hasBooking && !bookingViaPlatform) score += 2;
           return Math.min(10, score);
         },
 
@@ -1013,6 +1024,50 @@
           const reported = String((this.result && this.result.booking_system_reported) || '').toLowerCase();
           const formArr = (this.form.booking_system || []).map(v => String(v).toLowerCase());
           return reported.includes('treatwell') || formArr.includes('treatwell');
+        },
+
+        // Booking-button platform detection. Returns an array of human-readable
+        // platform names that the salon's own booking button links to. Drives
+        // the website row's amber "Boekknop ✓ maar linkt naar X" signal and the
+        // booking row's rust "Op je website gevonden: X" line.
+        get bookingLinkedPlatforms() {
+          const r = this.result || {};
+          const list = [];
+          if (r.booking_links_to_treatwell  === true) list.push('Treatwell');
+          if (r.booking_links_to_fresha     === true) list.push('Fresha');
+          if (r.booking_links_to_planity    === true) list.push('Planity');
+          if (r.booking_links_to_salonized  === true) list.push('Salonized');
+          if (r.booking_links_to_simplybook === true) list.push('SimplyBook');
+          if (r.booking_links_to_timma      === true) list.push('Timma');
+          return list;
+        },
+
+        // True if the salon has a real website that isn't a marketplace URL. Used
+        // to gate the booking signal: marketplace sites and "no website" cases
+        // don't get a per-site booking verdict (it's covered by the website score
+        // itself).
+        get websiteIsOwnDomain() {
+          const r = this.result || {};
+          if (!r.website) return false;
+          if (r.website_is_platform != null) return r.website_is_platform !== true;
+          return !this.isPlatformUrl(r.website);
+        },
+
+        // The website-row booking verdict: text + color. Three states.
+        // 1) Has booking button AND it routes through a commission platform → amber
+        //    diagnostic with the platform name (Smoova selling point: money leak).
+        // 2) Has booking button AND it stays on the salon's own domain → green confirm.
+        // 3) No booking button at all → rust failure marker.
+        get bookingSignal() {
+          const r = this.result || {};
+          if (r.website_has_booking !== true) {
+            return { text: 'Geen boekknop ✗', color: '#A6543A' };
+          }
+          const platforms = this.bookingLinkedPlatforms;
+          if (platforms.length > 0) {
+            return { text: `Boekknop ✓ maar linkt naar ${platforms[0]}`, color: '#B8860B' };
+          }
+          return { text: 'Eigen boekknop ✓', color: '#5B7F5B' };
         },
 
         // True if the candidate name contains a word repeated within itself, e.g.
@@ -1056,7 +1111,8 @@
           const wLoads = r.website_loads === true;
           const wHttps = r.website_has_https === true;
           const wBooking = r.website_has_booking === true;
-          const websiteScore = this.scoreWebsite(r.website, wIsPlatform, wLoads, wHttps, wBooking);
+          const bookingViaPlatform = this.bookingLinkedPlatforms.length > 0;
+          const websiteScore = this.scoreWebsite(r.website, wIsPlatform, wLoads, wHttps, wBooking, bookingViaPlatform);
 
           let websiteDetail;
           if (!r.website) {
@@ -1066,13 +1122,13 @@
             const platformName = matched ? this.platformLabel(matched[0]) : 'een platform';
             websiteDetail = `Via ${platformName} (je betaalt commissie)`;
           } else {
-            // Site loads-but-no-HTTPS gets a more actionable line. Loads-failure or
-            // HTTPS-present cases keep the short marker.
+            // Own-domain summary: domain + HTTPS status. The booking verdict is
+            // rendered separately below the detail line so its colour can carry
+            // the green / amber / rust meaning per case.
             const httpsBit = wHttps
               ? 'HTTPS ✓'
               : (wLoads ? 'Geen HTTPS in Google' : 'HTTPS ✗');
-            const bookBit = wBooking ? 'Boekknop ✓' : 'Geen boekknop ✗';
-            websiteDetail = `${this.cleanDomain(r.website)} · ${httpsBit} · ${bookBit}`;
+            websiteDetail = `${this.cleanDomain(r.website)} · ${httpsBit}`;
           }
 
           // 4. Boekingssysteem (informational). Only the user-reported value is
