@@ -462,20 +462,6 @@
       content: ''; width: 4px; height: 4px; border-radius: 999px;
       background: var(--color-gold-brule);
     }
-    /* Inline warning chip: "Je staat ook op Treatwell" */
-    .audit-warning {
-      display: inline-flex; align-items: flex-start; gap: 8px;
-      margin-top: 12px;
-      padding: 8px 14px;
-      background: rgba(107, 21, 37, 0.08);
-      border: 1px solid rgba(107, 21, 37, 0.24);
-      border-radius: 999px;
-      font-family: 'Inter', system-ui, sans-serif;
-      font-size: 13px;
-      line-height: 1.35;
-      color: var(--color-rouge-velours);
-    }
-    .audit-warning svg { flex-shrink: 0; margin-top: 2px; }
     /* ai_response block under the AI pillar — italic Fraunces in a tinted gold wash */
     .ai-response {
       margin-top: 12px;
@@ -642,7 +628,7 @@
           <span class="font-display font-light leading-none tracking-[-0.03em]"
                 style="font-size: clamp(64px, 14vw, 96px);"
                 :style="'color: ' + scoreColorFor(averageScore) + ';'"
-                x-text="averageScore"></span>
+                x-text="averageScore.toFixed(1)"></span>
           <span class="font-display font-light text-[34px] text-rouge-profond/55 leading-none">/ 10</span>
         </div>
         <p class="italic-display text-[20px] sm:text-[22px] leading-[1.4] text-rouge-profond mt-4 max-w-[480px]" x-text="summaryCopy"></p>
@@ -733,13 +719,8 @@
             <p class="check-label">Boekingssysteem</p>
             <p class="check-detail mt-3" x-text="pillars.booking.detail"></p>
             <template x-if="result.on_treatwell === true">
-              <p class="audit-warning">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-                  <line x1="12" y1="9" x2="12" y2="13"/>
-                  <line x1="12" y1="17" x2="12.01" y2="17"/>
-                </svg>
-                <span>Je staat ook op Treatwell (25–35% commissie)</span>
+              <p style="color: #A6543A; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 10px;">
+                Ook gevonden op Treatwell (25–35% commissie)
               </p>
             </template>
           </div>
@@ -936,24 +917,15 @@
         },
 
         // A website that points to Treatwell / Fresha / Planity means the salon
-        // is on a marketplace, not on their own domain. Used as a fallback only
-        // when the webhook does not return booking_platform explicitly.
+        // is on a marketplace, not on their own domain.
         isPlatformUrl(url) {
           if (!url) return false;
           const lower = url.toLowerCase();
           return ['treatwell', 'fresha', 'planity'].some(d => lower.includes(d));
         },
 
-        // Coerce any webhook score to a clean integer 0-10. Missing / NaN / out
-        // of range falls back to 0 so the bar still renders.
-        normalizeScore(v) {
-          const n = Number(v);
-          if (!Number.isFinite(n)) return 0;
-          return Math.max(0, Math.min(10, Math.round(n)));
-        },
-
-        // Maps a numeric platform key to its human-readable Dutch label. Used by
-        // the website pillar's "Via X (commissie)" copy and the booking-system
+        // Maps a platform key to its human-readable Dutch label. Used by the
+        // website pillar's "Via X (commissie)" copy and the booking-system
         // detail line.
         platformLabel(key) {
           const map = {
@@ -966,57 +938,97 @@
         },
 
         // The /10 colour scale that drives the score number, the bar fills, and
-        // the icon ring tint. Brand-tinted equivalents of the requested rust /
-        // goldenrod / green so the scorecard stays inside the Theatre Rouge
-        // palette already used across the site.
+        // the icon ring tint. Literal hexes per spec, decimal-aware so the overall
+        // average (which carries 1 decimal) buckets correctly.
         scoreColorFor(score) {
-          const s = this.normalizeScore(score);
-          if (s <= 3) return '#6B1525'; // rouge-velours
-          if (s <= 6) return '#8A6B2E'; // gold-brule
-          return '#D4A857';             // gold-vif
+          const s = Number(score);
+          if (!Number.isFinite(s)) return '#A6543A';
+          if (s <= 3) return '#A6543A'; // rust
+          if (s <= 6) return '#B8860B'; // dark goldenrod
+          return '#5B7F5B';             // muted green
         },
 
         // Icon ring class for a scored pillar. Pass at >= 6, fail otherwise.
         scoredIconClass(score) {
-          return this.normalizeScore(score) >= 6 ? 'check-icon--pass' : 'check-icon--fail';
+          return Number(score) >= 6 ? 'check-icon--pass' : 'check-icon--fail';
+        },
+
+        // ---- Score calculators (raw webhook fields -> 1-10 pillar score) ----
+
+        scoreReviews(rating, count) {
+          if (!count || count === 0) return 1;
+          let base = count > 100 ? 10 : count > 50 ? 8 : count > 20 ? 7 : count > 5 ? 5 : 3;
+          if (rating && rating < 3.5) base = Math.max(1, base - 3);
+          if (rating && rating >= 4.5) base = Math.min(10, base + 1);
+          return base;
+        },
+
+        scoreGBP(hasPhone, hasHours, photoCount) {
+          let score = 1;
+          if (hasPhone) score += 2;
+          if (hasHours) score += 2;
+          if (photoCount > 10) score += 3;
+          else if (photoCount > 4) score += 2;
+          else if (photoCount > 0) score += 1;
+          score += 2; // has listing at all
+          return Math.min(10, score);
+        },
+
+        scoreWebsite(website) {
+          if (!website) return 1;
+          const lower = String(website).toLowerCase();
+          if (lower.includes('treatwell') || lower.includes('fresha') || lower.includes('planity')) return 3;
+          return 6;
+        },
+
+        scoreAI(mentioned) {
+          return mentioned ? 7 : 2;
+        },
+
+        // Capitalize first letter (used for the self-reported booking system value).
+        capFirst(s) {
+          if (!s) return '';
+          const str = String(s);
+          return str.charAt(0).toUpperCase() + str.slice(1);
         },
 
         get pillars() {
           const r = this.result || {};
 
-          // 1. Google Reviews
+          // 1. Google Reviews — score computed from rating + review_count.
           const rating = Number(r.rating);
           const reviewCount = Number(r.review_count);
+          const reviewsScore = this.scoreReviews(isNaN(rating) ? null : rating, isNaN(reviewCount) ? 0 : reviewCount);
           const reviewsDetail = !isNaN(rating)
             ? `${rating.toLocaleString('nl-NL', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} sterren, ${(isNaN(reviewCount) ? 0 : reviewCount).toLocaleString('nl-NL')} reviews`
             : 'Geen Google reviews gevonden';
 
-          // 2. Google Bedrijfsprofiel — facts line built from has_phone, has_hours, photo_count.
+          // 2. Google Bedrijfsprofiel — score from has_phone + has_hours + photo_count.
           const mark = (ok) => ok ? '✓' : '✗';
           const photos = Number.isFinite(Number(r.photo_count)) ? Number(r.photo_count) : 0;
           const photosLabel = photos === 1 ? '1 foto' : `${photos.toLocaleString('nl-NL')} foto's`;
+          const gbpScore = this.scoreGBP(r.has_phone === true, r.has_hours === true, photos);
           const gbpDetail = `Telefoon ${mark(r.has_phone === true)} · Openingstijden ${mark(r.has_hours === true)} · ${photosLabel}`;
 
-          // 3. Eigen website — prefer the explicit booking_platform field, fall back to
-          //    sniffing the website URL for platform domains.
-          const platformKey = (r.booking_platform || '').toLowerCase()
-            || (this.isPlatformUrl(r.website) ? (r.website.toLowerCase().match(/(treatwell|fresha|planity)/) || [])[0] : '')
-            || (r.website ? 'own_website' : 'none');
-
+          // 3. Eigen website — score from URL (penalises marketplace platforms).
+          const websiteScore = this.scoreWebsite(r.website);
+          const onPlatform = this.isPlatformUrl(r.website);
           let websiteDetail;
-          if (platformKey === 'own_website' && r.website) {
-            websiteDetail = this.cleanDomain(r.website);
-          } else if (platformKey && platformKey !== 'none' && platformKey !== 'own_website') {
-            websiteDetail = `Via ${this.platformLabel(platformKey)} (commissie)`;
-          } else {
+          if (!r.website) {
             websiteDetail = 'Geen eigen website gevonden';
+          } else if (onPlatform) {
+            const matched = String(r.website).toLowerCase().match(/(treatwell|fresha|planity)/);
+            websiteDetail = `Via ${this.platformLabel(matched ? matched[0] : '')} (commissie)`;
+          } else {
+            websiteDetail = this.cleanDomain(r.website);
           }
 
-          // 4. Boekingssysteem (informational). Prefer the webhook's reported value
-          //    if present; otherwise compose from the form's multi-select.
+          // 4. Boekingssysteem (informational). Self-reported value from the form's
+          //    booking_system_reported string (single value). Falls back to the
+          //    multi-select array if the webhook didn't echo it.
           let bookingDetail;
           if (r.booking_system_reported && String(r.booking_system_reported).trim().length > 0) {
-            bookingDetail = String(r.booking_system_reported);
+            bookingDetail = this.capFirst(String(r.booking_system_reported).trim());
           } else if (Array.isArray(this.form.booking_system) && this.form.booking_system.length > 0) {
             bookingDetail = this.form.booking_system.map(v => this.platformLabel(v)).join(', ');
           } else {
@@ -1027,26 +1039,28 @@
           const mapsPass = !!r.google_maps_url;
           const mapsDetail = mapsPass ? '✓ Je staat op Google Maps' : '✗ Niet gevonden op Google Maps';
 
-          // 6. AI-zichtbaarheid
+          // 6. AI-zichtbaarheid — score from ai_mentioned bool.
           const aiMentioned = r.ai_mentioned === true;
+          const aiScore = this.scoreAI(aiMentioned);
           const aiDetail = aiMentioned ? 'ChatGPT noemt je salon' : 'ChatGPT noemt je niet';
 
           return {
-            reviews: { score: this.normalizeScore(r.score_reviews), detail: reviewsDetail },
-            gbp:     { score: this.normalizeScore(r.score_gbp),     detail: gbpDetail },
-            website: { score: this.normalizeScore(r.score_website), detail: websiteDetail },
+            reviews: { score: reviewsScore, detail: reviewsDetail },
+            gbp:     { score: gbpScore,     detail: gbpDetail },
+            website: { score: websiteScore, detail: websiteDetail },
             booking: { detail: bookingDetail },
-            maps:    { pass:  mapsPass,                              detail: mapsDetail },
-            ai:      { score: this.normalizeScore(r.score_ai),      detail: aiDetail },
+            maps:    { pass:  mapsPass,     detail: mapsDetail },
+            ai:      { score: aiScore,      detail: aiDetail },
           };
         },
 
         // Average of the four scored pillars (reviews + gbp + website + ai),
-        // rounded to a clean integer 0-10 for display.
+        // rounded to one decimal place. Always presented as a decimal in the UI
+        // (so a clean 7 reads as "7.0").
         get averageScore() {
           const p = this.pillars;
           const sum = p.reviews.score + p.gbp.score + p.website.score + p.ai.score;
-          return Math.round(sum / 4);
+          return Math.round((sum / 4) * 10) / 10;
         },
 
         get summaryCopy() {
@@ -1069,14 +1083,23 @@
           return 'Klaar voor de volgende stap? Plan een vrijblijvend gesprek van twintig minuten.';
         },
 
-        // Cleaned ai_top5: filters out the salon's own name (case-insensitive) so the
-        // "het noemt deze salons" list never shows you to yourself, and caps at 5.
+        // Cleaned ai_top5: accepts either a comma-separated string (current webhook
+        // shape) or an array (legacy), filters out the salon's own name
+        // (case-insensitive) so the "het noemt deze salons" list never shows you
+        // to yourself, and caps at 5.
         get aiTop5() {
-          const raw = this.result && Array.isArray(this.result.ai_top5) ? this.result.ai_top5 : [];
+          if (!this.result) return [];
+          let raw = this.result.ai_top5;
+          if (typeof raw === 'string') {
+            raw = raw.split(',');
+          } else if (!Array.isArray(raw)) {
+            raw = [];
+          }
           const own = (this.form.salon_name || '').trim().toLowerCase();
           return raw
-            .filter(n => typeof n === 'string' && n.trim().length > 0)
-            .filter(n => !own || n.trim().toLowerCase() !== own)
+            .map(n => (typeof n === 'string' ? n.trim() : ''))
+            .filter(n => n.length > 0)
+            .filter(n => !own || n.toLowerCase() !== own)
             .slice(0, 5);
         },
 
@@ -1099,23 +1122,24 @@
           }
         },
 
-        // A response counts as "not found" only when every meaningful field is
-        // missing or null. A salon with only a Maps listing should still produce
-        // a result — that's the audit's value: showing partial presence. The
-        // new pillar scores also count as signal so a webhook payload with
-        // scores but no raw fields still renders.
+        // A response counts as "not found" only when every meaningful raw field
+        // is missing or null. A salon with only a Maps listing or only an
+        // ai_mentioned flag should still render — partial presence is itself
+        // the audit's value.
         isEmptyResponse(data) {
           if (!data) return true;
+          const top5 = data.ai_top5;
+          const hasTop5 = (Array.isArray(top5) && top5.length > 0)
+            || (typeof top5 === 'string' && top5.trim().length > 0);
           const hasAnySignal = data.rating != null
             || data.review_count != null
             || data.website
             || data.google_maps_url
             || data.ai_mentioned != null
-            || (Array.isArray(data.ai_top5) && data.ai_top5.length > 0)
-            || data.score_reviews != null
-            || data.score_gbp != null
-            || data.score_website != null
-            || data.score_ai != null;
+            || data.has_phone != null
+            || data.has_hours != null
+            || data.photo_count != null
+            || hasTop5;
           return !hasAnySignal;
         },
 
