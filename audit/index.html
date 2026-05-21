@@ -954,11 +954,19 @@
 
         scoreReviews(rating, count) {
           if (!count || count === 0) return 1;
-          // Count component (0-5)
+          // Count base (1-5)
           const countScore = count > 100 ? 5 : count > 50 ? 4 : count > 20 ? 3 : count > 5 ? 2 : 1;
-          // Rating component (0-5)
-          const ratingScore = !rating ? 2 : rating >= 4.7 ? 5 : rating >= 4.3 ? 4 : rating >= 4.0 ? 3 : rating >= 3.5 ? 2 : 1;
-          return countScore + ratingScore;
+          // Rating multiplier (0.4 - 2.0). A great rating amplifies a healthy
+          // review count; a bad rating multiplies it down.
+          let ratingMultiplier;
+          if (!rating)              ratingMultiplier = 1.0;
+          else if (rating >= 4.8)   ratingMultiplier = 2.0;
+          else if (rating >= 4.6)   ratingMultiplier = 1.7;
+          else if (rating >= 4.3)   ratingMultiplier = 1.4;
+          else if (rating >= 4.0)   ratingMultiplier = 1.1;
+          else if (rating >= 3.5)   ratingMultiplier = 0.7;
+          else                       ratingMultiplier = 0.4;
+          return Math.min(10, Math.round(countScore * ratingMultiplier));
         },
 
         // GBP: tighter thresholds, having a listing is the baseline (not a bonus).
