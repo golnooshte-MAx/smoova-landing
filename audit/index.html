@@ -262,23 +262,6 @@
       margin-top: 12px;
     }
 
-    /* Skeleton placeholders during the loading state. Same dimensions as the real
-       check rows so layout doesn't shift on swap. */
-    .skel { background: rgba(43, 8, 16, 0.06); border-radius: 4px; overflow: hidden; position: relative; }
-    .skel::after {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(90deg, transparent, rgba(212, 168, 87, 0.18), transparent);
-      transform: translateX(-100%);
-      animation: skelShimmer 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-    @keyframes skelShimmer { 100% { transform: translateX(100%); } }
-    @media (prefers-reduced-motion: reduce) { .skel::after { animation: none; } }
-    .skel-row { display: flex; align-items: flex-start; gap: 18px; padding: 22px 0; border-top: 1px solid rgba(43, 8, 16, 0.10); }
-    .skel-row:last-child { border-bottom: 1px solid rgba(43, 8, 16, 0.10); }
-    .skel-circle { width: 28px; height: 28px; border-radius: 999px; flex-shrink: 0; margin-top: 1px; }
-    .skel-line { height: 16px; }
-    .skel-line.short { width: 38%; }
-    .skel-line.long { width: 64%; margin-top: 10px; height: 12px; opacity: 0.7; }
 
 
     /* ---- Buttons (Theatre Rouge primary, like the pricing CTAs) ---- */
@@ -339,21 +322,6 @@
       cursor: pointer;
     }
     .btn-ghost:hover { border-color: var(--color-rouge-velours); color: var(--color-rouge-velours); }
-
-    /* ---- Loader: thin gold-vif pulsing line ---- */
-    .audit-loader {
-      position: relative; width: 72px; height: 1px;
-      background: rgba(43, 8, 16, 0.14);
-      margin: 0 auto; overflow: hidden;
-    }
-    .audit-loader::after {
-      content: ''; position: absolute; inset: 0;
-      width: 40%;
-      background: linear-gradient(to right, var(--color-gold-vif), var(--color-gold-brule));
-      animation: loaderSlide 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-    @keyframes loaderSlide { 0% { transform: translateX(-100%); } 100% { transform: translateX(250%); } }
-    @media (prefers-reduced-motion: reduce) { .audit-loader::after { animation: none; } }
 
     /* ---- Result rows ---- */
     .check-row {
@@ -423,21 +391,8 @@
       line-height: 1;
     }
     .pillar-score .denom { color: rgba(43, 8, 16, 0.4); }
-    .pillar-bar-track {
-      width: 100%;
-      max-width: 260px;
-      height: 4px;
-      background: rgba(43, 8, 16, 0.08);
-      border-radius: 999px;
-      overflow: hidden;
-      margin-top: 12px;
-    }
-    .pillar-bar-fill {
-      height: 100%;
-      width: 0;
-      border-radius: 999px;
-      transition: width 900ms cubic-bezier(0.22, 1, 0.36, 1) 220ms;
-    }
+    /* (pillar-bar-track + pillar-bar-fill defined below in the motion-design block.) */
+
     /* Informational icon (gold ring, no check/X) for non-scored pillars */
     .check-icon--info {
       background: transparent;
@@ -489,6 +444,160 @@
       transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
     }
     .link-underline:hover::after { transform: scaleX(1); transform-origin: left; }
+
+    /* =========================================================================
+       MOTION DESIGN — see the upgrade spec. CSS-only; opacity/transform only;
+       reduced-motion guards at the bottom of this block.
+       ========================================================================= */
+
+    /* 1. Page load: letter-by-letter typewriter for the H1. Each .type-char gets
+       its own staggered animation-delay via inline style. No JS interval. */
+    .type-char {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(4px);
+      animation: typeIn 240ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      will-change: opacity, transform;
+    }
+    @keyframes typeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 2. Form interactions — button hover lift + press feel */
+    .btn-rouge { transition: background-color 220ms ease-out, transform 220ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 220ms ease-out, color 220ms ease-out; }
+    .btn-rouge:hover { transform: translateY(-2px); box-shadow: 0 16px 28px -14px rgba(43, 8, 16, 0.45); }
+    .btn-rouge:active { transform: scale(0.97); transition-duration: 100ms; }
+
+    /* 3. Loading hero — big counter + rotating messages + scaleX progress bar */
+    .loading-hero { display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 48px 0; }
+    .loading-counter {
+      font-family: 'Newsreader', Georgia, serif;
+      font-weight: 300;
+      font-size: clamp(80px, 18vw, 140px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--color-rouge-profond);
+      animation: counterPulse 2s ease-in-out infinite;
+      will-change: transform;
+    }
+    .loading-counter-pct {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      font-weight: 500;
+      color: rgba(43, 8, 16, 0.45);
+      vertical-align: super;
+      margin-left: 4px;
+    }
+    @keyframes counterPulse {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.02); }
+    }
+    .loading-message {
+      font-family: 'Newsreader', Georgia, serif;
+      font-style: italic;
+      font-size: clamp(18px, 2.4vw, 22px);
+      line-height: 1.3;
+      color: var(--color-rouge-profond);
+      text-align: center;
+      min-height: 1.3em;
+      transition: opacity 280ms ease-out;
+      will-change: opacity;
+    }
+    .loading-progress {
+      width: 100%;
+      max-width: 320px;
+      height: 2px;
+      background: rgba(43, 8, 16, 0.08);
+      border-radius: 1px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    .loading-progress-fill {
+      width: 100%;
+      height: 100%;
+      background: #A6543A;
+      transform: scaleX(0);
+      transform-origin: left center;
+      will-change: transform;
+    }
+    .loading-progress-fill--active {
+      animation: loadingFill 4s linear forwards;
+    }
+    @keyframes loadingFill {
+      to { transform: scaleX(1); }
+    }
+
+    /* 5. Editorial 3px score bar (was 4px). Track is muted; fill uses scaleX so
+       width never animates. A subtle glow rides the right edge of the fill. */
+    .pillar-bar-track {
+      width: 100%; max-width: 260px;
+      height: 3px;
+      background: rgba(43, 8, 16, 0.06);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 12px;
+      position: relative;
+    }
+    .pillar-bar-fill {
+      position: absolute; inset: 0;
+      width: 100%;
+      transform: scaleX(0);
+      transform-origin: left center;
+      border-radius: 2px;
+      transition: transform 800ms cubic-bezier(0.16, 1, 0.3, 1), background-color 600ms ease-out;
+      will-change: transform;
+      box-shadow: 0 0 8px var(--bar-glow-color, rgba(166, 84, 58, 0.2));
+    }
+
+    /* 6. Commission warning slide-in-shake (booking row + leak block). The shake
+       is a single damped overshoot, not a continuous tremor — it lands. */
+    @keyframes commissionShake {
+      0%   { opacity: 0; transform: translateX(12px); }
+      55%  { opacity: 1; transform: translateX(-3px); }
+      80%  { transform: translateX(2px); }
+      100% { transform: translateX(0); }
+    }
+    .commission-shake {
+      animation: commissionShake 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-delay: 500ms;
+      will-change: transform, opacity;
+    }
+
+    /* 7. CTA infinite shadow-pulse on the rust button */
+    .btn-rust { box-shadow: 0 12px 28px -10px rgba(166, 84, 58, 0.10); animation: ctaPulse 3s ease-in-out infinite; transition: background-color 220ms ease-out, transform 220ms cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes ctaPulse {
+      0%, 100% { box-shadow: 0 12px 28px -10px rgba(166, 84, 58, 0.10); }
+      50%      { box-shadow: 0 18px 36px -8px  rgba(166, 84, 58, 0.30); }
+    }
+    .btn-rust:hover { transform: translateY(-2px); }
+    .btn-rust:active { transform: scale(0.97); transition-duration: 100ms; }
+
+    /* 8. Smooth scroll + scroll-margin for the results container */
+    html { scroll-behavior: smooth; }
+    #main { scroll-margin-top: 24px; }
+
+    /* 10. Reduced-motion override: kill every audit-specific animation */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .type-char, .loading-counter, .loading-progress-fill--active,
+      .commission-shake, .btn-rust, .btn-rouge {
+        animation: none !important;
+      }
+      .type-char { opacity: 1 !important; transform: none !important; }
+      .pillar-bar-fill { transition: none !important; }
+      .btn-rust:hover, .btn-rouge:hover { transform: none !important; }
+    }
+
+    /* Mobile: cut translateY/translateX values roughly in half, keep timing */
+    @media (max-width: 640px) {
+      @keyframes typeIn { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes commissionShake {
+        0%   { opacity: 0; transform: translateX(6px); }
+        55%  { opacity: 1; transform: translateX(-2px); }
+        80%  { transform: translateX(1px); }
+        100% { transform: translateX(0); }
+      }
+    }
   </style>
 </head>
 
@@ -516,13 +625,22 @@
   <main id="main" class="relative z-10 mx-auto max-w-2xl px-6 md:px-12 pt-6 md:pt-10 pb-16">
 
     <!-- ===== STATE: IDLE (form) ===== -->
-    <section x-show="state === 'idle'" x-transition.opacity.duration.300ms>
+    <section x-show="state === 'idle'"
+             x-transition:enter="transition duration-300 ease-out"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition duration-400 ease-out"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 -translate-y-5">
       <div class="anim-fade-up" style="animation-delay: 80ms;">
         <p class="audit-eyebrow mb-5">Salon audit · gratis</p>
       </div>
-      <h1 class="anim-fade-up font-display font-medium text-[34px] sm:text-[44px] md:text-5xl leading-[1.04] tracking-tight text-rouge-profond mb-5"
-          style="animation-delay: 140ms;">
-        Hoe zichtbaar is jouw salon <span class="italic-display text-rouge-velours">online</span><span class="text-gold-vif">?</span>
+      <h1 class="font-display font-medium text-[34px] sm:text-[44px] md:text-5xl leading-[1.04] tracking-tight text-rouge-profond mb-5"
+          aria-label="Hoe zichtbaar is jouw salon online?">
+        <template x-for="(c, i) in headlineChars" :key="i"><span
+          :class="c.cls"
+          :style="`animation-delay: ${100 + i * 40}ms`"
+          x-html="c.ch === ' ' ? '&nbsp;' : c.ch"></span></template>
       </h1>
       <p class="anim-fade-up font-sans text-base md:text-lg leading-relaxed text-rouge-profond/75 mb-12 max-w-[480px]"
          style="animation-delay: 220ms;">
@@ -593,22 +711,19 @@
     </section>
 
     <!-- ===== STATE: LOADING ===== -->
+    <!-- Loading hero: big number 0-100, rotating message, scaleX progress bar.
+         The number + the bar are driven by separate timing: the number is
+         Alpine-reactive (ease-in-out over 4s); the bar is a single pure CSS
+         keyframe pinned to the same 4s window via the --active class. -->
     <section x-show="state === 'loading'" x-transition.opacity.duration.300ms class="py-16">
-      <div class="text-center">
-        <div class="audit-loader mb-8" aria-hidden="true"></div>
-        <p class="italic-display text-[22px] leading-[1.35] text-rouge-profond mb-12" x-text="loadingMessage" aria-live="polite"></p>
-      </div>
-      <!-- Skeleton pillar rows: same shape as the real results so the layout doesn't shift on swap. -->
-      <div class="mt-2" aria-hidden="true">
-        <template x-for="i in 6" :key="i">
-          <div class="skel-row">
-            <span class="skel skel-circle"></span>
-            <div class="flex-1 min-w-0">
-              <div class="skel skel-line short"></div>
-              <div class="skel skel-line long"></div>
-            </div>
-          </div>
-        </template>
+      <div class="loading-hero">
+        <p class="loading-counter" aria-live="polite">
+          <span x-text="Math.round(loadingProgress)"></span><span class="loading-counter-pct">%</span>
+        </p>
+        <p class="loading-message" x-text="loadingMessages[loadingMessageIndex]"></p>
+        <div class="loading-progress" aria-hidden="true">
+          <div class="loading-progress-fill" :class="state === 'loading' ? 'loading-progress-fill--active' : ''"></div>
+        </div>
       </div>
     </section>
 
@@ -632,8 +747,8 @@
         <div class="flex items-baseline gap-3">
           <span class="font-display font-light leading-none tracking-[-0.03em]"
                 style="font-size: clamp(64px, 14vw, 96px);"
-                :style="'color: ' + scoreColorFor(averageScore) + ';'"
-                x-text="averageScore.toFixed(1)"></span>
+                :style="'color: ' + scoreColorFor(animatedAverageScore) + ';'"
+                x-text="animatedAverageScore.toFixed(1)"></span>
           <span class="font-display font-light text-[34px] text-rouge-profond/55 leading-none">/ 10</span>
         </div>
         <p class="italic-display text-[20px] sm:text-[22px] leading-[1.4] text-rouge-profond mt-4 max-w-[480px]" x-text="summaryCopy"></p>
@@ -655,13 +770,12 @@
           <div class="flex-1 min-w-0">
             <div class="flex items-baseline justify-between gap-3">
               <p class="check-label">Google Reviews</p>
-              <span class="pillar-score" :style="`color: ${scoreColorFor(pillars.reviews.score)}`">
-                <span x-text="pillars.reviews.score"></span><span class="denom" x-text="'/' + pillars.reviews.maxScore"></span>
+              <span class="pillar-score" :style="`color: ${scoreColorFor(animatedPillarScores.reviews)}`">
+                <span x-text="Math.round(animatedPillarScores.reviews)"></span><span class="denom" x-text="'/' + pillars.reviews.maxScore"></span>
               </span>
             </div>
             <div class="pillar-bar-track" aria-hidden="true">
-              <div class="pillar-bar-fill"
-                   :style="resultsRevealed ? `width: ${(pillars.reviews.score / pillars.reviews.maxScore) * 100}%; background: ${scoreColorFor(pillars.reviews.score)};` : `width: 0; background: ${scoreColorFor(pillars.reviews.score)};`"></div>
+              <div class="pillar-bar-fill" :style="barFillStyle('reviews')"></div>
             </div>
             <p class="check-detail mt-3"
                :style="pillars.reviews.detailColor ? `color: ${pillars.reviews.detailColor};` : ''"
@@ -682,13 +796,12 @@
           <div class="flex-1 min-w-0">
             <div class="flex items-baseline justify-between gap-3">
               <p class="check-label">Google Bedrijfsprofiel</p>
-              <span class="pillar-score" :style="`color: ${scoreColorFor(pillars.gbp.score)}`">
-                <span x-text="pillars.gbp.score"></span><span class="denom" x-text="'/' + pillars.gbp.maxScore"></span>
+              <span class="pillar-score" :style="`color: ${scoreColorFor(animatedPillarScores.gbp)}`">
+                <span x-text="Math.round(animatedPillarScores.gbp)"></span><span class="denom" x-text="'/' + pillars.gbp.maxScore"></span>
               </span>
             </div>
             <div class="pillar-bar-track" aria-hidden="true">
-              <div class="pillar-bar-fill"
-                   :style="resultsRevealed ? `width: ${(pillars.gbp.score / pillars.gbp.maxScore) * 100}%; background: ${scoreColorFor(pillars.gbp.score)};` : `width: 0; background: ${scoreColorFor(pillars.gbp.score)};`"></div>
+              <div class="pillar-bar-fill" :style="barFillStyle('gbp')"></div>
             </div>
             <p class="check-detail mt-3" x-text="pillars.gbp.detail"></p>
           </div>
@@ -707,13 +820,12 @@
           <div class="flex-1 min-w-0">
             <div class="flex items-baseline justify-between gap-3">
               <p class="check-label">Eigen website</p>
-              <span class="pillar-score" :style="`color: ${scoreColorFor(pillars.website.score)}`">
-                <span x-text="pillars.website.score"></span><span class="denom" x-text="'/' + pillars.website.maxScore"></span>
+              <span class="pillar-score" :style="`color: ${scoreColorFor(animatedPillarScores.website)}`">
+                <span x-text="Math.round(animatedPillarScores.website)"></span><span class="denom" x-text="'/' + pillars.website.maxScore"></span>
               </span>
             </div>
             <div class="pillar-bar-track" aria-hidden="true">
-              <div class="pillar-bar-fill"
-                   :style="resultsRevealed ? `width: ${(pillars.website.score / pillars.website.maxScore) * 100}%; background: ${scoreColorFor(pillars.website.score)};` : `width: 0; background: ${scoreColorFor(pillars.website.score)};`"></div>
+              <div class="pillar-bar-fill" :style="barFillStyle('website')"></div>
             </div>
             <p class="check-detail mt-3"
                :style="pillars.website.detailColor ? `color: ${pillars.website.detailColor};` : ''"
@@ -734,13 +846,12 @@
           <div class="flex-1 min-w-0">
             <div class="flex items-baseline justify-between gap-3">
               <p class="check-label">Lokale SEO</p>
-              <span class="pillar-score" :style="`color: ${scoreColorFor(pillars.seo.score)}`">
-                <span x-text="pillars.seo.score"></span><span class="denom" x-text="'/' + pillars.seo.maxScore"></span>
+              <span class="pillar-score" :style="`color: ${scoreColorFor(animatedPillarScores.seo)}`">
+                <span x-text="Math.round(animatedPillarScores.seo)"></span><span class="denom" x-text="'/' + pillars.seo.maxScore"></span>
               </span>
             </div>
             <div class="pillar-bar-track" aria-hidden="true">
-              <div class="pillar-bar-fill"
-                   :style="resultsRevealed ? `width: ${(pillars.seo.score / pillars.seo.maxScore) * 100}%; background: ${scoreColorFor(pillars.seo.score)};` : `width: 0; background: ${scoreColorFor(pillars.seo.score)};`"></div>
+              <div class="pillar-bar-fill" :style="barFillStyle('seo')"></div>
             </div>
             <p class="check-detail mt-3" x-text="pillars.seo.detail"></p>
           </div>
@@ -759,13 +870,12 @@
           <div class="flex-1 min-w-0">
             <div class="flex items-baseline justify-between gap-3">
               <p class="check-label">AI-zichtbaarheid</p>
-              <span class="pillar-score" :style="`color: ${scoreColorFor(pillars.ai.score)}`">
-                <span x-text="pillars.ai.score"></span><span class="denom" x-text="'/' + pillars.ai.maxScore"></span>
+              <span class="pillar-score" :style="`color: ${scoreColorFor(animatedPillarScores.ai)}`">
+                <span x-text="Math.round(animatedPillarScores.ai)"></span><span class="denom" x-text="'/' + pillars.ai.maxScore"></span>
               </span>
             </div>
             <div class="pillar-bar-track" aria-hidden="true">
-              <div class="pillar-bar-fill"
-                   :style="resultsRevealed ? `width: ${(pillars.ai.score / pillars.ai.maxScore) * 100}%; background: ${scoreColorFor(pillars.ai.score)};` : `width: 0; background: ${scoreColorFor(pillars.ai.score)};`"></div>
+              <div class="pillar-bar-fill" :style="barFillStyle('ai')"></div>
             </div>
             <p class="check-detail mt-3" x-text="pillars.ai.detail"></p>
             <template x-if="!isTruthy(result.ai_mentioned) && aiTop5.length > 0">
@@ -783,7 +893,7 @@
             <p class="check-label">Boekingssysteem</p>
             <p class="check-detail mt-3" x-text="pillars.booking.detail"></p>
             <template x-if="usesCommissionPlatform">
-              <p style="color: #B8860B; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 8px;">
+              <p class="commission-shake" style="color: #B8860B; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 8px;">
                 Op je website gaan boekingen via een extern platform. Dat kost je commissie per klant.
               </p>
             </template>
@@ -801,7 +911,7 @@
            (HTML scan, self-reported, Treatwell directory, or platform URL).
            Generic copy — no platform name interpolated. -->
       <template x-if="usesCommissionPlatform">
-        <div class="reveal r-9 leak-block">
+        <div class="reveal r-9 leak-block commission-shake">
           <p class="leak-block__body">
             Externe boekingsplatformen rekenen 25 tot 35 procent per boeking. Bij een behandeling van 85 euro is dat tot 30 euro commissie, per klant, elke keer. Een eigen boekingspagina kost een fractie daarvan.
           </p>
@@ -884,9 +994,24 @@
         state: 'idle', // idle | loading | results | not-found | error
         form: { salon_name: '', city: '', salon_type: '', booking_system: [] },
         result: {},
-        loadingMessage: 'We zoeken je salon op...',
         resultsRevealed: false, // flips true a tick after results render, so bar fills animate
         _timers: [],
+        _rafIds: [],
+
+        // Motion / count-up state
+        loadingProgress: 0,         // 0-100, drives the loading hero number
+        loadingMessageIndex: 0,     // which entry in loadingMessages is visible
+        loadingMessages: [
+          'Google Reviews ophalen...',
+          'Website analyseren...',
+          'Google Maps checken...',
+          'AI-zoekmachines doorzoeken...',
+          'Score berekenen...',
+        ],
+        animatedAverageScore: 0,    // the headline X.X/10 counts up to averageScore
+        animatedPillarScores: {     // each pillar score number animates from 0 -> final
+          reviews: 0, gbp: 0, website: 0, seo: 0, ai: 0,
+        },
 
         salonTypes: [
           { value: 'schoonheidssalon', label: 'Schoonheidssalon' },
@@ -907,6 +1032,125 @@
         ],
 
         init() { /* placeholder; reserved for future analytics opt-in or persistence */ },
+
+        // Pre-flattened letter list for the typewriter H1. Each entry carries
+        // its character + the Tailwind/Smoova classes for its segment so the
+        // template can render type-chars with a single x-for and one delay
+        // formula.
+        get headlineChars() {
+          const segments = [
+            { text: 'Hoe zichtbaar is jouw salon ', cls: 'type-char' },
+            { text: 'online',                       cls: 'type-char italic-display text-rouge-velours' },
+            { text: '?',                            cls: 'type-char text-gold-vif' },
+          ];
+          const out = [];
+          for (const seg of segments) {
+            for (const ch of seg.text) out.push({ ch, cls: seg.cls });
+          }
+          return out;
+        },
+
+        // Returns true if the user has set OS-level reduced-motion preference.
+        // Read once per call site so reduced-motion users skip animation deltas.
+        prefersReducedMotion() {
+          return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+        },
+
+        // Generic rAF-driven number tween. onUpdate(value) is called every frame
+        // with the eased value; on the last frame value === end exactly. Reduced-
+        // motion users skip the tween and jump straight to end.
+        animateNumber(start, end, duration, onUpdate, easing) {
+          if (this.prefersReducedMotion()) { onUpdate(end); return; }
+          const ease = easing || ((t) => t);
+          const startTime = performance.now();
+          const tick = (now) => {
+            const t = Math.min(1, (now - startTime) / duration);
+            const value = start + (end - start) * ease(t);
+            onUpdate(t === 1 ? end : value);
+            if (t < 1) {
+              const id = requestAnimationFrame(tick);
+              this._rafIds.push(id);
+            }
+          };
+          const id = requestAnimationFrame(tick);
+          this._rafIds.push(id);
+        },
+
+        easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); },
+
+        // Inline-style helper for a pillar bar-fill: drives transform: scaleX,
+        // background-color, and --bar-glow-color from the LIVE animated score
+        // so the bar fills and recolours as the count-up runs.
+        barFillStyle(key) {
+          const live = this.animatedPillarScores[key] || 0;
+          const max = (this.pillars[key] && this.pillars[key].maxScore) || 10;
+          const scale = Math.max(0, Math.min(1, live / max));
+          const color = this.scoreColorFor(live);
+          // Drop the alpha to ~20% for the glow shadow by appending hex 33.
+          return `transform: scaleX(${scale}); background-color: ${color}; --bar-glow-color: ${color}33;`;
+        },
+
+        // Cancel every in-flight rAF + timer. Called on state changes that
+        // invalidate the running animations (reset, error, abort).
+        cancelAnimations() {
+          this._rafIds.forEach((id) => cancelAnimationFrame(id));
+          this._rafIds = [];
+          this._timers.forEach(clearTimeout);
+          this._timers = [];
+        },
+
+        // Kicks off the loading hero: 0->100 counter over 4s with ease-in-out,
+        // rotating message every 1200ms, progress bar driven by pure CSS via
+        // the .loading-progress-fill--active class on the bar.
+        startLoadingAnimation() {
+          this.loadingProgress = 0;
+          this.loadingMessageIndex = 0;
+          // Counter 0 -> 100 over 4s, mild ease-in-out
+          const easeInOut = (t) => t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t + 2, 2) / 2;
+          this.animateNumber(0, 100, 4000, (v) => { this.loadingProgress = v; }, easeInOut);
+          // Rotate the status message every 1200ms (stops when state leaves loading).
+          const rotate = () => {
+            if (this.state !== 'loading') return;
+            this.loadingMessageIndex = (this.loadingMessageIndex + 1) % this.loadingMessages.length;
+            const id = setTimeout(rotate, 1200);
+            this._timers.push(id);
+          };
+          const id = setTimeout(rotate, 1200);
+          this._timers.push(id);
+        },
+
+        // Orchestrates the staged results reveal: overall score counts up first
+        // (after the loading-fade + salon-name pause), then each pillar score
+        // counts up in turn ~200ms apart. The bar fills are driven reactively
+        // by animatedPillarScores via :style on the .pillar-bar-fill element.
+        startResultsAnimation() {
+          // Reset to zero so the count-ups start visibly at 0.
+          this.animatedAverageScore = 0;
+          this.animatedPillarScores = { reviews: 0, gbp: 0, website: 0, seo: 0, ai: 0 };
+          const ease = this.easeOutCubic;
+          // Overall score: starts 400ms (loading fade) + 300ms (salon-name pause) = 700ms
+          const overallStart = 700;
+          const overallDuration = 1500;
+          const overallId = setTimeout(() => {
+            this.animateNumber(0, this.averageScore, overallDuration, (v) => {
+              this.animatedAverageScore = Math.round(v * 10) / 10;
+            }, ease);
+          }, overallStart);
+          this._timers.push(overallId);
+          // Pillar scores: 400ms after overall finishes, then 200ms apart.
+          const pillarKeys = ['reviews', 'gbp', 'website', 'seo', 'ai'];
+          const pillarStart = overallStart + overallDuration + 400;
+          pillarKeys.forEach((key, idx) => {
+            const delay = pillarStart + idx * 200;
+            const id = setTimeout(() => {
+              const finalScore = this.pillars[key].score;
+              this.animateNumber(0, finalScore, 800, (v) => {
+                this.animatedPillarScores[key] = v;
+              }, ease);
+            }, delay);
+            this._timers.push(id);
+          });
+        },
 
         canSubmit() {
           return this.form.salon_name && this.form.city && this.form.salon_type && this.form.booking_system.length > 0;
@@ -1381,20 +1625,16 @@
         async runAudit() {
           if (!this.canSubmit()) return;
 
+          // Reset any prior animation state, then drive the loading hero.
+          this.cancelAnimations();
           this.state = 'loading';
-          this.loadingMessage = 'We zoeken je salon op...';
-
-          // Rotate to second loading message after 3s
-          const msgTimer = setTimeout(() => {
-            if (this.state === 'loading') this.loadingMessage = 'Bijna klaar...';
-          }, 3000);
-          this._timers.push(msgTimer);
+          this.startLoadingAnimation();
 
           try {
             const data = await this.fetchAudit();
-            // Clear the loading-message rotation timer; it's irrelevant past loading state.
-            this._timers.forEach(clearTimeout);
-            this._timers = [];
+            // Clear ALL running loading-state timers + rAFs; we're about to
+            // switch into the results animation, which owns its own schedule.
+            this.cancelAnimations();
             // DEBUG: surface the raw webhook payload + the three commission-detection
             // layers so we can verify the combined flag fires for naaz-style salons
             // even when the HTML scan misses the booking link. Remove once stable.
@@ -1435,27 +1675,40 @@
             }
             this.result = data;
             this.resultsRevealed = false;
-            this.state = 'results';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            // Next tick: flip resultsRevealed so the bar-fill width transitions
-            // from 0 to score*10%. Sits at ~120ms so it lands after the rows reveal.
-            const revealTimer = setTimeout(() => { this.resultsRevealed = true; }, 120);
-            this._timers.push(revealTimer);
+            // 400ms pause after the loading state fades out before flipping to
+            // results — that beat gives the salon owner a sense of anticipation.
+            const flipTimer = setTimeout(() => {
+              this.state = 'results';
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              // Kick off the staged results animation (overall score then pillars).
+              this.startResultsAnimation();
+              // Bar-fill scaleX trigger sits at ~120ms, after the row reveals start.
+              const revealTimer = setTimeout(() => { this.resultsRevealed = true; }, 120);
+              this._timers.push(revealTimer);
+            }, 400);
+            this._timers.push(flipTimer);
           } catch (err) {
-            this._timers.forEach(clearTimeout);
-            this._timers = [];
+            this.cancelAnimations();
             this.state = 'error';
           }
         },
 
         reset() {
-          this._timers.forEach(clearTimeout);
-          this._timers = [];
+          this.cancelAnimations();
           this.state = 'idle';
           this.result = {};
           this.resultsRevealed = false;
-          this.loadingMessage = 'We zoeken je salon op...';
-          // Form values preserved so user can correct and retry without retyping
+          this.animatedAverageScore = 0;
+          this.animatedPillarScores = { reviews: 0, gbp: 0, website: 0, seo: 0, ai: 0 };
+          this.loadingProgress = 0;
+          this.loadingMessageIndex = 0;
+          // Clear all form fields (spec: "All fields are cleared")
+          this.form = { salon_name: '', city: '', salon_type: '', booking_system: [] };
+          // Focus the first input after Alpine has re-rendered the idle state.
+          this.$nextTick(() => {
+            const first = document.getElementById('salon_name');
+            if (first && typeof first.focus === 'function') first.focus();
+          });
         },
       };
     }
