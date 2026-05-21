@@ -421,8 +421,72 @@
     .results-in .r-5 { transition-delay: 0.40s; }
     .results-in .r-6 { transition-delay: 0.48s; }
     .results-in .r-7 { transition-delay: 0.56s; }
+    .results-in .r-8 { transition-delay: 0.64s; }
+    .results-in .r-9 { transition-delay: 0.72s; }
     @media (prefers-reduced-motion: reduce) {
       .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+    }
+
+    /* ---- Pillar scorecard (/10 model) ---- */
+    .pillar-score {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      line-height: 1;
+    }
+    .pillar-score .denom { color: rgba(43, 8, 16, 0.4); }
+    .pillar-bar-track {
+      width: 100%;
+      max-width: 260px;
+      height: 4px;
+      background: rgba(43, 8, 16, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+    .pillar-bar-fill {
+      height: 100%;
+      width: 0;
+      border-radius: 999px;
+      transition: width 900ms cubic-bezier(0.22, 1, 0.36, 1) 220ms;
+    }
+    /* Informational icon (gold ring, no check/X) for non-scored pillars */
+    .check-icon--info {
+      background: transparent;
+      color: var(--color-gold-brule);
+      border: 1px solid rgba(184, 146, 75, 0.42);
+    }
+    .check-icon--info::after {
+      content: ''; width: 4px; height: 4px; border-radius: 999px;
+      background: var(--color-gold-brule);
+    }
+    /* Inline warning chip: "Je staat ook op Treatwell" */
+    .audit-warning {
+      display: inline-flex; align-items: flex-start; gap: 8px;
+      margin-top: 12px;
+      padding: 8px 14px;
+      background: rgba(107, 21, 37, 0.08);
+      border: 1px solid rgba(107, 21, 37, 0.24);
+      border-radius: 999px;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 13px;
+      line-height: 1.35;
+      color: var(--color-rouge-velours);
+    }
+    .audit-warning svg { flex-shrink: 0; margin-top: 2px; }
+    /* ai_response block under the AI pillar — italic Fraunces in a tinted gold wash */
+    .ai-response {
+      margin-top: 12px;
+      padding: 12px 16px;
+      background: rgba(212, 168, 87, 0.08);
+      border-radius: 8px;
+      font-family: 'Fraunces', Georgia, serif;
+      font-style: italic;
+      font-size: 14px;
+      line-height: 1.5;
+      color: rgba(43, 8, 16, 0.78);
     }
 
     /* Link underline reuse */
@@ -543,9 +607,9 @@
         <div class="audit-loader mb-8" aria-hidden="true"></div>
         <p class="italic-display text-[22px] leading-[1.35] text-rouge-profond mb-12" x-text="loadingMessage" aria-live="polite"></p>
       </div>
-      <!-- Skeleton check rows: same shape as the real results so the layout doesn't shift on swap. -->
+      <!-- Skeleton pillar rows: same shape as the real results so the layout doesn't shift on swap. -->
       <div class="mt-2" aria-hidden="true">
-        <template x-for="i in 4" :key="i">
+        <template x-for="i in 6" :key="i">
           <div class="skel-row">
             <span class="skel skel-circle"></span>
             <div class="flex-1 min-w-0">
@@ -571,88 +635,161 @@
         <p class="font-sans text-sm text-rouge-profond/65 mt-2" x-text="result.city || form.city"></p>
       </div>
 
-      <!-- Score: solid color carries meaning. Rouge-velours for danger (0–1), gold-brule
-           for the in-between (2), gold-vif for good (3), rouge-profond for perfect (4). -->
+      <!-- Score: averaged /10 across the four scored pillars. Solid color from the
+           same severity scale (rouge-velours / gold-brule / gold-vif). -->
       <div class="reveal r-2 mb-10">
         <div class="flex items-baseline gap-3">
           <span class="font-display font-light leading-none tracking-[-0.03em]"
                 style="font-size: clamp(64px, 14vw, 96px);"
-                :style="'color: ' + scoreColor + ';'"
-                x-text="passCount"></span>
-          <span class="font-display font-light text-[34px] text-rouge-profond/55 leading-none">/ 4</span>
+                :style="'color: ' + scoreColorFor(averageScore) + ';'"
+                x-text="averageScore"></span>
+          <span class="font-display font-light text-[34px] text-rouge-profond/55 leading-none">/ 10</span>
         </div>
-        <p class="italic-display text-[20px] sm:text-[22px] leading-[1.4] text-rouge-profond mt-4 max-w-[480px]" x-text="scoreCopy"></p>
+        <p class="italic-display text-[20px] sm:text-[22px] leading-[1.4] text-rouge-profond mt-4 max-w-[480px]" x-text="summaryCopy"></p>
       </div>
 
-      <!-- Check rows -->
+      <!-- Pillar rows -->
       <div class="mb-12">
-        <!-- 1. Google Reviews -->
+
+        <!-- 1. Google Reviews (scored /10) -->
         <div class="check-row reveal r-3">
-          <span class="check-icon" :class="checks.reviews.pass ? 'check-icon--pass' : 'check-icon--fail'">
-            <template x-if="checks.reviews.pass">
+          <span class="check-icon" :class="scoredIconClass(pillars.reviews.score)">
+            <template x-if="pillars.reviews.score >= 6">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
             </template>
-            <template x-if="!checks.reviews.pass">
+            <template x-if="pillars.reviews.score < 6">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </template>
           </span>
           <div class="flex-1 min-w-0">
-            <p class="check-label">Google Reviews</p>
-            <p class="check-detail" :class="checks.reviews.pass ? 'check-detail--pass' : 'check-detail--fail'" x-text="checks.reviews.detail"></p>
+            <div class="flex items-baseline justify-between gap-3">
+              <p class="check-label">Google Reviews</p>
+              <span class="pillar-score" :style="`color: ${scoreColorFor(pillars.reviews.score)}`">
+                <span x-text="pillars.reviews.score"></span><span class="denom">/10</span>
+              </span>
+            </div>
+            <div class="pillar-bar-track" aria-hidden="true">
+              <div class="pillar-bar-fill"
+                   :style="resultsRevealed ? `width: ${pillars.reviews.score * 10}%; background: ${scoreColorFor(pillars.reviews.score)};` : `width: 0; background: ${scoreColorFor(pillars.reviews.score)};`"></div>
+            </div>
+            <p class="check-detail mt-3" x-text="pillars.reviews.detail"></p>
           </div>
         </div>
 
-        <!-- 2. Eigen website -->
+        <!-- 2. Google Bedrijfsprofiel (scored /10) -->
         <div class="check-row reveal r-4">
-          <span class="check-icon" :class="checks.website.pass ? 'check-icon--pass' : 'check-icon--fail'">
-            <template x-if="checks.website.pass">
+          <span class="check-icon" :class="scoredIconClass(pillars.gbp.score)">
+            <template x-if="pillars.gbp.score >= 6">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
             </template>
-            <template x-if="!checks.website.pass">
+            <template x-if="pillars.gbp.score < 6">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </template>
           </span>
           <div class="flex-1 min-w-0">
-            <p class="check-label">Eigen website</p>
-            <p class="check-detail" :class="checks.website.pass ? 'check-detail--pass' : 'check-detail--fail'" x-text="checks.website.detail"></p>
+            <div class="flex items-baseline justify-between gap-3">
+              <p class="check-label">Google Bedrijfsprofiel</p>
+              <span class="pillar-score" :style="`color: ${scoreColorFor(pillars.gbp.score)}`">
+                <span x-text="pillars.gbp.score"></span><span class="denom">/10</span>
+              </span>
+            </div>
+            <div class="pillar-bar-track" aria-hidden="true">
+              <div class="pillar-bar-fill"
+                   :style="resultsRevealed ? `width: ${pillars.gbp.score * 10}%; background: ${scoreColorFor(pillars.gbp.score)};` : `width: 0; background: ${scoreColorFor(pillars.gbp.score)};`"></div>
+            </div>
+            <p class="check-detail mt-3" x-text="pillars.gbp.detail"></p>
           </div>
         </div>
 
-        <!-- 3. Google Maps -->
+        <!-- 3. Eigen website (scored /10) -->
         <div class="check-row reveal r-5">
-          <span class="check-icon" :class="checks.maps.pass ? 'check-icon--pass' : 'check-icon--fail'">
-            <template x-if="checks.maps.pass">
+          <span class="check-icon" :class="scoredIconClass(pillars.website.score)">
+            <template x-if="pillars.website.score >= 6">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
             </template>
-            <template x-if="!checks.maps.pass">
+            <template x-if="pillars.website.score < 6">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </template>
+          </span>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-baseline justify-between gap-3">
+              <p class="check-label">Eigen website</p>
+              <span class="pillar-score" :style="`color: ${scoreColorFor(pillars.website.score)}`">
+                <span x-text="pillars.website.score"></span><span class="denom">/10</span>
+              </span>
+            </div>
+            <div class="pillar-bar-track" aria-hidden="true">
+              <div class="pillar-bar-fill"
+                   :style="resultsRevealed ? `width: ${pillars.website.score * 10}%; background: ${scoreColorFor(pillars.website.score)};` : `width: 0; background: ${scoreColorFor(pillars.website.score)};`"></div>
+            </div>
+            <p class="check-detail mt-3" x-text="pillars.website.detail"></p>
+          </div>
+        </div>
+
+        <!-- 4. Boekingssysteem (informational, no score) -->
+        <div class="check-row reveal r-6">
+          <span class="check-icon check-icon--info" aria-hidden="true"></span>
+          <div class="flex-1 min-w-0">
+            <p class="check-label">Boekingssysteem</p>
+            <p class="check-detail mt-3" x-text="pillars.booking.detail"></p>
+            <template x-if="result.on_treatwell === true">
+              <p class="audit-warning">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                  <line x1="12" y1="9" x2="12" y2="13"/>
+                  <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                <span>Je staat ook op Treatwell (25–35% commissie)</span>
+              </p>
+            </template>
+          </div>
+        </div>
+
+        <!-- 5. Google Maps (informational, presence/absence) -->
+        <div class="check-row reveal r-7">
+          <span class="check-icon" :class="pillars.maps.pass ? 'check-icon--pass' : 'check-icon--fail'">
+            <template x-if="pillars.maps.pass">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            </template>
+            <template x-if="!pillars.maps.pass">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </template>
           </span>
           <div class="flex-1 min-w-0">
             <p class="check-label">Google Maps</p>
-            <p class="check-detail" :class="checks.maps.pass ? 'check-detail--pass' : 'check-detail--fail'" x-text="checks.maps.detail"></p>
+            <p class="check-detail mt-3" :class="pillars.maps.pass ? 'check-detail--pass' : 'check-detail--fail'" x-text="pillars.maps.detail"></p>
           </div>
         </div>
 
-        <!-- 4. AI-zichtbaarheid -->
-        <div class="check-row reveal r-6">
-          <span class="check-icon" :class="checks.ai.pass ? 'check-icon--pass' : 'check-icon--fail'">
-            <template x-if="checks.ai.pass">
+        <!-- 6. AI-zichtbaarheid (scored /10) -->
+        <div class="check-row reveal r-8">
+          <span class="check-icon" :class="scoredIconClass(pillars.ai.score)">
+            <template x-if="pillars.ai.score >= 6">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
             </template>
-            <template x-if="!checks.ai.pass">
+            <template x-if="pillars.ai.score < 6">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </template>
           </span>
           <div class="flex-1 min-w-0">
-            <p class="check-label">AI-zichtbaarheid</p>
-            <p class="check-detail" :class="checks.ai.pass ? 'check-detail--pass' : 'check-detail--fail'" x-text="checks.ai.detail"></p>
-            <!-- The punch: when ChatGPT recommends OTHER salons in this city, list them.
-                 Salon owner sees, by name, who is being recommended in their place. -->
+            <div class="flex items-baseline justify-between gap-3">
+              <p class="check-label">AI-zichtbaarheid</p>
+              <span class="pillar-score" :style="`color: ${scoreColorFor(pillars.ai.score)}`">
+                <span x-text="pillars.ai.score"></span><span class="denom">/10</span>
+              </span>
+            </div>
+            <div class="pillar-bar-track" aria-hidden="true">
+              <div class="pillar-bar-fill"
+                   :style="resultsRevealed ? `width: ${pillars.ai.score * 10}%; background: ${scoreColorFor(pillars.ai.score)};` : `width: 0; background: ${scoreColorFor(pillars.ai.score)};`"></div>
+            </div>
+            <p class="check-detail mt-3" x-text="pillars.ai.detail"></p>
+            <template x-if="result.ai_response">
+              <p class="ai-response" x-text="result.ai_response"></p>
+            </template>
             <template x-if="aiTop5.length > 0">
               <div>
                 <p class="audit-eyebrow mt-4 mb-1" style="color: var(--color-rouge-velours);">
-                  <span x-text="checks.ai.pass ? 'Ook genoemd' : 'Het noemt deze salons'"></span>
+                  <span x-text="pillars.ai.score >= 6 ? 'Ook genoemd' : 'Het noemt deze salons'"></span>
                 </p>
                 <ol class="ai-list">
                   <template x-for="(name, idx) in aiTop5" :key="idx">
@@ -669,7 +806,7 @@
       </div>
 
       <!-- CTA -->
-      <div class="reveal r-7 pt-2">
+      <div class="reveal r-9 pt-2">
         <p class="italic-display text-[20px] sm:text-[22px] leading-[1.45] text-rouge-profond mb-6 max-w-[460px]"
            x-text="ctaCopy"></p>
         <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
@@ -744,6 +881,7 @@
         form: { salon_name: '', city: '', salon_type: '', booking_system: [] },
         result: {},
         loadingMessage: 'We zoeken je salon op...',
+        resultsRevealed: false, // flips true a tick after results render, so bar fills animate
         _timers: [],
 
         salonTypes: [
@@ -798,82 +936,137 @@
         },
 
         // A website that points to Treatwell / Fresha / Planity means the salon
-        // is on a marketplace, not on their own domain. We count that as a fail.
+        // is on a marketplace, not on their own domain. Used as a fallback only
+        // when the webhook does not return booking_platform explicitly.
         isPlatformUrl(url) {
           if (!url) return false;
           const lower = url.toLowerCase();
           return ['treatwell', 'fresha', 'planity'].some(d => lower.includes(d));
         },
 
-        get checks() {
+        // Coerce any webhook score to a clean integer 0-10. Missing / NaN / out
+        // of range falls back to 0 so the bar still renders.
+        normalizeScore(v) {
+          const n = Number(v);
+          if (!Number.isFinite(n)) return 0;
+          return Math.max(0, Math.min(10, Math.round(n)));
+        },
+
+        // Maps a numeric platform key to its human-readable Dutch label. Used by
+        // the website pillar's "Via X (commissie)" copy and the booking-system
+        // detail line.
+        platformLabel(key) {
+          const map = {
+            treatwell: 'Treatwell', fresha: 'Fresha', planity: 'Planity',
+            salonized: 'Salonized', own_website: 'Eigen website',
+            none: 'Geen', other: 'Anders',
+          };
+          if (!key) return '';
+          return map[String(key).toLowerCase()] || String(key);
+        },
+
+        // The /10 colour scale that drives the score number, the bar fills, and
+        // the icon ring tint. Brand-tinted equivalents of the requested rust /
+        // goldenrod / green so the scorecard stays inside the Theatre Rouge
+        // palette already used across the site.
+        scoreColorFor(score) {
+          const s = this.normalizeScore(score);
+          if (s <= 3) return '#6B1525'; // rouge-velours
+          if (s <= 6) return '#8A6B2E'; // gold-brule
+          return '#D4A857';             // gold-vif
+        },
+
+        // Icon ring class for a scored pillar. Pass at >= 6, fail otherwise.
+        scoredIconClass(score) {
+          return this.normalizeScore(score) >= 6 ? 'check-icon--pass' : 'check-icon--fail';
+        },
+
+        get pillars() {
           const r = this.result || {};
 
-          // 1. Google Reviews — pass if rating >= 4.0
+          // 1. Google Reviews
           const rating = Number(r.rating);
           const reviewCount = Number(r.review_count);
-          const reviewsPass = !isNaN(rating) && rating >= 4.0;
           const reviewsDetail = !isNaN(rating)
-            ? `${rating.toLocaleString('nl-NL', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} sterren · ${(isNaN(reviewCount) ? 0 : reviewCount).toLocaleString('nl-NL')} reviews`
+            ? `${rating.toLocaleString('nl-NL', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} sterren, ${(isNaN(reviewCount) ? 0 : reviewCount).toLocaleString('nl-NL')} reviews`
             : 'Geen Google reviews gevonden';
 
-          // 2. Eigen website — pass if a real domain (not a platform)
-          const hasWebsite = !!r.website;
-          const onPlatform = this.isPlatformUrl(r.website);
-          const websitePass = hasWebsite && !onPlatform;
-          const websiteDetail = !hasWebsite
-            ? 'Geen eigen website gevonden'
-            : onPlatform
-              ? `Alleen zichtbaar via ${this.cleanDomain(r.website)}`
-              : this.cleanDomain(r.website);
+          // 2. Google Bedrijfsprofiel — facts line built from has_phone, has_hours, photo_count.
+          const mark = (ok) => ok ? '✓' : '✗';
+          const photos = Number.isFinite(Number(r.photo_count)) ? Number(r.photo_count) : 0;
+          const photosLabel = photos === 1 ? '1 foto' : `${photos.toLocaleString('nl-NL')} foto's`;
+          const gbpDetail = `Telefoon ${mark(r.has_phone === true)} · Openingstijden ${mark(r.has_hours === true)} · ${photosLabel}`;
 
-          // 3. Google Maps — pass if listing exists
+          // 3. Eigen website — prefer the explicit booking_platform field, fall back to
+          //    sniffing the website URL for platform domains.
+          const platformKey = (r.booking_platform || '').toLowerCase()
+            || (this.isPlatformUrl(r.website) ? (r.website.toLowerCase().match(/(treatwell|fresha|planity)/) || [])[0] : '')
+            || (r.website ? 'own_website' : 'none');
+
+          let websiteDetail;
+          if (platformKey === 'own_website' && r.website) {
+            websiteDetail = this.cleanDomain(r.website);
+          } else if (platformKey && platformKey !== 'none' && platformKey !== 'own_website') {
+            websiteDetail = `Via ${this.platformLabel(platformKey)} (commissie)`;
+          } else {
+            websiteDetail = 'Geen eigen website gevonden';
+          }
+
+          // 4. Boekingssysteem (informational). Prefer the webhook's reported value
+          //    if present; otherwise compose from the form's multi-select.
+          let bookingDetail;
+          if (r.booking_system_reported && String(r.booking_system_reported).trim().length > 0) {
+            bookingDetail = String(r.booking_system_reported);
+          } else if (Array.isArray(this.form.booking_system) && this.form.booking_system.length > 0) {
+            bookingDetail = this.form.booking_system.map(v => this.platformLabel(v)).join(', ');
+          } else {
+            bookingDetail = '—';
+          }
+
+          // 5. Google Maps — presence/absence, no /10 score.
           const mapsPass = !!r.google_maps_url;
-          const mapsDetail = mapsPass ? 'Je staat op Google Maps' : 'Niet gevonden op Google Maps';
+          const mapsDetail = mapsPass ? '✓ Je staat op Google Maps' : '✗ Niet gevonden op Google Maps';
 
-          // 4. AI-zichtbaarheid — pass if mentioned
-          const aiPass = r.ai_mentioned === true;
-          const aiDetail = aiPass ? 'ChatGPT noemt je salon' : 'ChatGPT noemt je niet';
+          // 6. AI-zichtbaarheid
+          const aiMentioned = r.ai_mentioned === true;
+          const aiDetail = aiMentioned ? 'ChatGPT noemt je salon' : 'ChatGPT noemt je niet';
 
           return {
-            reviews: { pass: reviewsPass, detail: reviewsDetail },
-            website: { pass: websitePass, detail: websiteDetail },
-            maps:    { pass: mapsPass,    detail: mapsDetail },
-            ai:      { pass: aiPass,      detail: aiDetail },
+            reviews: { score: this.normalizeScore(r.score_reviews), detail: reviewsDetail },
+            gbp:     { score: this.normalizeScore(r.score_gbp),     detail: gbpDetail },
+            website: { score: this.normalizeScore(r.score_website), detail: websiteDetail },
+            booking: { detail: bookingDetail },
+            maps:    { pass:  mapsPass,                              detail: mapsDetail },
+            ai:      { score: this.normalizeScore(r.score_ai),      detail: aiDetail },
           };
         },
 
-        get passCount() {
-          const c = this.checks;
-          return [c.reviews.pass, c.website.pass, c.maps.pass, c.ai.pass].filter(Boolean).length;
+        // Average of the four scored pillars (reviews + gbp + website + ai),
+        // rounded to a clean integer 0-10 for display.
+        get averageScore() {
+          const p = this.pillars;
+          const sum = p.reviews.score + p.gbp.score + p.website.score + p.ai.score;
+          return Math.round(sum / 4);
         },
 
-        get scoreCopy() {
-          const n = this.passCount;
-          if (n === 0) return 'Vier van vier rood. Je laat élke nieuwe klant liggen.';
-          if (n === 1) return 'Eén van vier groen. De rest lekt klanten naar concurrenten.';
-          if (n === 2) return 'Halverwege. Je hebt een basis, maar nog te veel gaten.';
-          if (n === 3) return 'Bijna compleet. Eén ding houdt je tegen.';
-          return 'Vier van vier. Je bent al goed zichtbaar.';
+        get summaryCopy() {
+          const n = this.averageScore;
+          if (n <= 3) return 'Er is werk aan de winkel. Maar dat is oplosbaar.';
+          if (n <= 5) return 'Je hebt een basis. Maar je laat klanten liggen.';
+          if (n <= 7) return 'Goed bezig. Er mist nog wat.';
+          if (n <= 9) return 'Bijna perfect. Nog een paar details.';
+          return 'Uitstekend. Je bent al goed zichtbaar.';
         },
 
-        // Solid color carries the score's meaning. No gradient text.
-        get scoreColor() {
-          const n = this.passCount;
-          if (n <= 1) return '#6B1525'; // rouge-velours — danger
-          if (n === 2) return '#8A6B2E'; // gold-brule — yellow zone
-          if (n === 3) return '#D4A857'; // gold-vif — good
-          return '#2B0810';              // rouge-profond — verdict
-        },
-
-        // CTA copy reflects what they just saw. The number of failing checks is
-        // the lever; a 0-fail score still earns a soft pitch instead of a hard ask.
+        // CTA copy reflects the average score: the lower it is, the harder the
+        // pitch. Same five buckets as summaryCopy for consistency.
         get ctaCopy() {
-          const failed = 4 - this.passCount;
-          if (failed === 0) return 'Klaar voor de volgende stap? Plan een vrijblijvend gesprek van twintig minuten.';
-          if (failed === 1) return 'Eén ding houdt je tegen. We lossen het op binnen veertien dagen.';
-          if (failed === 2) return 'Twee gaten in je vindbaarheid. Wij dichten ze in veertien dagen.';
-          if (failed === 3) return 'Drie van vier rood. Veertien dagen later staat er een site die wél werkt.';
-          return 'Alles rood. Maar oplosbaar. Veertien dagen tot een site die nieuwe klanten oplevert.';
+          const n = this.averageScore;
+          if (n <= 3) return 'Veel rood op je scorecard. Maar oplosbaar. Veertien dagen tot een site die nieuwe klanten oplevert.';
+          if (n <= 5) return 'Te veel gaten in je vindbaarheid. We dichten ze in veertien dagen.';
+          if (n <= 7) return 'Een paar puntjes houden je tegen. Veertien dagen later staat het.';
+          if (n <= 9) return 'Bijna compleet. Plan een gesprek en sluit de laatste details.';
+          return 'Klaar voor de volgende stap? Plan een vrijblijvend gesprek van twintig minuten.';
         },
 
         // Cleaned ai_top5: filters out the salon's own name (case-insensitive) so the
@@ -906,10 +1099,11 @@
           }
         },
 
-        // A response counts as "not found" only when every meaningful field
-        // (rating, review_count, website, google_maps_url, ai_mentioned, ai_top5)
-        // is missing or null. A salon with only a Maps listing should still
-        // produce a result — that's the audit's value: showing partial presence.
+        // A response counts as "not found" only when every meaningful field is
+        // missing or null. A salon with only a Maps listing should still produce
+        // a result — that's the audit's value: showing partial presence. The
+        // new pillar scores also count as signal so a webhook payload with
+        // scores but no raw fields still renders.
         isEmptyResponse(data) {
           if (!data) return true;
           const hasAnySignal = data.rating != null
@@ -917,7 +1111,11 @@
             || data.website
             || data.google_maps_url
             || data.ai_mentioned != null
-            || (Array.isArray(data.ai_top5) && data.ai_top5.length > 0);
+            || (Array.isArray(data.ai_top5) && data.ai_top5.length > 0)
+            || data.score_reviews != null
+            || data.score_gbp != null
+            || data.score_website != null
+            || data.score_ai != null;
           return !hasAnySignal;
         },
 
@@ -935,18 +1133,25 @@
 
           try {
             const data = await this.fetchAudit();
+            // Clear the loading-message rotation timer; it's irrelevant past loading state.
+            this._timers.forEach(clearTimeout);
+            this._timers = [];
             if (this.isEmptyResponse(data)) {
               this.state = 'not-found';
               return;
             }
             this.result = data;
+            this.resultsRevealed = false;
             this.state = 'results';
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Next tick: flip resultsRevealed so the bar-fill width transitions
+            // from 0 to score*10%. Sits at ~120ms so it lands after the rows reveal.
+            const revealTimer = setTimeout(() => { this.resultsRevealed = true; }, 120);
+            this._timers.push(revealTimer);
           } catch (err) {
-            this.state = 'error';
-          } finally {
             this._timers.forEach(clearTimeout);
             this._timers = [];
+            this.state = 'error';
           }
         },
 
@@ -955,6 +1160,7 @@
           this._timers = [];
           this.state = 'idle';
           this.result = {};
+          this.resultsRevealed = false;
           this.loadingMessage = 'We zoeken je salon op...';
           // Form values preserved so user can correct and retry without retyping
         },
