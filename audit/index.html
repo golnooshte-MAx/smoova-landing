@@ -505,14 +505,17 @@
 
         <div class="anim-fade-up" style="animation-delay: 500ms;">
           <span class="audit-eyebrow block mb-3" id="booking_system_label">Gebruik je een boekingssysteem?</span>
-          <div class="chip-row" role="group" aria-labelledby="booking_system_label">
+          <div class="chip-row" role="group" aria-labelledby="booking_system_label" aria-describedby="booking_system_hint">
             <template x-for="opt in bookingSystems" :key="opt.value">
               <button type="button" class="chip"
-                      :aria-pressed="form.booking_system === opt.value"
-                      @click="form.booking_system = opt.value"
+                      :aria-pressed="form.booking_system.includes(opt.value)"
+                      @click="toggleBookingSystem(opt.value)"
                       x-text="opt.label"></button>
             </template>
           </div>
+          <p id="booking_system_hint" class="audit-eyebrow opacity-60 mt-2" style="letter-spacing: 0.22em;">
+            Meerdere mogelijk
+          </p>
         </div>
 
         <div class="pt-4 anim-fade-up" style="animation-delay: 560ms;">
@@ -523,7 +526,7 @@
               <polyline points="12 5 19 12 12 19"></polyline>
             </svg>
           </button>
-          <p class="form-helper" x-show="!canSubmit() && (form.salon_name || form.city || form.salon_type || form.booking_system)" x-transition.opacity>
+          <p class="form-helper" x-show="!canSubmit() && (form.salon_name || form.city || form.salon_type || form.booking_system.length > 0)" x-transition.opacity>
             Vul alle vier de velden in om te starten.
           </p>
         </div>
@@ -738,7 +741,7 @@
     function auditApp() {
       return {
         state: 'idle', // idle | loading | results | not-found | error
-        form: { salon_name: '', city: '', salon_type: '', booking_system: '' },
+        form: { salon_name: '', city: '', salon_type: '', booking_system: [] },
         result: {},
         loadingMessage: 'We zoeken je salon op...',
         _timers: [],
@@ -764,7 +767,23 @@
         init() { /* placeholder; reserved for future analytics opt-in or persistence */ },
 
         canSubmit() {
-          return this.form.salon_name && this.form.city && this.form.salon_type && this.form.booking_system;
+          return this.form.salon_name && this.form.city && this.form.salon_type && this.form.booking_system.length > 0;
+        },
+
+        // Toggle a booking-system value in/out of the multi-select array.
+        // Mutually exclusive: picking "none" clears the rest; picking another clears "none".
+        toggleBookingSystem(value) {
+          const arr = this.form.booking_system;
+          const idx = arr.indexOf(value);
+          if (idx >= 0) {
+            arr.splice(idx, 1);
+            return;
+          }
+          if (value === 'none') {
+            this.form.booking_system = ['none'];
+          } else {
+            this.form.booking_system = arr.filter(v => v !== 'none').concat(value);
+          }
         },
 
         // Strip protocol + path, leave clean hostname for display
