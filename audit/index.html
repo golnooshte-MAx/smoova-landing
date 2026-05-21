@@ -1377,6 +1377,28 @@
             // Clear the loading-message rotation timer; it's irrelevant past loading state.
             this._timers.forEach(clearTimeout);
             this._timers = [];
+            // DEBUG: surface the raw webhook payload + the booking-link fields so we
+            // can verify Make.com is actually returning the booking_links_to_*
+            // booleans (and in what format). Remove once integration is stable.
+            try {
+              const linksToCommission = this.isTruthy(data && data.booking_links_to_treatwell)
+                || this.isTruthy(data && data.booking_links_to_fresha)
+                || this.isTruthy(data && data.booking_links_to_planity)
+                || this.isTruthy(data && data.booking_links_to_salonized)
+                || this.isTruthy(data && data.booking_links_to_simplybook)
+                || this.isTruthy(data && data.booking_links_to_timma);
+              console.log('[audit] webhook response:', data);
+              console.log('[audit] booking fields:', {
+                website_has_booking:        data && data.website_has_booking,
+                booking_links_to_treatwell: data && data.booking_links_to_treatwell,
+                booking_links_to_fresha:    data && data.booking_links_to_fresha,
+                booking_links_to_planity:   data && data.booking_links_to_planity,
+                booking_links_to_salonized: data && data.booking_links_to_salonized,
+                booking_links_to_simplybook:data && data.booking_links_to_simplybook,
+                booking_links_to_timma:     data && data.booking_links_to_timma,
+                linksToCommission:          linksToCommission,
+              });
+            } catch (_) { /* ignore logging failures */ }
             if (this.isEmptyResponse(data)) {
               this.state = 'not-found';
               return;
