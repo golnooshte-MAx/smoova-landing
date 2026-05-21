@@ -14,7 +14,64 @@
   <meta property="og:title" content="Gratis Salon Audit | Smoova" />
   <meta property="og:description" content="Ontdek in 30 seconden hoe zichtbaar jouw salon online is." />
   <meta property="og:url" content="https://smoova.studio/audit/" />
+  <meta property="og:image" content="https://smoova.studio/smoova_21_1_assets/hero-800.jpg" />
+  <meta property="og:image:width" content="800" />
+  <meta property="og:image:height" content="800" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Gratis Salon Audit | Smoova" />
+  <meta name="twitter:description" content="Ontdek in 30 seconden hoe zichtbaar jouw salon online is." />
+  <meta name="twitter:image" content="https://smoova.studio/smoova_21_1_assets/hero-800.jpg" />
   <meta name="theme-color" content="#2B0810" />
+
+  <!-- JSON-LD: Organization + WebPage + Audit Service. Mirrors the schema discipline of index.html / book.html. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://smoova.studio/#organization",
+        "name": "Smoova",
+        "url": "https://smoova.studio",
+        "logo": "https://smoova.studio/smoova_21_1_assets/smoova-logo.svg",
+        "email": "info@smoova.studio",
+        "areaServed": "NL"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://smoova.studio/audit/#webpage",
+        "url": "https://smoova.studio/audit/",
+        "name": "Gratis Salon Audit | Smoova",
+        "description": "Ontdek in 30 seconden hoe zichtbaar jouw salon online is. Gratis audit van je Google Reviews, website, Maps en AI-zichtbaarheid.",
+        "inLanguage": "nl-NL",
+        "isPartOf": { "@id": "https://smoova.studio/#organization" },
+        "breadcrumb": { "@id": "https://smoova.studio/audit/#breadcrumb" }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://smoova.studio/audit/#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Smoova", "item": "https://smoova.studio/" },
+          { "@type": "ListItem", "position": 2, "name": "Salon Audit", "item": "https://smoova.studio/audit/" }
+        ]
+      },
+      {
+        "@type": "Service",
+        "name": "Salon Audit",
+        "provider": { "@id": "https://smoova.studio/#organization" },
+        "serviceType": "Online vindbaarheidscheck voor schoonheidssalons",
+        "areaServed": "NL",
+        "description": "Een gratis check in 30 seconden: Google Reviews, eigen website, Google Maps en AI-zichtbaarheid in ChatGPT en Perplexity.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "EUR",
+          "availability": "https://schema.org/InStock"
+        }
+      }
+    ]
+  }
+  </script>
 
   <!-- Critical FOUC shim — same lockset as index.html / book.html -->
   <style>
@@ -25,6 +82,16 @@
       padding: 0 !important; margin: -1px !important; overflow: hidden !important;
       clip: rect(0,0,0,0) !important; white-space: nowrap !important; border-width: 0 !important;
     }
+    /* Skip link: visible only when focused. Uses its own class instead of fighting
+       sr-only's !important declarations. */
+    .skip-link {
+      position: absolute; top: -100px; left: 12px; z-index: 100;
+      padding: 10px 16px; background: var(--color-bone, #F2EBDD); color: var(--color-rouge-profond, #2B0810);
+      border-radius: 6px; font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase;
+      transition: top 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .skip-link:focus-visible { top: 12px; outline: 2px solid var(--color-gold-vif, #D4A857); outline-offset: 3px; }
   </style>
 
   <!-- Inline SVG favicon — matches index.html / book.html -->
@@ -159,6 +226,74 @@
       text-transform: uppercase;
       color: var(--color-gold-brule);
     }
+
+    /* ---- Salon-type chips: ditches native <select> for a faster, more tactile mobile pick ---- */
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 44px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(43, 8, 16, 0.22);
+      background: transparent;
+      color: var(--color-rouge-profond);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: background-color 220ms ease-out, border-color 220ms ease-out, color 220ms ease-out;
+    }
+    .chip:hover { border-color: var(--color-rouge-velours); color: var(--color-rouge-velours); }
+    .chip[aria-pressed="true"] {
+      background: var(--color-rouge-profond);
+      border-color: var(--color-rouge-profond);
+      color: var(--color-bone);
+    }
+    .chip[aria-pressed="true"]:hover { background: var(--color-rouge-velours); border-color: var(--color-rouge-velours); }
+
+    /* Helper microcopy under disabled submit. Reveals when the user has tried to submit
+       an incomplete form, or is hinted into the form. */
+    .form-helper {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 13px;
+      color: var(--color-rouge-velours);
+      margin-top: 12px;
+    }
+
+    /* Skeleton placeholders during the loading state. Same dimensions as the real
+       check rows so layout doesn't shift on swap. */
+    .skel { background: rgba(43, 8, 16, 0.06); border-radius: 4px; overflow: hidden; position: relative; }
+    .skel::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(212, 168, 87, 0.18), transparent);
+      transform: translateX(-100%);
+      animation: skelShimmer 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes skelShimmer { 100% { transform: translateX(100%); } }
+    @media (prefers-reduced-motion: reduce) { .skel::after { animation: none; } }
+    .skel-row { display: flex; align-items: flex-start; gap: 18px; padding: 22px 0; border-top: 1px solid rgba(43, 8, 16, 0.10); }
+    .skel-row:last-child { border-bottom: 1px solid rgba(43, 8, 16, 0.10); }
+    .skel-circle { width: 28px; height: 28px; border-radius: 999px; flex-shrink: 0; margin-top: 1px; }
+    .skel-line { height: 16px; }
+    .skel-line.short { width: 38%; }
+    .skel-line.long { width: 64%; margin-top: 10px; height: 12px; opacity: 0.7; }
+
+    /* AI top-5 list shown when ChatGPT mentions other salons instead of yours. The
+       prosecutorial moment of the page: "It recommends them, not you." */
+    .ai-list { margin-top: 12px; padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .ai-list li {
+      display: flex; align-items: baseline; gap: 10px;
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 16px; line-height: 1.35; color: var(--color-rouge-profond);
+    }
+    .ai-list li .ai-rank {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.2em;
+      color: var(--color-gold-brule);
+      flex-shrink: 0; width: 24px;
+    }
+    .ai-list li .ai-name { font-style: italic; }
 
     /* ---- Buttons (Theatre Rouge primary, like the pricing CTAs) ---- */
     .btn-rouge {
@@ -307,9 +442,7 @@
   <div class="page-bg" aria-hidden="true"></div>
   <div class="page-grain" aria-hidden="true"></div>
 
-  <a href="#main" class="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-3 focus-visible:left-3 focus-visible:z-50 focus-visible:px-4 focus-visible:py-2 focus-visible:bg-bone focus-visible:text-rouge-profond focus-visible:rounded-md focus-visible:font-medium">
-    Naar inhoud
-  </a>
+  <a href="#main" class="skip-link">Naar inhoud</a>
 
   <!-- ============== NAV ============== -->
   <nav class="relative z-30 px-6 md:px-12 lg:px-20 py-6 flex items-center justify-between">
@@ -359,18 +492,30 @@
         </div>
 
         <div class="anim-fade-up" style="animation-delay: 440ms;">
-          <label for="salon_type" class="audit-eyebrow block mb-2">Type salon</label>
-          <select id="salon_type" class="audit-field" x-model="form.salon_type" required>
-            <option value="" disabled>Kies een type</option>
-            <option value="schoonheidssalon">Schoonheidssalon</option>
-            <option value="kapsalon">Kapsalon</option>
-            <option value="nagelsalon">Nagelsalon</option>
-            <option value="barbershop">Barbershop</option>
-            <option value="beautysalon">Beautysalon</option>
-          </select>
+          <span class="audit-eyebrow block mb-3" id="salon_type_label">Type salon</span>
+          <div class="chip-row" role="group" aria-labelledby="salon_type_label">
+            <template x-for="opt in salonTypes" :key="opt.value">
+              <button type="button" class="chip"
+                      :aria-pressed="form.salon_type === opt.value"
+                      @click="form.salon_type = opt.value"
+                      x-text="opt.label"></button>
+            </template>
+          </div>
         </div>
 
-        <div class="pt-4 anim-fade-up" style="animation-delay: 520ms;">
+        <div class="anim-fade-up" style="animation-delay: 500ms;">
+          <span class="audit-eyebrow block mb-3" id="booking_system_label">Gebruik je een boekingssysteem?</span>
+          <div class="chip-row" role="group" aria-labelledby="booking_system_label">
+            <template x-for="opt in bookingSystems" :key="opt.value">
+              <button type="button" class="chip"
+                      :aria-pressed="form.booking_system === opt.value"
+                      @click="form.booking_system = opt.value"
+                      x-text="opt.label"></button>
+            </template>
+          </div>
+        </div>
+
+        <div class="pt-4 anim-fade-up" style="animation-delay: 560ms;">
           <button type="submit" class="btn-rouge w-full sm:w-auto" :disabled="!canSubmit()">
             <span>Start audit</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
@@ -378,18 +523,35 @@
               <polyline points="12 5 19 12 12 19"></polyline>
             </svg>
           </button>
+          <p class="form-helper" x-show="!canSubmit() && (form.salon_name || form.city || form.salon_type || form.booking_system)" x-transition.opacity>
+            Vul alle vier de velden in om te starten.
+          </p>
         </div>
 
-        <p class="audit-eyebrow opacity-70 pt-2 anim-fade-up" style="animation-delay: 580ms;">
+        <p class="audit-eyebrow opacity-70 pt-2 anim-fade-up" style="animation-delay: 620ms;">
           Geen account · Geen spam · Resultaat op deze pagina
         </p>
       </form>
     </section>
 
     <!-- ===== STATE: LOADING ===== -->
-    <section x-show="state === 'loading'" x-transition.opacity.duration.300ms class="py-28 text-center">
-      <div class="audit-loader mb-10" aria-hidden="true"></div>
-      <p class="italic-display text-[22px] leading-[1.35] text-rouge-profond" x-text="loadingMessage" aria-live="polite"></p>
+    <section x-show="state === 'loading'" x-transition.opacity.duration.300ms class="py-16">
+      <div class="text-center">
+        <div class="audit-loader mb-8" aria-hidden="true"></div>
+        <p class="italic-display text-[22px] leading-[1.35] text-rouge-profond mb-12" x-text="loadingMessage" aria-live="polite"></p>
+      </div>
+      <!-- Skeleton check rows: same shape as the real results so the layout doesn't shift on swap. -->
+      <div class="mt-2" aria-hidden="true">
+        <template x-for="i in 4" :key="i">
+          <div class="skel-row">
+            <span class="skel skel-circle"></span>
+            <div class="flex-1 min-w-0">
+              <div class="skel skel-line short"></div>
+              <div class="skel skel-line long"></div>
+            </div>
+          </div>
+        </template>
+      </div>
     </section>
 
     <!-- ===== STATE: RESULTS ===== -->
@@ -406,12 +568,13 @@
         <p class="font-sans text-sm text-rouge-profond/65 mt-2" x-text="result.city || form.city"></p>
       </div>
 
-      <!-- Score -->
+      <!-- Score: solid color carries meaning. Rouge-velours for danger (0–1), gold-brule
+           for the in-between (2), gold-vif for good (3), rouge-profond for perfect (4). -->
       <div class="reveal r-2 mb-10">
         <div class="flex items-baseline gap-3">
           <span class="font-display font-light leading-none tracking-[-0.03em]"
                 style="font-size: clamp(64px, 14vw, 96px);"
-                :style="passCount >= 3 ? 'background: linear-gradient(135deg, #D4A857 0%, #8A6B2E 100%); -webkit-background-clip: text; background-clip: text; color: transparent;' : passCount >= 2 ? 'color: #2B0810;' : 'background: linear-gradient(135deg, #6B1525 0%, #2B0810 100%); -webkit-background-clip: text; background-clip: text; color: transparent;'"
+                :style="'color: ' + scoreColor + ';'"
                 x-text="passCount"></span>
           <span class="font-display font-light text-[34px] text-rouge-profond/55 leading-none">/ 4</span>
         </div>
@@ -481,15 +644,31 @@
           <div class="flex-1 min-w-0">
             <p class="check-label">AI-zichtbaarheid</p>
             <p class="check-detail" :class="checks.ai.pass ? 'check-detail--pass' : 'check-detail--fail'" x-text="checks.ai.detail"></p>
+            <!-- The punch: when ChatGPT recommends OTHER salons in this city, list them.
+                 Salon owner sees, by name, who is being recommended in their place. -->
+            <template x-if="aiTop5.length > 0">
+              <div>
+                <p class="audit-eyebrow mt-4 mb-1" style="color: var(--color-rouge-velours);">
+                  <span x-text="checks.ai.pass ? 'Ook genoemd' : 'Het noemt deze salons'"></span>
+                </p>
+                <ol class="ai-list">
+                  <template x-for="(name, idx) in aiTop5" :key="idx">
+                    <li>
+                      <span class="ai-rank" x-text="String(idx + 1).padStart(2, '0')"></span>
+                      <span class="ai-name" x-text="name"></span>
+                    </li>
+                  </template>
+                </ol>
+              </div>
+            </template>
           </div>
         </div>
       </div>
 
       <!-- CTA -->
       <div class="reveal r-7 pt-2">
-        <p class="italic-display text-[20px] sm:text-[22px] leading-[1.45] text-rouge-profond mb-6 max-w-[460px]">
-          Wil je zien hoe Smoova dit oplost? Plan een vrijblijvend gesprek van twintig minuten.
-        </p>
+        <p class="italic-display text-[20px] sm:text-[22px] leading-[1.45] text-rouge-profond mb-6 max-w-[460px]"
+           x-text="ctaCopy"></p>
         <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
           <a href="/book.html" class="btn-gold w-full sm:w-auto">
             <span>Plan een gesprek</span>
@@ -559,15 +738,33 @@
     function auditApp() {
       return {
         state: 'idle', // idle | loading | results | not-found | error
-        form: { salon_name: '', city: '', salon_type: '' },
+        form: { salon_name: '', city: '', salon_type: '', booking_system: '' },
         result: {},
         loadingMessage: 'We zoeken je salon op...',
         _timers: [],
 
+        salonTypes: [
+          { value: 'schoonheidssalon', label: 'Schoonheidssalon' },
+          { value: 'kapsalon',         label: 'Kapsalon' },
+          { value: 'nagelsalon',       label: 'Nagelsalon' },
+          { value: 'barbershop',       label: 'Barbershop' },
+          { value: 'beautysalon',      label: 'Beautysalon' },
+        ],
+
+        bookingSystems: [
+          { value: 'none',           label: 'Nee, alleen telefoon/WhatsApp' },
+          { value: 'treatwell',      label: 'Ja, Treatwell' },
+          { value: 'fresha',         label: 'Ja, Fresha' },
+          { value: 'planity',        label: 'Ja, Planity' },
+          { value: 'salonized',      label: 'Ja, Salonized' },
+          { value: 'own_website',    label: 'Ja, eigen website' },
+          { value: 'other',          label: 'Ja, anders' },
+        ],
+
         init() { /* placeholder; reserved for future analytics opt-in or persistence */ },
 
         canSubmit() {
-          return this.form.salon_name && this.form.city && this.form.salon_type;
+          return this.form.salon_name && this.form.city && this.form.salon_type && this.form.booking_system;
         },
 
         // Strip protocol + path, leave clean hostname for display
@@ -633,10 +830,42 @@
 
         get scoreCopy() {
           const n = this.passCount;
-          if (n <= 1) return 'Er is werk aan de winkel. Maar dat is oplosbaar.';
-          if (n === 2) return 'Je hebt een basis. Maar je laat klanten liggen.';
-          if (n === 3) return 'Goed bezig. Eén ding mist nog.';
-          return 'Uitstekend. Je bent al goed zichtbaar.';
+          if (n === 0) return 'Vier van vier rood. Je laat élke nieuwe klant liggen.';
+          if (n === 1) return 'Eén van vier groen. De rest lekt klanten naar concurrenten.';
+          if (n === 2) return 'Halverwege. Je hebt een basis, maar nog te veel gaten.';
+          if (n === 3) return 'Bijna compleet. Eén ding houdt je tegen.';
+          return 'Vier van vier. Je bent al goed zichtbaar.';
+        },
+
+        // Solid color carries the score's meaning. No gradient text.
+        get scoreColor() {
+          const n = this.passCount;
+          if (n <= 1) return '#6B1525'; // rouge-velours — danger
+          if (n === 2) return '#8A6B2E'; // gold-brule — yellow zone
+          if (n === 3) return '#D4A857'; // gold-vif — good
+          return '#2B0810';              // rouge-profond — verdict
+        },
+
+        // CTA copy reflects what they just saw. The number of failing checks is
+        // the lever; a 0-fail score still earns a soft pitch instead of a hard ask.
+        get ctaCopy() {
+          const failed = 4 - this.passCount;
+          if (failed === 0) return 'Klaar voor de volgende stap? Plan een vrijblijvend gesprek van twintig minuten.';
+          if (failed === 1) return 'Eén ding houdt je tegen. We lossen het op binnen veertien dagen.';
+          if (failed === 2) return 'Twee gaten in je vindbaarheid. Wij dichten ze in veertien dagen.';
+          if (failed === 3) return 'Drie van vier rood. Veertien dagen later staat er een site die wél werkt.';
+          return 'Alles rood. Maar oplosbaar. Veertien dagen tot een site die nieuwe klanten oplevert.';
+        },
+
+        // Cleaned ai_top5: filters out the salon's own name (case-insensitive) so the
+        // "het noemt deze salons" list never shows you to yourself, and caps at 5.
+        get aiTop5() {
+          const raw = this.result && Array.isArray(this.result.ai_top5) ? this.result.ai_top5 : [];
+          const own = (this.form.salon_name || '').trim().toLowerCase();
+          return raw
+            .filter(n => typeof n === 'string' && n.trim().length > 0)
+            .filter(n => !own || n.trim().toLowerCase() !== own)
+            .slice(0, 5);
         },
 
         // Webhook fetch with 30s timeout. Aborts on timeout, propagates errors
