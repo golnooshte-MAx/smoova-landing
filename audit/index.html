@@ -643,12 +643,9 @@
               <div class="pillar-bar-fill"
                    :style="resultsRevealed ? `width: ${(pillars.reviews.score / pillars.reviews.maxScore) * 100}%; background: ${scoreColorFor(pillars.reviews.score)};` : `width: 0; background: ${scoreColorFor(pillars.reviews.score)};`"></div>
             </div>
-            <p class="check-detail mt-3" x-text="pillars.reviews.detail"></p>
-            <template x-if="result.rating != null && Number(result.rating) < 4.0">
-              <p style="color: #A6543A; font-family: 'Inter', system-ui, sans-serif; font-size: 13px; line-height: 1.45; margin-top: 6px;">
-                Beoordeling onder 4.0 is een risico
-              </p>
-            </template>
+            <p class="check-detail mt-3"
+               :style="pillars.reviews.detailColor ? `color: ${pillars.reviews.detailColor};` : ''"
+               x-text="pillars.reviews.detail"></p>
           </div>
         </div>
 
@@ -1101,13 +1098,32 @@
         get pillars() {
           const r = this.result || {};
 
-          // 1. Google Reviews — score from rating + review_count.
+          // 1. Google Reviews — score from rating + review_count. Detail line is
+          // colour-coded by tier: 4.5+ green, 4.0-4.4 amber (with "ruimte voor
+          // verbetering"), <4.0 rust (with "te laag voor nieuwe klanten"). The
+          // 4.5 threshold matches the cut-off most customers filter by when
+          // searching; below 4.0 actively repels them.
           const rating = Number(r.rating);
           const reviewCount = Number(r.review_count);
           const reviewsScore = this.scoreReviews(isNaN(rating) ? null : rating, isNaN(reviewCount) ? 0 : reviewCount);
-          const reviewsDetail = !isNaN(rating)
-            ? `${rating.toLocaleString('nl-NL', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} sterren, ${(isNaN(reviewCount) ? 0 : reviewCount).toLocaleString('nl-NL')} reviews`
-            : 'Geen Google reviews gevonden';
+          let reviewsDetail, reviewsDetailColor;
+          if (!isNaN(rating)) {
+            const ratingStr = rating.toLocaleString('nl-NL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+            const countStr  = (isNaN(reviewCount) ? 0 : reviewCount).toLocaleString('nl-NL');
+            if (rating >= 4.5) {
+              reviewsDetail = `${ratingStr} sterren ${countStr} reviews`;
+              reviewsDetailColor = '#5B7F5B'; // green
+            } else if (rating >= 4.0) {
+              reviewsDetail = `${ratingStr} sterren ${countStr} reviews, ruimte voor verbetering`;
+              reviewsDetailColor = '#B8860B'; // amber
+            } else {
+              reviewsDetail = `${ratingStr} sterren ${countStr} reviews, te laag voor nieuwe klanten`;
+              reviewsDetailColor = '#A6543A'; // rust
+            }
+          } else {
+            reviewsDetail = 'Geen Google reviews gevonden';
+            reviewsDetailColor = null; // use the default check-detail colour
+          }
 
           // 2. Google Bedrijfsprofiel — score from has_phone + has_hours + photo_count.
           //    Caps at 8 by design; rendered as X/8.
@@ -1173,7 +1189,7 @@
           const aiDetail = aiMentioned ? 'ChatGPT noemt je salon' : 'ChatGPT noemt je niet. Jouw concurrenten mogelijk wel.';
 
           return {
-            reviews: { score: reviewsScore, maxScore: 10, detail: reviewsDetail },
+            reviews: { score: reviewsScore, maxScore: 10, detail: reviewsDetail, detailColor: reviewsDetailColor },
             gbp:     { score: gbpScore,     maxScore: 8,  detail: gbpDetail },
             website: { score: websiteScore, maxScore: 10, detail: websiteDetail },
             booking: { detail: bookingDetail },
