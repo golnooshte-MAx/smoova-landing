@@ -279,21 +279,6 @@
     .skel-line.short { width: 38%; }
     .skel-line.long { width: 64%; margin-top: 10px; height: 12px; opacity: 0.7; }
 
-    /* AI top-5 list shown when ChatGPT mentions other salons instead of yours. The
-       prosecutorial moment of the page: "It recommends them, not you." */
-    .ai-list { margin-top: 12px; padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
-    .ai-list li {
-      display: flex; align-items: baseline; gap: 10px;
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: 16px; line-height: 1.35; color: var(--color-rouge-profond);
-    }
-    .ai-list li .ai-rank {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; letter-spacing: 0.2em;
-      color: var(--color-gold-brule);
-      flex-shrink: 0; width: 24px;
-    }
-    .ai-list li .ai-name { font-style: italic; }
 
     /* ---- Buttons (Theatre Rouge primary, like the pricing CTAs) ---- */
     .btn-rouge {
@@ -651,18 +636,23 @@
             <div class="flex items-baseline justify-between gap-3">
               <p class="check-label">Google Reviews</p>
               <span class="pillar-score" :style="`color: ${scoreColorFor(pillars.reviews.score)}`">
-                <span x-text="pillars.reviews.score"></span><span class="denom">/10</span>
+                <span x-text="pillars.reviews.score"></span><span class="denom" x-text="'/' + pillars.reviews.maxScore"></span>
               </span>
             </div>
             <div class="pillar-bar-track" aria-hidden="true">
               <div class="pillar-bar-fill"
-                   :style="resultsRevealed ? `width: ${pillars.reviews.score * 10}%; background: ${scoreColorFor(pillars.reviews.score)};` : `width: 0; background: ${scoreColorFor(pillars.reviews.score)};`"></div>
+                   :style="resultsRevealed ? `width: ${(pillars.reviews.score / pillars.reviews.maxScore) * 100}%; background: ${scoreColorFor(pillars.reviews.score)};` : `width: 0; background: ${scoreColorFor(pillars.reviews.score)};`"></div>
             </div>
             <p class="check-detail mt-3" x-text="pillars.reviews.detail"></p>
+            <template x-if="result.rating != null && Number(result.rating) < 4.0">
+              <p style="color: #A6543A; font-family: 'Inter', system-ui, sans-serif; font-size: 13px; line-height: 1.45; margin-top: 6px;">
+                Beoordeling onder 4.0 is een risico
+              </p>
+            </template>
           </div>
         </div>
 
-        <!-- 2. Google Bedrijfsprofiel (scored /10) -->
+        <!-- 2. Google Bedrijfsprofiel (scored /8) -->
         <div class="check-row reveal r-4">
           <span class="check-icon" :class="scoredIconClass(pillars.gbp.score)">
             <template x-if="pillars.gbp.score >= 6">
@@ -676,14 +666,22 @@
             <div class="flex items-baseline justify-between gap-3">
               <p class="check-label">Google Bedrijfsprofiel</p>
               <span class="pillar-score" :style="`color: ${scoreColorFor(pillars.gbp.score)}`">
-                <span x-text="pillars.gbp.score"></span><span class="denom">/10</span>
+                <span x-text="pillars.gbp.score"></span><span class="denom" x-text="'/' + pillars.gbp.maxScore"></span>
               </span>
             </div>
             <div class="pillar-bar-track" aria-hidden="true">
               <div class="pillar-bar-fill"
-                   :style="resultsRevealed ? `width: ${pillars.gbp.score * 10}%; background: ${scoreColorFor(pillars.gbp.score)};` : `width: 0; background: ${scoreColorFor(pillars.gbp.score)};`"></div>
+                   :style="resultsRevealed ? `width: ${(pillars.gbp.score / pillars.gbp.maxScore) * 100}%; background: ${scoreColorFor(pillars.gbp.score)};` : `width: 0; background: ${scoreColorFor(pillars.gbp.score)};`"></div>
             </div>
             <p class="check-detail mt-3" x-text="pillars.gbp.detail"></p>
+            <template x-if="(Number(result.photo_count) || 0) < 6">
+              <p style="color: #B8860B; font-family: 'Inter', system-ui, sans-serif; font-size: 13px; line-height: 1.45; margin-top: 6px;">
+                Meer foto's nodig (minimaal 15 voor een goed profiel)
+              </p>
+            </template>
+            <p style="color: rgba(43, 8, 16, 0.5); font-family: 'Inter', system-ui, sans-serif; font-size: 12px; line-height: 1.4; margin-top: 8px;">
+              Op basis van publieke gegevens. Volledige analyse in een gesprek.
+            </p>
           </div>
         </div>
 
@@ -701,12 +699,12 @@
             <div class="flex items-baseline justify-between gap-3">
               <p class="check-label">Eigen website</p>
               <span class="pillar-score" :style="`color: ${scoreColorFor(pillars.website.score)}`">
-                <span x-text="pillars.website.score"></span><span class="denom">/10</span>
+                <span x-text="pillars.website.score"></span><span class="denom" x-text="'/' + pillars.website.maxScore"></span>
               </span>
             </div>
             <div class="pillar-bar-track" aria-hidden="true">
               <div class="pillar-bar-fill"
-                   :style="resultsRevealed ? `width: ${pillars.website.score * 10}%; background: ${scoreColorFor(pillars.website.score)};` : `width: 0; background: ${scoreColorFor(pillars.website.score)};`"></div>
+                   :style="resultsRevealed ? `width: ${(pillars.website.score / pillars.website.maxScore) * 100}%; background: ${scoreColorFor(pillars.website.score)};` : `width: 0; background: ${scoreColorFor(pillars.website.score)};`"></div>
             </div>
             <p class="check-detail mt-3" x-text="pillars.website.detail"></p>
           </div>
@@ -756,31 +754,21 @@
             <div class="flex items-baseline justify-between gap-3">
               <p class="check-label">AI-zichtbaarheid</p>
               <span class="pillar-score" :style="`color: ${scoreColorFor(pillars.ai.score)}`">
-                <span x-text="pillars.ai.score"></span><span class="denom">/10</span>
+                <span x-text="pillars.ai.score"></span><span class="denom" x-text="'/' + pillars.ai.maxScore"></span>
               </span>
             </div>
             <div class="pillar-bar-track" aria-hidden="true">
               <div class="pillar-bar-fill"
-                   :style="resultsRevealed ? `width: ${pillars.ai.score * 10}%; background: ${scoreColorFor(pillars.ai.score)};` : `width: 0; background: ${scoreColorFor(pillars.ai.score)};`"></div>
+                   :style="resultsRevealed ? `width: ${(pillars.ai.score / pillars.ai.maxScore) * 100}%; background: ${scoreColorFor(pillars.ai.score)};` : `width: 0; background: ${scoreColorFor(pillars.ai.score)};`"></div>
             </div>
             <p class="check-detail mt-3" x-text="pillars.ai.detail"></p>
+            <template x-if="aiTop5.length > 0">
+              <p style="color: rgba(43, 8, 16, 0.62); font-family: 'Inter', system-ui, sans-serif; font-size: 13px; line-height: 1.5; margin-top: 8px;">
+                <span x-text="result.ai_mentioned === true ? 'Ook genoemd: ' : 'ChatGPT noemt: '"></span><span x-text="aiTop5.join(', ')"></span>
+              </p>
+            </template>
             <template x-if="result.ai_response">
               <p class="ai-response" x-text="result.ai_response"></p>
-            </template>
-            <template x-if="aiTop5.length > 0">
-              <div>
-                <p class="audit-eyebrow mt-4 mb-1" style="color: var(--color-rouge-velours);">
-                  <span x-text="pillars.ai.score >= 6 ? 'Ook genoemd' : 'Het noemt deze salons'"></span>
-                </p>
-                <ol class="ai-list">
-                  <template x-for="(name, idx) in aiTop5" :key="idx">
-                    <li>
-                      <span class="ai-rank" x-text="String(idx + 1).padStart(2, '0')"></span>
-                      <span class="ai-name" x-text="name"></span>
-                    </li>
-                  </template>
-                </ol>
-              </div>
             </template>
           </div>
         </div>
@@ -964,22 +952,30 @@
           return countScore + ratingScore;
         },
 
+        // GBP: tighter thresholds, having a listing is the baseline (not a bonus).
+        // Caps at 8 — full audit requires manual review for the last two points.
         scoreGBP(hasPhone, hasHours, photoCount) {
-          let score = 1;
-          if (hasPhone) score += 2;
-          if (hasHours) score += 2;
-          if (photoCount > 10) score += 3;
-          else if (photoCount > 4) score += 2;
+          let score = 1; // you exist, congrats, that's 1
+          if (hasPhone) score += 1;
+          if (hasHours) score += 1;
+          if (photoCount >= 30) score += 4;
+          else if (photoCount >= 15) score += 3;
+          else if (photoCount >= 6) score += 2;
           else if (photoCount > 0) score += 1;
-          score += 2; // has listing at all
-          return Math.min(10, score);
+          return Math.min(8, score);
         },
 
-        scoreWebsite(website) {
+        // Website: uses homepage-fetch booleans. Own domain starts at 4 and earns
+        // up to +4 from loads / HTTPS / booking signals. Marketplace URL is a
+        // hard 3; no site is a hard 1.
+        scoreWebsite(website, isPlatform, loads, hasHttps, hasBooking) {
           if (!website) return 1;
-          const lower = String(website).toLowerCase();
-          if (lower.includes('treatwell') || lower.includes('fresha') || lower.includes('planity')) return 3;
-          return 6;
+          if (isPlatform) return 3;
+          let score = 4;
+          if (loads) score += 1;
+          if (hasHttps) score += 1;
+          if (hasBooking) score += 2;
+          return Math.min(10, score);
         },
 
         scoreAI(mentioned) {
@@ -996,7 +992,7 @@
         get pillars() {
           const r = this.result || {};
 
-          // 1. Google Reviews — score computed from rating + review_count.
+          // 1. Google Reviews — score from rating + review_count.
           const rating = Number(r.rating);
           const reviewCount = Number(r.review_count);
           const reviewsScore = this.scoreReviews(isNaN(rating) ? null : rating, isNaN(reviewCount) ? 0 : reviewCount);
@@ -1005,28 +1001,40 @@
             : 'Geen Google reviews gevonden';
 
           // 2. Google Bedrijfsprofiel — score from has_phone + has_hours + photo_count.
+          //    Caps at 8 by design; rendered as X/8.
           const mark = (ok) => ok ? '✓' : '✗';
           const photos = Number.isFinite(Number(r.photo_count)) ? Number(r.photo_count) : 0;
           const photosLabel = photos === 1 ? '1 foto' : `${photos.toLocaleString('nl-NL')} foto's`;
           const gbpScore = this.scoreGBP(r.has_phone === true, r.has_hours === true, photos);
           const gbpDetail = `Telefoon ${mark(r.has_phone === true)} · Openingstijden ${mark(r.has_hours === true)} · ${photosLabel}`;
 
-          // 3. Eigen website — score from URL (penalises marketplace platforms).
-          const websiteScore = this.scoreWebsite(r.website);
-          const onPlatform = this.isPlatformUrl(r.website);
+          // 3. Eigen website — score from website + website_is_platform + website_loads
+          //    + website_has_https + website_has_booking. Webhook's is_platform wins;
+          //    URL sniff is the fallback when the webhook didn't return that flag.
+          const wIsPlatform = r.website_is_platform != null
+            ? r.website_is_platform === true
+            : this.isPlatformUrl(r.website);
+          const wLoads = r.website_loads === true;
+          const wHttps = r.website_has_https === true;
+          const wBooking = r.website_has_booking === true;
+          const websiteScore = this.scoreWebsite(r.website, wIsPlatform, wLoads, wHttps, wBooking);
+
           let websiteDetail;
           if (!r.website) {
             websiteDetail = 'Geen eigen website gevonden';
-          } else if (onPlatform) {
+          } else if (wIsPlatform) {
             const matched = String(r.website).toLowerCase().match(/(treatwell|fresha|planity)/);
-            websiteDetail = `Via ${this.platformLabel(matched ? matched[0] : '')} (commissie)`;
+            const platformName = matched ? this.platformLabel(matched[0]) : 'een platform';
+            websiteDetail = `Via ${platformName} (je betaalt commissie)`;
           } else {
-            websiteDetail = this.cleanDomain(r.website);
+            const httpsBit = wHttps ? 'HTTPS ✓' : 'HTTPS ✗';
+            const bookBit = wBooking ? 'Boekknop ✓' : 'Geen boekknop ✗';
+            websiteDetail = `${this.cleanDomain(r.website)} · ${httpsBit} · ${bookBit}`;
           }
 
           // 4. Boekingssysteem (informational). Self-reported value from the form's
-          //    booking_system_reported string (single value). Falls back to the
-          //    multi-select array if the webhook didn't echo it.
+          //    booking_system_reported string. Falls back to the multi-select array
+          //    if the webhook didn't echo it.
           let bookingDetail;
           if (r.booking_system_reported && String(r.booking_system_reported).trim().length > 0) {
             bookingDetail = this.capFirst(String(r.booking_system_reported).trim());
@@ -1043,24 +1051,25 @@
           // 6. AI-zichtbaarheid — score from ai_mentioned bool.
           const aiMentioned = r.ai_mentioned === true;
           const aiScore = this.scoreAI(aiMentioned);
-          const aiDetail = aiMentioned ? 'ChatGPT noemt je salon' : 'ChatGPT noemt je niet';
+          const aiDetail = aiMentioned ? 'ChatGPT noemt je salon' : 'ChatGPT noemt je niet. Jouw concurrenten mogelijk wel.';
 
           return {
-            reviews: { score: reviewsScore, detail: reviewsDetail },
-            gbp:     { score: gbpScore,     detail: gbpDetail },
-            website: { score: websiteScore, detail: websiteDetail },
+            reviews: { score: reviewsScore, maxScore: 10, detail: reviewsDetail },
+            gbp:     { score: gbpScore,     maxScore: 8,  detail: gbpDetail },
+            website: { score: websiteScore, maxScore: 10, detail: websiteDetail },
             booking: { detail: bookingDetail },
             maps:    { pass:  mapsPass,     detail: mapsDetail },
-            ai:      { score: aiScore,      detail: aiDetail },
+            ai:      { score: aiScore,      maxScore: 10, detail: aiDetail },
           };
         },
 
-        // Average of the four scored pillars (reviews + gbp + website + ai),
-        // rounded to one decimal place. Always presented as a decimal in the UI
-        // (so a clean 7 reads as "7.0").
+        // Average of the four scored pillars, all on a /10 basis. GBP caps at 8
+        // by design, so it's rescaled (gbp/8 * 10) before averaging. Rounded to
+        // one decimal. The display layer uses toFixed(1) so a clean 7 reads "7.0".
         get averageScore() {
           const p = this.pillars;
-          const sum = p.reviews.score + p.gbp.score + p.website.score + p.ai.score;
+          const gbpNorm = (p.gbp.score / 8) * 10;
+          const sum = p.reviews.score + gbpNorm + p.website.score + p.ai.score;
           return Math.round((sum / 4) * 10) / 10;
         },
 
