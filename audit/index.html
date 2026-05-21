@@ -782,7 +782,7 @@
           <div class="flex-1 min-w-0">
             <p class="check-label">Boekingssysteem</p>
             <p class="check-detail mt-3" x-text="pillars.booking.detail"></p>
-            <template x-if="bookingLinkedPlatforms.length > 0 || isTruthy(result.on_treatwell)">
+            <template x-if="usesCommissionPlatform">
               <p style="color: #B8860B; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 8px;">
                 Op je website gaan boekingen via een extern platform. Dat kost je commissie per klant.
               </p>
@@ -798,9 +798,9 @@
       </div>
 
       <!-- Booking-leak callout: fires when any commission signal exists
-           (booking_links_to_*, on_treatwell, or website_is_platform). Generic
-           copy — no platform name interpolated. -->
-      <template x-if="hasCommissionLeak">
+           (HTML scan, self-reported, Treatwell directory, or platform URL).
+           Generic copy — no platform name interpolated. -->
+      <template x-if="usesCommissionPlatform">
         <div class="reveal r-9 leak-block">
           <p class="leak-block__body">
             Externe boekingsplatformen rekenen 25 tot 35 procent per boeking. Bij een behandeling van 85 euro is dat tot 30 euro commissie, per klant, elke keer. Een eigen boekingspagina kost een fractie daarvan.
@@ -1183,7 +1183,10 @@
           const wLoads = this.isTruthy(r.website_loads);
           const wHttps = this.isTruthy(r.website_has_https);
           const wBooking = this.isTruthy(r.website_has_booking);
-          const bookingViaPlatform = this.bookingLinkedPlatforms.length > 0;
+          // Commission detection now combines HTML scan + self-reported + Treatwell
+          // directory + platform-URL. Any one of them flips the website pillar from
+          // "eigen boekingen" green to the rust commission warning.
+          const bookingViaPlatform = this.usesCommissionPlatform;
           const websiteScore = this.scoreWebsite(r.website, wIsPlatform, wLoads, wHttps, wBooking, bookingViaPlatform);
 
           let websiteDetail, websiteDetailColor;
@@ -1281,15 +1284,30 @@
             : 'Je bent al ver. Wat er nog mist is snel geregeld.';
         },
 
-        // The leak block fires whenever a commission platform is detected
-        // anywhere: any booking_links_to_*, the Treatwell directory flag, or
-        // the website being a marketplace URL. Self-reported values don't
-        // trigger the block (the salon already knows they use it).
-        get hasCommissionLeak() {
+        // Single source of truth for "this salon is on a commission platform".
+        // Combines three independent signals so a flaky webhook layer never
+        // hides the verdict.
+        //   1. Detected from the website HTML scan (booking_links_to_*)
+        //   2. User self-reported in the form (booking_system_reported text)
+        //   3. Found in the Treatwell directory (on_treatwell)
+        //   4. (defensive) The salon's "website" IS a marketplace URL
+        // ANY of these means the leak block fires, the website pillar drops
+        // the +2 booking bonus, and the website detail surfaces the rust line.
+        get usesCommissionPlatform() {
           const r = this.result || {};
-          return this.bookingLinkedPlatforms.length > 0
-            || this.isTruthy(r.on_treatwell)
-            || this.isTruthy(r.website_is_platform);
+          // Layer 1: HTML scan
+          const detectedCommission = this.bookingLinkedPlatforms.length > 0;
+          // Layer 2: self-reported
+          const reportedStr = String(r.booking_system_reported || '').toLowerCase();
+          const reportedCommission = reportedStr.includes('treatwell')
+            || reportedStr.includes('fresha')
+            || reportedStr.includes('planity')
+            || reportedStr.includes('salonized');
+          // Layer 3: Treatwell directory
+          const foundOnTreatwell = this.isTruthy(r.on_treatwell);
+          // Layer 4: website itself is a marketplace
+          const websiteIsPlatform = this.isTruthy(r.website_is_platform);
+          return detectedCommission || reportedCommission || foundOnTreatwell || websiteIsPlatform;
         },
 
         // Cleaned ai_top5 competitors list: accepts a comma-separated string or an
@@ -1377,26 +1395,38 @@
             // Clear the loading-message rotation timer; it's irrelevant past loading state.
             this._timers.forEach(clearTimeout);
             this._timers = [];
-            // DEBUG: surface the raw webhook payload + the booking-link fields so we
-            // can verify Make.com is actually returning the booking_links_to_*
-            // booleans (and in what format). Remove once integration is stable.
+            // DEBUG: surface the raw webhook payload + the three commission-detection
+            // layers so we can verify the combined flag fires for naaz-style salons
+            // even when the HTML scan misses the booking link. Remove once stable.
             try {
-              const linksToCommission = this.isTruthy(data && data.booking_links_to_treatwell)
-                || this.isTruthy(data && data.booking_links_to_fresha)
-                || this.isTruthy(data && data.booking_links_to_planity)
-                || this.isTruthy(data && data.booking_links_to_salonized)
-                || this.isTruthy(data && data.booking_links_to_simplybook)
-                || this.isTruthy(data && data.booking_links_to_timma);
+              const d = data || {};
+              const detectedCommission = this.isTruthy(d.booking_links_to_treatwell)
+                || this.isTruthy(d.booking_links_to_fresha)
+                || this.isTruthy(d.booking_links_to_planity)
+                || this.isTruthy(d.booking_links_to_salonized)
+                || this.isTruthy(d.booking_links_to_simplybook)
+                || this.isTruthy(d.booking_links_to_timma);
+              const reportedStr = String(d.booking_system_reported || '').toLowerCase();
+              const reportedCommission = ['treatwell','fresha','planity','salonized']
+                .some(p => reportedStr.includes(p));
+              const foundOnTreatwell = this.isTruthy(d.on_treatwell);
+              const websiteIsPlatform = this.isTruthy(d.website_is_platform);
               console.log('[audit] webhook response:', data);
+              console.log('[audit] commission detection layers:', {
+                detectedCommission, reportedCommission, foundOnTreatwell, websiteIsPlatform,
+                usesCommissionPlatform: detectedCommission || reportedCommission || foundOnTreatwell || websiteIsPlatform,
+              });
               console.log('[audit] booking fields:', {
-                website_has_booking:        data && data.website_has_booking,
-                booking_links_to_treatwell: data && data.booking_links_to_treatwell,
-                booking_links_to_fresha:    data && data.booking_links_to_fresha,
-                booking_links_to_planity:   data && data.booking_links_to_planity,
-                booking_links_to_salonized: data && data.booking_links_to_salonized,
-                booking_links_to_simplybook:data && data.booking_links_to_simplybook,
-                booking_links_to_timma:     data && data.booking_links_to_timma,
-                linksToCommission:          linksToCommission,
+                website_has_booking:        d.website_has_booking,
+                booking_system_reported:    d.booking_system_reported,
+                booking_links_to_treatwell: d.booking_links_to_treatwell,
+                booking_links_to_fresha:    d.booking_links_to_fresha,
+                booking_links_to_planity:   d.booking_links_to_planity,
+                booking_links_to_salonized: d.booking_links_to_salonized,
+                booking_links_to_simplybook:d.booking_links_to_simplybook,
+                booking_links_to_timma:     d.booking_links_to_timma,
+                on_treatwell:               d.on_treatwell,
+                website_is_platform:        d.website_is_platform,
               });
             } catch (_) { /* ignore logging failures */ }
             if (this.isEmptyResponse(data)) {
