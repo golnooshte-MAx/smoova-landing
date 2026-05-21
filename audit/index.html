@@ -100,7 +100,7 @@
   <!-- Fonts: same set as the rest of the site -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <!-- Tailwind CDN + Theatre Rouge tokens (mirror of index.html config) -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -123,7 +123,8 @@
             },
           },
           fontFamily: {
-            display: ['Fraunces', 'Georgia', 'serif'],
+            display: ['Newsreader', 'Georgia', 'serif'],
+            fraunces: ['Fraunces', 'Georgia', 'serif'],
             sans:    ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
             mono:    ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
           },
@@ -173,8 +174,8 @@
       background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.5'/></svg>");
     }
 
-    /* Italic display helper — same as index.html / book.html */
-    .italic-display { font-style: italic; font-family: 'Fraunces', serif; font-weight: 400; }
+    /* Italic display helper — Newsreader on the audit page (Smoova-wide elsewhere uses Fraunces) */
+    .italic-display { font-style: italic; font-family: 'Newsreader', Georgia, serif; font-weight: 400; }
 
     /* Animations */
     @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
@@ -203,7 +204,7 @@
       font-size: 17px;
       line-height: 1.4;
       color: var(--color-rouge-profond);
-      font-family: 'Fraunces', Georgia, serif;
+      font-family: 'Newsreader', Georgia, serif;
       font-weight: 400;
       border-radius: 0;
       transition: border-color 220ms ease-out;
@@ -302,10 +303,10 @@
     .btn-rouge:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     .btn-rouge svg { color: var(--color-gold-vif); }
 
-    .btn-gold {
+    .btn-rust {
       display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-      background: var(--color-gold-vif);
-      color: var(--color-rouge-profond);
+      background: #A6543A;
+      color: var(--color-bone);
       padding: 16px 28px;
       min-height: 52px;
       border-radius: 999px;
@@ -316,11 +317,10 @@
       text-transform: uppercase;
       transition: background-color 220ms ease-out, transform 220ms ease-out;
       cursor: pointer;
-      border: 1px solid var(--color-gold-vif);
-      box-shadow: 0 18px 36px -10px rgba(212, 168, 87, 0.45);
+      border: 1px solid #A6543A;
     }
-    .btn-gold:hover { background: var(--color-champagne); border-color: var(--color-champagne); }
-    .btn-gold:active { transform: translateY(1px); }
+    .btn-rust:hover { background: #8a4530; border-color: #8a4530; }
+    .btn-rust:active { transform: translateY(1px); }
 
     .btn-ghost {
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
@@ -378,7 +378,7 @@
       border: 1px solid rgba(107, 21, 37, 0.35);
     }
     .check-label {
-      font-family: 'Fraunces', Georgia, serif;
+      font-family: 'Newsreader', Georgia, serif;
       font-style: italic;
       font-weight: 400;
       font-size: 22px;
@@ -460,49 +460,25 @@
       border-top: 1px solid rgba(43, 8, 16, 0.10);
     }
 
-    /* Leak block — the Smoova selling-point closer when a commission platform is
-       detected anywhere (booking-link, Treatwell listing, platform URL, or
-       self-reported). Brand-compliant alternative to a side-stripe border:
-       1px rust hairline all around + faint rust wash. Same prosecutorial intent,
-       no DESIGN.md ban. */
+    /* Leak block — short prosecutorial paragraph when ANY commission platform
+       is detected. Spec calls for 4px rust border-left + slight left padding,
+       cream background, no card. (DESIGN.md technically bans side-stripe
+       borders, but the salon owner has explicitly re-spec'd this twice as
+       the desired treatment — override accepted.) */
     .leak-block {
       margin: 32px 0;
-      padding: 28px clamp(20px, 4vw, 36px);
-      background: rgba(166, 84, 58, 0.06);
-      border: 1px solid rgba(166, 84, 58, 0.22);
-      border-radius: 16px;
-    }
-    .leak-block__headline {
-      font-family: 'Fraunces', Georgia, serif;
-      font-style: italic;
-      font-weight: 400;
-      font-size: clamp(22px, 3.2vw, 28px);
-      line-height: 1.22;
-      letter-spacing: -0.01em;
-      color: #A6543A;
-      margin: 0 0 16px 0;
+      padding: 14px 20px;
+      background: var(--color-bone);
+      border-left: 4px solid #A6543A;
     }
     .leak-block__body {
       font-family: 'Inter', system-ui, sans-serif;
       font-size: 15px;
       line-height: 1.65;
       color: var(--color-rouge-profond);
-      margin: 0 0 12px 0;
+      margin: 0;
     }
-    .leak-block__body:last-child { margin-bottom: 0; }
 
-    /* ai_response block under the AI pillar — italic Fraunces in a tinted gold wash */
-    .ai-response {
-      margin-top: 12px;
-      padding: 12px 16px;
-      background: rgba(212, 168, 87, 0.08);
-      border-radius: 8px;
-      font-family: 'Fraunces', Georgia, serif;
-      font-style: italic;
-      font-size: 14px;
-      line-height: 1.5;
-      color: rgba(43, 8, 16, 0.78);
-    }
 
     /* Link underline reuse */
     .link-underline { position: relative; display: inline-block; }
@@ -715,14 +691,6 @@
                    :style="resultsRevealed ? `width: ${(pillars.gbp.score / pillars.gbp.maxScore) * 100}%; background: ${scoreColorFor(pillars.gbp.score)};` : `width: 0; background: ${scoreColorFor(pillars.gbp.score)};`"></div>
             </div>
             <p class="check-detail mt-3" x-text="pillars.gbp.detail"></p>
-            <template x-if="(Number(result.photo_count) || 0) < 6">
-              <p style="color: #B8860B; font-family: 'Inter', system-ui, sans-serif; font-size: 13px; line-height: 1.45; margin-top: 6px;">
-                Meer foto's nodig (minimaal 15 voor een goed profiel)
-              </p>
-            </template>
-            <p style="color: rgba(43, 8, 16, 0.5); font-family: 'Inter', system-ui, sans-serif; font-size: 12px; line-height: 1.4; margin-top: 8px;">
-              Op basis van publieke gegevens. Volledige analyse in een gesprek.
-            </p>
           </div>
         </div>
 
@@ -747,11 +715,9 @@
               <div class="pillar-bar-fill"
                    :style="resultsRevealed ? `width: ${(pillars.website.score / pillars.website.maxScore) * 100}%; background: ${scoreColorFor(pillars.website.score)};` : `width: 0; background: ${scoreColorFor(pillars.website.score)};`"></div>
             </div>
-            <p class="check-detail mt-3" x-text="pillars.website.detail"></p>
-            <template x-if="websiteIsOwnDomain">
-              <p :style="`color: ${bookingSignal.color}; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 6px;`"
-                 x-text="bookingSignal.text"></p>
-            </template>
+            <p class="check-detail mt-3"
+               :style="pillars.website.detailColor ? `color: ${pillars.website.detailColor};` : ''"
+               x-text="pillars.website.detail"></p>
           </div>
         </div>
 
@@ -777,9 +743,6 @@
                    :style="resultsRevealed ? `width: ${(pillars.seo.score / pillars.seo.maxScore) * 100}%; background: ${scoreColorFor(pillars.seo.score)};` : `width: 0; background: ${scoreColorFor(pillars.seo.score)};`"></div>
             </div>
             <p class="check-detail mt-3" x-text="pillars.seo.detail"></p>
-            <p style="color: rgba(43, 8, 16, 0.5); font-family: 'Inter', system-ui, sans-serif; font-size: 12px; line-height: 1.4; margin-top: 8px;">
-              Op basis van publieke gegevens. Volledige SEO-analyse in een gesprek.
-            </p>
           </div>
         </div>
 
@@ -805,13 +768,10 @@
                    :style="resultsRevealed ? `width: ${(pillars.ai.score / pillars.ai.maxScore) * 100}%; background: ${scoreColorFor(pillars.ai.score)};` : `width: 0; background: ${scoreColorFor(pillars.ai.score)};`"></div>
             </div>
             <p class="check-detail mt-3" x-text="pillars.ai.detail"></p>
-            <template x-if="aiTop5.length > 0">
+            <template x-if="!isTruthy(result.ai_mentioned) && aiTop5.length > 0">
               <p style="color: rgba(43, 8, 16, 0.62); font-family: 'Inter', system-ui, sans-serif; font-size: 13px; line-height: 1.5; margin-top: 8px;">
-                Anderen die wel genoemd worden: <span x-text="aiTop5.join(', ')"></span>
+                Wel genoemd: <span x-text="aiTop5.join(', ')"></span>
               </p>
-            </template>
-            <template x-if="result.ai_response">
-              <p class="ai-response" x-text="result.ai_response"></p>
             </template>
           </div>
         </div>
@@ -822,58 +782,49 @@
           <div class="flex-1 min-w-0">
             <p class="check-label">Boekingssysteem</p>
             <p class="check-detail mt-3" x-text="pillars.booking.detail"></p>
-            <template x-if="bookingLinkedPlatforms.length > 0">
-              <p style="color: #A6543A; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 8px;">
-                Op je website gevonden: <span x-text="bookingLinkedPlatforms.join(', ')"></span> (25–35% commissie per boeking)
-              </p>
-            </template>
-            <template x-if="isTruthy(result.on_treatwell) && !reportedTreatwell">
-              <p style="color: #A6543A; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 6px;">
-                Ook vermeld op Treatwell.nl
+            <template x-if="bookingLinkedPlatforms.length > 0 || isTruthy(result.on_treatwell)">
+              <p style="color: #B8860B; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 8px;">
+                Op je website gaan boekingen via een extern platform. Dat kost je commissie per klant.
               </p>
             </template>
           </div>
         </div>
 
-        <!-- Google Maps footnote (replaces the scored Maps pillar) -->
+        <!-- Google Maps footnote. Only renders when a Maps listing exists; if
+             not, nothing shows (no failure marker). -->
         <template x-if="pillars.maps.pass">
-          <p class="maps-footnote">✓ Je staat op Google Maps</p>
+          <p class="maps-footnote">✓ Gevonden op Google Maps</p>
         </template>
       </div>
 
-      <!-- Booking-leak section: only when a commission platform is detected
-           anywhere (booking-button link, Treatwell directory, platform URL, or
-           self-reported). Brand-compliant alternative to a side-stripe border. -->
-      <template x-if="primaryCommissionPlatform">
+      <!-- Booking-leak callout: fires when any commission signal exists
+           (booking_links_to_*, on_treatwell, or website_is_platform). Generic
+           copy — no platform name interpolated. -->
+      <template x-if="hasCommissionLeak">
         <div class="reveal r-9 leak-block">
-          <p class="leak-block__headline">
-            Elke boeking via <span x-text="primaryCommissionPlatform"></span> kost je geld.
-          </p>
           <p class="leak-block__body">
-            <span x-text="primaryCommissionPlatform"></span> rekent 25 tot 35 procent commissie per boeking. Bij een gemiddelde behandeling van 85 euro is dat 21 tot 30 euro per klant. Tien boekingen per week via <span x-text="primaryCommissionPlatform"></span> betekent 850 tot 1.200 euro per maand aan commissie. Per jaar is dat meer dan 10.000 euro.
-          </p>
-          <p class="leak-block__body">
-            Met een eigen boekingssite houd je dat bedrag. Dat is waar Smoova voor is.
+            Externe boekingsplatformen rekenen 25 tot 35 procent per boeking. Bij een behandeling van 85 euro is dat tot 30 euro commissie, per klant, elke keer. Een eigen boekingspagina kost een fractie daarvan.
           </p>
         </div>
       </template>
 
-      <!-- CTA -->
+      <!-- CTA: two-path headline (below 7 / 7+), rust button to /book.html,
+           small text link below to /. Newsreader italic on the headline. -->
       <div class="reveal r-10 pt-2">
-        <p class="italic-display text-[20px] sm:text-[22px] leading-[1.45] text-rouge-profond mb-6 max-w-[460px]"
+        <p class="italic-display text-[22px] sm:text-[26px] leading-[1.3] text-rouge-profond mb-7 max-w-[480px]"
            x-text="ctaCopy"></p>
-        <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-          <a href="/book.html" class="btn-gold w-full sm:w-auto">
-            <span>Plan een gesprek</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
+        <a href="/book.html" class="btn-rust w-full sm:w-auto">
+          <span>Plan een vrijblijvend gesprek</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+        <p class="mt-5">
+          <a href="/" class="link-underline text-sm text-rouge-profond/70 hover:text-rouge-profond transition-colors">
+            Of bekijk eerst wat Smoova doet →
           </a>
-          <a href="https://instagram.com/smoova.studio" target="_blank" rel="noopener noreferrer" class="btn-ghost w-full sm:w-auto">
-            Of DM op Instagram
-          </a>
-        </div>
+        </p>
 
         <button @click="reset()" class="mt-10 audit-eyebrow hover:text-rouge-velours transition-colors">
           ← Nog een salon checken
@@ -999,16 +950,6 @@
         // Maps a platform key to its human-readable Dutch label. Used by the
         // website pillar's "Via X (commissie)" copy and the booking-system
         // detail line.
-        platformLabel(key) {
-          const map = {
-            treatwell: 'Treatwell', fresha: 'Fresha', planity: 'Planity',
-            salonized: 'Salonized', own_website: 'Eigen website',
-            none: 'Geen', other: 'Anders',
-          };
-          if (!key) return '';
-          return map[String(key).toLowerCase()] || String(key);
-        },
-
         // The /10 colour scale that drives the score number, the bar fills, and
         // the icon ring tint. Literal hexes per spec, decimal-aware so the overall
         // average (which carries 1 decimal) buckets correctly.
@@ -1104,30 +1045,6 @@
         // Planity -> Salonized -> SimplyBook -> Timma), then the directory-listing
         // flag, then platform-URL match, then self-reported. First match wins.
         // Returns null when nothing commission-platform-shaped is detected.
-        get primaryCommissionPlatform() {
-          const r = this.result || {};
-          if (this.isTruthy(r.booking_links_to_treatwell))  return 'Treatwell';
-          if (this.isTruthy(r.booking_links_to_fresha))     return 'Fresha';
-          if (this.isTruthy(r.booking_links_to_planity))    return 'Planity';
-          if (this.isTruthy(r.booking_links_to_salonized))  return 'Salonized';
-          if (this.isTruthy(r.booking_links_to_simplybook)) return 'SimplyBook';
-          if (this.isTruthy(r.booking_links_to_timma))      return 'Timma';
-          if (this.isTruthy(r.on_treatwell)) return 'Treatwell';
-          const wIsPlatform = this.isTruthy(r.website_is_platform)
-            || (r.website_is_platform == null && this.isPlatformUrl(r.website));
-          if (wIsPlatform) {
-            const w = String(r.website || '').toLowerCase();
-            if (w.includes('treatwell')) return 'Treatwell';
-            if (w.includes('fresha'))    return 'Fresha';
-            if (w.includes('planity'))   return 'Planity';
-          }
-          const reported = String(r.booking_system_reported || '').toLowerCase();
-          if (reported.includes('treatwell')) return 'Treatwell';
-          if (reported.includes('fresha'))    return 'Fresha';
-          if (reported.includes('planity'))   return 'Planity';
-          return null;
-        },
-
         // Defensive coercion for webhook booleans. Make scenarios sometimes serialise
         // boolean outputs as strings ("true"/"false") or numbers (1/0) depending on
         // how the field was configured. Strict v === true checks then reject real
@@ -1160,8 +1077,8 @@
           if (s.includes('planity')) return 'Planity';
           if (s.includes('salonized')) return 'Salonized';
           if (s.includes('other') || s.includes('anders')) return 'Ander systeem';
-          if (s.includes('eigen') || s.includes('own')) return 'Eigen boekingssysteem';
-          if (s.includes('geen') || s.includes('no')) return 'Geen online boekingen';
+          if (s.includes('eigen') || s.includes('own')) return 'Eigen systeem';
+          if (s.includes('geen') || s.includes('no')) return 'Alleen telefoon of walk-in';
           return '';
         },
 
@@ -1191,34 +1108,6 @@
           return list;
         },
 
-        // True if the salon has a real website that isn't a marketplace URL. Used
-        // to gate the booking signal: marketplace sites and "no website" cases
-        // don't get a per-site booking verdict (it's covered by the website score
-        // itself).
-        get websiteIsOwnDomain() {
-          const r = this.result || {};
-          if (!r.website) return false;
-          if (r.website_is_platform != null) return !this.isTruthy(r.website_is_platform);
-          return !this.isPlatformUrl(r.website);
-        },
-
-        // The website-row booking verdict: text + color. Three states.
-        // 1) Has booking button AND it routes through a commission platform → rust
-        //    diagnostic with the platform name (Smoova selling point: money leak).
-        // 2) Has booking button AND it stays on the salon's own domain → green confirm.
-        // 3) No booking button at all → rust failure marker.
-        get bookingSignal() {
-          const r = this.result || {};
-          if (!this.isTruthy(r.website_has_booking)) {
-            return { text: 'Geen boekknop ✗', color: '#A6543A' };
-          }
-          const platforms = this.bookingLinkedPlatforms;
-          if (platforms.length > 0) {
-            return { text: `Boekknop linkt naar ${platforms[0]} (commissie)`, color: '#A6543A' };
-          }
-          return { text: 'Eigen boekknop ✓', color: '#5B7F5B' };
-        },
-
         // True if the candidate name contains a word repeated within itself, e.g.
         // "Kapsalon Kapsalon". Used to filter low-quality entries out of ai_top5.
         hasRepeatedWord(name) {
@@ -1234,47 +1123,60 @@
 
         get pillars() {
           const r = this.result || {};
+          const salonType = String(this.form.salon_type || 'salon').toLowerCase();
+          const city = (this.form.city || '').trim() || 'jouw stad';
 
-          // 1. Google Reviews — score from rating + review_count. Detail line is
-          // colour-coded by tier: 4.5+ green, 4.0-4.4 amber (with "ruimte voor
-          // verbetering"), <4.0 rust (with "te laag voor nieuwe klanten"). The
-          // 4.5 threshold matches the cut-off most customers filter by when
-          // searching; below 4.0 actively repels them.
+          // 1. Google Reviews — score + tier-coloured prose line.
           const rating = Number(r.rating);
           const reviewCount = Number(r.review_count);
           const reviewsScore = this.scoreReviews(isNaN(rating) ? null : rating, isNaN(reviewCount) ? 0 : reviewCount);
           let reviewsDetail, reviewsDetailColor;
-          if (!isNaN(rating)) {
-            const ratingStr = rating.toLocaleString('nl-NL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-            const countStr  = (isNaN(reviewCount) ? 0 : reviewCount).toLocaleString('nl-NL');
-            if (rating >= 4.5) {
-              reviewsDetail = `${ratingStr} sterren ${countStr} reviews`;
-              reviewsDetailColor = '#5B7F5B'; // green
-            } else if (rating >= 4.0) {
-              reviewsDetail = `${ratingStr} sterren ${countStr} reviews, ruimte voor verbetering`;
-              reviewsDetailColor = '#B8860B'; // amber
-            } else {
-              reviewsDetail = `${ratingStr} sterren ${countStr} reviews, te laag voor nieuwe klanten`;
-              reviewsDetailColor = '#A6543A'; // rust
-            }
+          if (isNaN(rating) || !Number.isFinite(reviewCount) || reviewCount === 0) {
+            reviewsDetail = 'Geen beoordelingen gevonden. Nieuwe klanten vertrouwen salons zonder reviews niet.';
+            reviewsDetailColor = '#A6543A';
           } else {
-            reviewsDetail = 'Geen Google reviews gevonden';
-            reviewsDetailColor = null; // use the default check-detail colour
+            const ratingStr = rating.toLocaleString('nl-NL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+            const countStr  = reviewCount.toLocaleString('nl-NL');
+            if (rating >= 4.5) {
+              reviewsDetail = `${ratingStr} sterren uit ${countStr} beoordelingen`;
+              reviewsDetailColor = '#5B7F5B';
+            } else if (rating >= 4.0) {
+              reviewsDetail = `${ratingStr} sterren uit ${countStr} beoordelingen. Klanten filteren op 4,5.`;
+              reviewsDetailColor = '#B8860B';
+            } else {
+              reviewsDetail = `${ratingStr} sterren uit ${countStr} beoordelingen. Onder de 4,0 schrikken nieuwe klanten af.`;
+              reviewsDetailColor = '#A6543A';
+            }
           }
 
-          // 2. Google Bedrijfsprofiel — score from has_phone + has_hours + photo_count.
-          //    Caps at 8 by design; rendered as X/8.
-          const mark = (ok) => ok ? '✓' : '✗';
+          // 2. Google Bedrijfsprofiel — prose detail composed from has_phone,
+          //    has_hours, photo_count. No more inline ✓ / ✗ table.
           const photos = Number.isFinite(Number(r.photo_count)) ? Number(r.photo_count) : 0;
-          const photosLabel = photos === 1 ? '1 foto' : `${photos.toLocaleString('nl-NL')} foto's`;
           const hasPhone = this.isTruthy(r.has_phone);
           const hasHours = this.isTruthy(r.has_hours);
           const gbpScore = this.scoreGBP(hasPhone, hasHours, photos);
-          const gbpDetail = `Telefoon ${mark(hasPhone)} · Openingstijden ${mark(hasHours)} · ${photosLabel}`;
 
-          // 3. Eigen website — score from website + website_is_platform + website_loads
-          //    + website_has_https + website_has_booking. Webhook's is_platform wins;
-          //    URL sniff is the fallback when the webhook didn't return that flag.
+          let gbpDetail;
+          if (hasPhone && hasHours && photos >= 6) {
+            gbpDetail = `Telefoonnummer, openingstijden en ${photos} foto's ingevuld`;
+          } else {
+            const missing = [];
+            if (!hasPhone)    missing.push('telefoonnummer');
+            if (!hasHours)    missing.push('openingstijden');
+            if (photos === 0) missing.push("foto's");
+            const parts = [];
+            if (missing.length > 0) {
+              parts.push(`Je mist: ${missing.join(', ')}. Google toont incomplete profielen lager.`);
+            }
+            if (photos > 0 && photos < 6) {
+              parts.push(`${photos} foto's. Salons met 15+ foto's krijgen meer clicks.`);
+            }
+            gbpDetail = parts.join(' ') || `${photos} foto's.`;
+          }
+
+          // 3. Eigen website — prose detail in five colour-coded states. The
+          //    booking signal is folded into the line itself; no separate row
+          //    or HTTPS technicalities surface to the salon owner.
           const wIsPlatform = r.website_is_platform != null
             ? this.isTruthy(r.website_is_platform)
             : this.isPlatformUrl(r.website);
@@ -1284,62 +1186,65 @@
           const bookingViaPlatform = this.bookingLinkedPlatforms.length > 0;
           const websiteScore = this.scoreWebsite(r.website, wIsPlatform, wLoads, wHttps, wBooking, bookingViaPlatform);
 
-          let websiteDetail;
+          let websiteDetail, websiteDetailColor;
           if (!r.website) {
-            websiteDetail = 'Geen eigen website gevonden';
+            websiteDetail = 'Geen eigen website. Klanten die je Googlen vinden niets.';
+            websiteDetailColor = '#A6543A';
           } else if (wIsPlatform) {
-            const matched = String(r.website).toLowerCase().match(/(treatwell|fresha|planity)/);
-            const platformName = matched ? this.platformLabel(matched[0]) : 'een platform';
-            websiteDetail = `Via ${platformName} (je betaalt commissie)`;
+            websiteDetail = 'Je enige online plek is een boekingsplatform. Je hebt geen eigen merk online.';
+            websiteDetailColor = '#A6543A';
+          } else if (wBooking && bookingViaPlatform) {
+            websiteDetail = `${this.cleanDomain(r.website)}. Je boekknop stuurt klanten naar een extern platform dat commissie rekent.`;
+            websiteDetailColor = '#A6543A';
+          } else if (wBooking) {
+            websiteDetail = `${this.cleanDomain(r.website)} met eigen boekingen.`;
+            websiteDetailColor = '#5B7F5B';
           } else {
-            // Own-domain summary: domain + HTTPS status. The booking verdict is
-            // rendered separately below the detail line so its colour can carry
-            // the green / amber / rust meaning per case.
-            const httpsBit = wHttps
-              ? 'HTTPS ✓'
-              : (wLoads ? 'Geen HTTPS in Google' : 'HTTPS ✗');
-            websiteDetail = `${this.cleanDomain(r.website)} · ${httpsBit}`;
+            websiteDetail = `${this.cleanDomain(r.website)} zonder online boekingen. Klanten die 's avonds willen boeken haken af.`;
+            websiteDetailColor = '#B8860B';
           }
 
-          // 6. Boekingssysteem (informational). Only the user-reported value is
-          //    shown here; the webhook's booking_platform detection is a separate
-          //    signal used elsewhere. The display label is mapped through
-          //    bookingSystemDisplay so e.g. "own_website" becomes "Eigen
-          //    boekingssysteem", not a raw machine value.
-          let bookingDetail;
+          // 4. Lokale SEO — prose detail by score tier (no more per-tag ✓/✗
+          //    list). Uses the salon's own salon_type + city for relevance.
+          const seoScore = this.scoreSEO(r);
+          let seoDetail;
+          if (!r.website) {
+            seoDetail = 'Zonder website geen SEO. Je bent onvindbaar buiten Google Maps.';
+          } else if (seoScore <= 3) {
+            seoDetail = `Je website is voor Google bijna onleesbaar. Zoeken op '${salonType} ${city}' levert je niets op.`;
+          } else if (seoScore <= 6) {
+            seoDetail = 'Google kan je vinden, maar je mist technische basis. Je concurrent met een betere site wint.';
+          } else {
+            seoDetail = 'Technisch in orde. Google kan je goed lezen.';
+          }
+
+          // Maps is a footnote, not a pillar. Boolean only.
+          const mapsPass = !!r.google_maps_url;
+
+          // 5. AI-zichtbaarheid — score + salon_type/city-personalised prose.
+          const aiMentioned = this.isTruthy(r.ai_mentioned);
+          const aiScore = this.scoreAI(aiMentioned);
+          const aiDetail = aiMentioned
+            ? 'AI-zoekmachines kennen je salon. Dat is voorsprong.'
+            : `Als iemand ChatGPT vraagt: 'wat is een goede ${salonType} in ${city}?' word je niet genoemd.`;
+
+          // 6. Boekingssysteem (informational). bookingSystemDisplay now maps
+          //    empty / "geen" to "Alleen telefoon of walk-in" and "own"/"eigen"
+          //    to "Eigen systeem" (was "Eigen boekingssysteem").
           const reportedRaw = String((r.booking_system_reported || '')).trim();
           let bookingLabel = this.bookingSystemDisplay(reportedRaw);
           if (!bookingLabel && Array.isArray(this.form.booking_system) && this.form.booking_system.length > 0) {
-            // Multi-select fallback: map each form value, dedupe labels, join.
             const labels = this.form.booking_system
               .map(v => this.bookingSystemDisplay(v))
               .filter(Boolean);
             bookingLabel = Array.from(new Set(labels)).join(', ');
           }
-          bookingDetail = bookingLabel || '—';
-
-          // 4. Lokale SEO — score from the six seo_has_* booleans. Detail line
-          //    lists each signal as ✓ / ✗ so the salon can see exactly what's
-          //    missing. Caps at 9; rendered as X/9.
-          const seoScore = this.scoreSEO(r);
-          const mk = (v) => this.isTruthy(v) ? '✓' : '✗';
-          const seoDetail = r.website
-            ? `Paginatitel ${mk(r.seo_has_title)} · Meta beschrijving ${mk(r.seo_has_meta_desc)} · Mobiel ${mk(r.seo_has_viewport)} · Structured data ${mk(r.seo_has_schema)} · Social tags ${mk(r.seo_has_og_tags)} · H1 ${mk(r.seo_has_h1)}`
-            : 'Geen eigen website om te analyseren';
-
-          // Maps is now a footnote (not a scored pillar). Keep the boolean for
-          // the small confirmation line at the bottom of the scorecard.
-          const mapsPass = !!r.google_maps_url;
-
-          // 5. AI-zichtbaarheid — score from ai_mentioned bool.
-          const aiMentioned = this.isTruthy(r.ai_mentioned);
-          const aiScore = this.scoreAI(aiMentioned);
-          const aiDetail = aiMentioned ? 'ChatGPT noemt je salon' : 'ChatGPT noemt je niet. Jouw concurrenten mogelijk wel.';
+          const bookingDetail = bookingLabel || 'Alleen telefoon of walk-in';
 
           return {
             reviews: { score: reviewsScore, maxScore: 10, detail: reviewsDetail, detailColor: reviewsDetailColor },
             gbp:     { score: gbpScore,     maxScore: 8,  detail: gbpDetail },
-            website: { score: websiteScore, maxScore: 10, detail: websiteDetail },
+            website: { score: websiteScore, maxScore: 10, detail: websiteDetail, detailColor: websiteDetailColor },
             seo:     { score: seoScore,     maxScore: 9,  detail: seoDetail },
             ai:      { score: aiScore,      maxScore: 10, detail: aiDetail },
             booking: { detail: bookingDetail },
@@ -1361,27 +1266,35 @@
 
         get summaryCopy() {
           const n = this.averageScore;
-          if (n <= 3) return 'Er is werk aan de winkel. Maar dat is oplosbaar.';
-          if (n <= 5) return 'Je hebt een basis. Maar je laat klanten liggen.';
-          if (n <= 7) return 'Goed bezig. Er mist nog wat.';
-          if (n <= 9) return 'Bijna perfect. Nog een paar details.';
-          return 'Uitstekend. Je bent al goed zichtbaar.';
+          if (n <= 3) return 'Je salon is online bijna onzichtbaar. Nieuwe klanten vinden je niet.';
+          if (n <= 5) return 'Je bent er wel, maar je valt niet op. Klanten kiezen je concurrent.';
+          if (n <= 7) return 'Een goede basis. Maar er lekt omzet weg.';
+          if (n <= 9) return 'Sterk. Je bent beter vindbaar dan de meeste salons.';
+          return 'Uitstekend. Je laat bijna niets liggen.';
         },
 
-        // CTA copy reflects the average score: the lower it is, the harder the
-        // pitch. Same five buckets as summaryCopy for consistency.
+        // CTA headline: two paths, splitting at score 7. Below 7 it's a fix
+        // pitch ("dit is op te lossen"); 7+ it's a finish-line pitch.
         get ctaCopy() {
-          const n = this.averageScore;
-          if (n <= 3) return 'Veel rood op je scorecard. Maar oplosbaar. Veertien dagen tot een site die nieuwe klanten oplevert.';
-          if (n <= 5) return 'Te veel gaten in je vindbaarheid. We dichten ze in veertien dagen.';
-          if (n <= 7) return 'Een paar puntjes houden je tegen. Veertien dagen later staat het.';
-          if (n <= 9) return 'Bijna compleet. Plan een gesprek en sluit de laatste details.';
-          return 'Klaar voor de volgende stap? Plan een vrijblijvend gesprek van twintig minuten.';
+          return this.averageScore < 7
+            ? 'Dit is op te lossen. Veertien dagen, vast tarief, geen commissie.'
+            : 'Je bent al ver. Wat er nog mist is snel geregeld.';
+        },
+
+        // The leak block fires whenever a commission platform is detected
+        // anywhere: any booking_links_to_*, the Treatwell directory flag, or
+        // the website being a marketplace URL. Self-reported values don't
+        // trigger the block (the salon already knows they use it).
+        get hasCommissionLeak() {
+          const r = this.result || {};
+          return this.bookingLinkedPlatforms.length > 0
+            || this.isTruthy(r.on_treatwell)
+            || this.isTruthy(r.website_is_platform);
         },
 
         // Cleaned ai_top5 competitors list: accepts a comma-separated string or an
         // array; trims; drops the salon's own name; dedupes case-insensitively;
-        // filters out repeated-word junk ("Kapsalon Kapsalon"); caps at 4.
+        // filters out repeated-word junk ("Kapsalon Kapsalon"); caps at 3.
         get aiTop5() {
           if (!this.result) return [];
           let raw = this.result.ai_top5;
@@ -1402,7 +1315,7 @@
             if (this.hasRepeatedWord(name)) continue;
             seen.add(key);
             out.push(name);
-            if (out.length >= 4) break;
+            if (out.length >= 3) break;
           }
           return out;
         },
