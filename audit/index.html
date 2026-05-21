@@ -408,6 +408,7 @@
     .results-in .r-7 { transition-delay: 0.56s; }
     .results-in .r-8 { transition-delay: 0.64s; }
     .results-in .r-9 { transition-delay: 0.72s; }
+    .results-in .r-10 { transition-delay: 0.80s; }
     @media (prefers-reduced-motion: reduce) {
       .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
     }
@@ -447,6 +448,49 @@
       content: ''; width: 4px; height: 4px; border-radius: 999px;
       background: var(--color-gold-brule);
     }
+    /* Google Maps footnote: subtle single-line confirmation at the bottom of the
+       scorecard. Replaces the old scored Maps pillar; no big icon, no big number. */
+    .maps-footnote {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 13px;
+      line-height: 1.5;
+      color: rgba(43, 8, 16, 0.55);
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(43, 8, 16, 0.10);
+    }
+
+    /* Leak block — the Smoova selling-point closer when a commission platform is
+       detected anywhere (booking-link, Treatwell listing, platform URL, or
+       self-reported). Brand-compliant alternative to a side-stripe border:
+       1px rust hairline all around + faint rust wash. Same prosecutorial intent,
+       no DESIGN.md ban. */
+    .leak-block {
+      margin: 32px 0;
+      padding: 28px clamp(20px, 4vw, 36px);
+      background: rgba(166, 84, 58, 0.06);
+      border: 1px solid rgba(166, 84, 58, 0.22);
+      border-radius: 16px;
+    }
+    .leak-block__headline {
+      font-family: 'Fraunces', Georgia, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(22px, 3.2vw, 28px);
+      line-height: 1.22;
+      letter-spacing: -0.01em;
+      color: #A6543A;
+      margin: 0 0 16px 0;
+    }
+    .leak-block__body {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--color-rouge-profond);
+      margin: 0 0 12px 0;
+    }
+    .leak-block__body:last-child { margin-bottom: 0; }
+
     /* ai_response block under the AI pillar — italic Fraunces in a tinted gold wash */
     .ai-response {
       margin-top: 12px;
@@ -711,43 +755,36 @@
           </div>
         </div>
 
-        <!-- 4. Boekingssysteem (informational, no score) -->
+        <!-- 4. Lokale SEO (scored /9) -->
         <div class="check-row reveal r-6">
-          <span class="check-icon check-icon--info" aria-hidden="true"></span>
-          <div class="flex-1 min-w-0">
-            <p class="check-label">Boekingssysteem</p>
-            <p class="check-detail mt-3" x-text="pillars.booking.detail"></p>
-            <template x-if="bookingLinkedPlatforms.length > 0">
-              <p style="color: #A6543A; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 8px;">
-                Op je website gevonden: <span x-text="bookingLinkedPlatforms.join(', ')"></span> (25–35% commissie per boeking)
-              </p>
-            </template>
-            <template x-if="result.on_treatwell === true && !reportedTreatwell">
-              <p style="color: #A6543A; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 6px;">
-                Ook vermeld op Treatwell.nl
-              </p>
-            </template>
-          </div>
-        </div>
-
-        <!-- 5. Google Maps (informational, presence/absence) -->
-        <div class="check-row reveal r-7">
-          <span class="check-icon" :class="pillars.maps.pass ? 'check-icon--pass' : 'check-icon--fail'">
-            <template x-if="pillars.maps.pass">
+          <span class="check-icon" :class="scoredIconClass(pillars.seo.score)">
+            <template x-if="pillars.seo.score >= 6">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
             </template>
-            <template x-if="!pillars.maps.pass">
+            <template x-if="pillars.seo.score < 6">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </template>
           </span>
           <div class="flex-1 min-w-0">
-            <p class="check-label">Google Maps</p>
-            <p class="check-detail mt-3" :class="pillars.maps.pass ? 'check-detail--pass' : 'check-detail--fail'" x-text="pillars.maps.detail"></p>
+            <div class="flex items-baseline justify-between gap-3">
+              <p class="check-label">Lokale SEO</p>
+              <span class="pillar-score" :style="`color: ${scoreColorFor(pillars.seo.score)}`">
+                <span x-text="pillars.seo.score"></span><span class="denom" x-text="'/' + pillars.seo.maxScore"></span>
+              </span>
+            </div>
+            <div class="pillar-bar-track" aria-hidden="true">
+              <div class="pillar-bar-fill"
+                   :style="resultsRevealed ? `width: ${(pillars.seo.score / pillars.seo.maxScore) * 100}%; background: ${scoreColorFor(pillars.seo.score)};` : `width: 0; background: ${scoreColorFor(pillars.seo.score)};`"></div>
+            </div>
+            <p class="check-detail mt-3" x-text="pillars.seo.detail"></p>
+            <p style="color: rgba(43, 8, 16, 0.5); font-family: 'Inter', system-ui, sans-serif; font-size: 12px; line-height: 1.4; margin-top: 8px;">
+              Op basis van publieke gegevens. Volledige SEO-analyse in een gesprek.
+            </p>
           </div>
         </div>
 
-        <!-- 6. AI-zichtbaarheid (scored /10) -->
-        <div class="check-row reveal r-8">
+        <!-- 5. AI-zichtbaarheid (scored /10) -->
+        <div class="check-row reveal r-7">
           <span class="check-icon" :class="scoredIconClass(pillars.ai.score)">
             <template x-if="pillars.ai.score >= 6">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
@@ -778,10 +815,51 @@
             </template>
           </div>
         </div>
+
+        <!-- 6. Boekingssysteem (informational, no score) -->
+        <div class="check-row reveal r-8">
+          <span class="check-icon check-icon--info" aria-hidden="true"></span>
+          <div class="flex-1 min-w-0">
+            <p class="check-label">Boekingssysteem</p>
+            <p class="check-detail mt-3" x-text="pillars.booking.detail"></p>
+            <template x-if="bookingLinkedPlatforms.length > 0">
+              <p style="color: #A6543A; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 8px;">
+                Op je website gevonden: <span x-text="bookingLinkedPlatforms.join(', ')"></span> (25–35% commissie per boeking)
+              </p>
+            </template>
+            <template x-if="result.on_treatwell === true && !reportedTreatwell">
+              <p style="color: #A6543A; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 6px;">
+                Ook vermeld op Treatwell.nl
+              </p>
+            </template>
+          </div>
+        </div>
+
+        <!-- Google Maps footnote (replaces the scored Maps pillar) -->
+        <template x-if="pillars.maps.pass">
+          <p class="maps-footnote">✓ Je staat op Google Maps</p>
+        </template>
       </div>
 
+      <!-- Booking-leak section: only when a commission platform is detected
+           anywhere (booking-button link, Treatwell directory, platform URL, or
+           self-reported). Brand-compliant alternative to a side-stripe border. -->
+      <template x-if="primaryCommissionPlatform">
+        <div class="reveal r-9 leak-block">
+          <p class="leak-block__headline">
+            Elke boeking via <span x-text="primaryCommissionPlatform"></span> kost je geld.
+          </p>
+          <p class="leak-block__body">
+            <span x-text="primaryCommissionPlatform"></span> rekent 25 tot 35 procent commissie per boeking. Bij een gemiddelde behandeling van 85 euro is dat 21 tot 30 euro per klant. Tien boekingen per week via <span x-text="primaryCommissionPlatform"></span> betekent 850 tot 1.200 euro per maand aan commissie. Per jaar is dat meer dan 10.000 euro.
+          </p>
+          <p class="leak-block__body">
+            Met een eigen boekingssite houd je dat bedrag. Dat is waar Smoova voor is.
+          </p>
+        </div>
+      </template>
+
       <!-- CTA -->
-      <div class="reveal r-9 pt-2">
+      <div class="reveal r-10 pt-2">
         <p class="italic-display text-[20px] sm:text-[22px] leading-[1.45] text-rouge-profond mb-6 max-w-[460px]"
            x-text="ctaCopy"></p>
         <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
@@ -1005,6 +1083,51 @@
           return mentioned ? 7 : 2;
         },
 
+        // Lokale SEO: caps at 9. Website existence is the baseline; the six
+        // SEO booleans each contribute 1-2 points. A salon with no website
+        // can't earn this pillar, hard 1.
+        scoreSEO(r) {
+          const data = r || {};
+          if (!data.website) return 1;
+          let score = 1; // baseline: site exists
+          if (data.seo_has_title === true)     score += 2;
+          if (data.seo_has_meta_desc === true) score += 1;
+          if (data.seo_has_viewport === true)  score += 1;
+          if (data.seo_has_schema === true)    score += 2;
+          if (data.seo_has_og_tags === true)   score += 1;
+          if (data.seo_has_h1 === true)        score += 1;
+          return Math.min(9, score);
+        },
+
+        // The single platform name that should drive the leak section copy.
+        // Priority: explicit booking-link signals first (Treatwell -> Fresha ->
+        // Planity -> Salonized -> SimplyBook -> Timma), then the directory-listing
+        // flag, then platform-URL match, then self-reported. First match wins.
+        // Returns null when nothing commission-platform-shaped is detected.
+        get primaryCommissionPlatform() {
+          const r = this.result || {};
+          if (r.booking_links_to_treatwell  === true) return 'Treatwell';
+          if (r.booking_links_to_fresha     === true) return 'Fresha';
+          if (r.booking_links_to_planity    === true) return 'Planity';
+          if (r.booking_links_to_salonized  === true) return 'Salonized';
+          if (r.booking_links_to_simplybook === true) return 'SimplyBook';
+          if (r.booking_links_to_timma      === true) return 'Timma';
+          if (r.on_treatwell === true) return 'Treatwell';
+          const wIsPlatform = r.website_is_platform === true
+            || (r.website_is_platform == null && this.isPlatformUrl(r.website));
+          if (wIsPlatform) {
+            const w = String(r.website || '').toLowerCase();
+            if (w.includes('treatwell')) return 'Treatwell';
+            if (w.includes('fresha'))    return 'Fresha';
+            if (w.includes('planity'))   return 'Planity';
+          }
+          const reported = String(r.booking_system_reported || '').toLowerCase();
+          if (reported.includes('treatwell')) return 'Treatwell';
+          if (reported.includes('fresha'))    return 'Fresha';
+          if (reported.includes('planity'))   return 'Planity';
+          return null;
+        },
+
         // Capitalize first letter (kept for any future use; the booking row now uses
         // bookingSystemDisplay below).
         capFirst(s) {
@@ -1162,7 +1285,7 @@
             websiteDetail = `${this.cleanDomain(r.website)} · ${httpsBit}`;
           }
 
-          // 4. Boekingssysteem (informational). Only the user-reported value is
+          // 6. Boekingssysteem (informational). Only the user-reported value is
           //    shown here; the webhook's booking_platform detection is a separate
           //    signal used elsewhere. The display label is mapped through
           //    bookingSystemDisplay so e.g. "own_website" becomes "Eigen
@@ -1179,11 +1302,20 @@
           }
           bookingDetail = bookingLabel || '—';
 
-          // 5. Google Maps — presence/absence, no /10 score.
-          const mapsPass = !!r.google_maps_url;
-          const mapsDetail = mapsPass ? '✓ Je staat op Google Maps' : '✗ Niet gevonden op Google Maps';
+          // 4. Lokale SEO — score from the six seo_has_* booleans. Detail line
+          //    lists each signal as ✓ / ✗ so the salon can see exactly what's
+          //    missing. Caps at 9; rendered as X/9.
+          const seoScore = this.scoreSEO(r);
+          const mk = (v) => v === true ? '✓' : '✗';
+          const seoDetail = r.website
+            ? `Paginatitel ${mk(r.seo_has_title)} · Meta beschrijving ${mk(r.seo_has_meta_desc)} · Mobiel ${mk(r.seo_has_viewport)} · Structured data ${mk(r.seo_has_schema)} · Social tags ${mk(r.seo_has_og_tags)} · H1 ${mk(r.seo_has_h1)}`
+            : 'Geen eigen website om te analyseren';
 
-          // 6. AI-zichtbaarheid — score from ai_mentioned bool.
+          // Maps is now a footnote (not a scored pillar). Keep the boolean for
+          // the small confirmation line at the bottom of the scorecard.
+          const mapsPass = !!r.google_maps_url;
+
+          // 5. AI-zichtbaarheid — score from ai_mentioned bool.
           const aiMentioned = r.ai_mentioned === true;
           const aiScore = this.scoreAI(aiMentioned);
           const aiDetail = aiMentioned ? 'ChatGPT noemt je salon' : 'ChatGPT noemt je niet. Jouw concurrenten mogelijk wel.';
@@ -1192,20 +1324,23 @@
             reviews: { score: reviewsScore, maxScore: 10, detail: reviewsDetail, detailColor: reviewsDetailColor },
             gbp:     { score: gbpScore,     maxScore: 8,  detail: gbpDetail },
             website: { score: websiteScore, maxScore: 10, detail: websiteDetail },
-            booking: { detail: bookingDetail },
-            maps:    { pass:  mapsPass,     detail: mapsDetail },
+            seo:     { score: seoScore,     maxScore: 9,  detail: seoDetail },
             ai:      { score: aiScore,      maxScore: 10, detail: aiDetail },
+            booking: { detail: bookingDetail },
+            maps:    { pass:  mapsPass },
           };
         },
 
-        // Average of the four scored pillars, all on a /10 basis. GBP caps at 8
-        // by design, so it's rescaled (gbp/8 * 10) before averaging. Rounded to
-        // one decimal. The display layer uses toFixed(1) so a clean 7 reads "7.0".
+        // Average of the five scored pillars, all on a /10 basis. GBP caps at 8
+        // and SEO caps at 9 by design, so both are rescaled to /10 before
+        // averaging. Rounded to one decimal. The display layer uses toFixed(1)
+        // so a clean 7 reads "7.0".
         get averageScore() {
           const p = this.pillars;
           const gbpNorm = (p.gbp.score / 8) * 10;
-          const sum = p.reviews.score + gbpNorm + p.website.score + p.ai.score;
-          return Math.round((sum / 4) * 10) / 10;
+          const seoNorm = (p.seo.score / 9) * 10;
+          const sum = p.reviews.score + gbpNorm + p.website.score + seoNorm + p.ai.score;
+          return Math.round((sum / 5) * 10) / 10;
         },
 
         get summaryCopy() {
