@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gratis Salon Audit | Smoova</title>
+  <meta name="description" content="Ontdek in 30 seconden hoe zichtbaar jouw salon online is. Gratis audit van je Google Reviews, website, Maps en AI-zichtbaarheid." />
+  <link rel="canonical" href="https://smoova.studio/audit/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="nl_NL" />
+  <meta property="og:site_name" content="Smoova" />
+  <meta property="og:title" content="Gratis Salon Audit | Smoova" />
+  <meta property="og:description" content="Ontdek in 30 seconden hoe zichtbaar jouw salon online is." />
+  <meta property="og:url" content="https://smoova.studio/audit/" />
+  <meta name="theme-color" content="#2B0810" />
+
+  <!-- Critical FOUC shim — same lockset as index.html / book.html -->
+  <style>
+    [x-cloak] { display: none !important; }
+    .hidden { display: none !important; }
+    .sr-only {
+      position: absolute !important; width: 1px !important; height: 1px !important;
+      padding: 0 !important; margin: -1px !important; overflow: hidden !important;
+      clip: rect(0,0,0,0) !important; white-space: nowrap !important; border-width: 0 !important;
+    }
+  </style>
+
+  <!-- Inline SVG favicon — matches index.html / book.html -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232B0810'/%3E%3Ctext x='32' y='44' font-family='Georgia, serif' font-size='38' font-style='italic' font-weight='600' fill='%23F2EBDD' text-anchor='middle'%3Es%3C/text%3E%3Ccircle cx='46' cy='46' r='5' fill='%23D4A857'/%3E%3C/svg%3E" />
+
+  <!-- Fonts: same set as the rest of the site -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CDN + Theatre Rouge tokens (mirror of index.html config) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      future: { hoverOnlyWhenSupported: true },
+      theme: {
+        extend: {
+          colors: {
+            ink:       { void: '#0A0507', noir: '#16090C' },
+            rouge:     { profond: '#2B0810', DEFAULT: '#4A0E1A', velours: '#6B1525' },
+            bone:      { DEFAULT: '#F2EBDD', warm: '#E8DCC4', ivory: '#FBF7EF' },
+            gold:      { DEFAULT: '#B8924B', vif: '#D4A857', brule: '#8A6B2E' },
+            champagne: '#E8D4A8',
+            text: {
+              primary:     '#0A0507',
+              secondary:   '#4A2D32',
+              ondark:      '#F2EBDD',
+              ondarkmuted: '#BFA89A',
+            },
+          },
+          fontFamily: {
+            display: ['Fraunces', 'Georgia', 'serif'],
+            sans:    ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+            mono:    ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <style>
+    :root {
+      --color-rouge-profond: #2B0810;
+      --color-rouge: #4A0E1A;
+      --color-rouge-velours: #6B1525;
+      --color-bone: #F2EBDD;
+      --color-bone-warm: #E8DCC4;
+      --color-gold: #B8924B;
+      --color-gold-vif: #D4A857;
+      --color-gold-brule: #8A6B2E;
+      --color-champagne: #E8D4A8;
+      --color-ink-noir: #16090C;
+      --color-ink-void: #0A0507;
+    }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--color-bone);
+      color: var(--color-rouge-profond);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      min-height: 100vh;
+    }
+    :focus-visible { outline: 2px solid var(--color-gold-vif); outline-offset: 3px; border-radius: 4px; }
+
+    /* Atmospheric backdrop — champagne in the upper-right corner +
+       quiet rouge-velours wash at the bottom edge. Same Theatre Rouge
+       grammar as the glossary section on the landing page. */
+    .page-bg {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 80% 50% at 100% 0%, rgba(232, 212, 168, 0.45), transparent 65%),
+        radial-gradient(ellipse 60% 40% at 0% 18%, rgba(107, 21, 37, 0.06), transparent 70%),
+        linear-gradient(to bottom, #F2EBDD 0%, #F2EBDD 65%, #EFE3CC 100%);
+    }
+    .page-grain {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.05; mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.5'/></svg>");
+    }
+
+    /* Italic display helper — same as index.html / book.html */
+    .italic-display { font-style: italic; font-family: 'Fraunces', serif; font-weight: 400; }
+
+    /* Animations */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    .anim-fade-up { animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    @media (prefers-reduced-motion: reduce) {
+      .anim-fade-up { animation: none !important; opacity: 1 !important; transform: none !important; }
+    }
+
+    /* Hairline accent rule */
+    .rouge-rule {
+      height: 1px;
+      background: linear-gradient(to right,
+        transparent 0%,
+        rgba(107, 21, 37, 0.32) 20%,
+        rgba(107, 21, 37, 0.32) 80%,
+        transparent 100%);
+    }
+
+    /* ---- Form fields ---- */
+    .audit-field {
+      width: 100%;
+      background: transparent;
+      border: 0;
+      border-bottom: 1px solid rgba(43, 8, 16, 0.22);
+      padding: 14px 0;
+      font-size: 17px;
+      line-height: 1.4;
+      color: var(--color-rouge-profond);
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 400;
+      border-radius: 0;
+      transition: border-color 220ms ease-out;
+    }
+    .audit-field::placeholder { color: rgba(43, 8, 16, 0.38); font-style: italic; }
+    .audit-field:focus { outline: none; border-bottom-color: var(--color-rouge-velours); }
+    select.audit-field {
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236B1525' stroke-width='1.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 4px center;
+      padding-right: 28px;
+    }
+    select.audit-field option { background: #F2EBDD; color: #2B0810; }
+    .audit-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--color-gold-brule);
+    }
+
+    /* ---- Buttons (Theatre Rouge primary, like the pricing CTAs) ---- */
+    .btn-rouge {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      background: var(--color-rouge-profond);
+      color: var(--color-bone);
+      padding: 16px 28px;
+      min-height: 52px;
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      transition: background-color 220ms ease-out, transform 220ms ease-out, color 220ms ease-out;
+      cursor: pointer;
+      border: 1px solid var(--color-rouge-profond);
+    }
+    .btn-rouge:hover { background: var(--color-rouge-velours); border-color: var(--color-rouge-velours); }
+    .btn-rouge:active { transform: translateY(1px); }
+    .btn-rouge:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-rouge svg { color: var(--color-gold-vif); }
+
+    .btn-gold {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      background: var(--color-gold-vif);
+      color: var(--color-rouge-profond);
+      padding: 16px 28px;
+      min-height: 52px;
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      transition: background-color 220ms ease-out, transform 220ms ease-out;
+      cursor: pointer;
+      border: 1px solid var(--color-gold-vif);
+      box-shadow: 0 18px 36px -10px rgba(212, 168, 87, 0.45);
+    }
+    .btn-gold:hover { background: var(--color-champagne); border-color: var(--color-champagne); }
+    .btn-gold:active { transform: translateY(1px); }
+
+    .btn-ghost {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      background: transparent;
+      color: var(--color-rouge-profond);
+      padding: 14px 22px;
+      min-height: 48px;
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      border: 1px solid rgba(43, 8, 16, 0.28);
+      transition: border-color 220ms ease-out, color 220ms ease-out;
+      cursor: pointer;
+    }
+    .btn-ghost:hover { border-color: var(--color-rouge-velours); color: var(--color-rouge-velours); }
+
+    /* ---- Loader: thin gold-vif pulsing line ---- */
+    .audit-loader {
+      position: relative; width: 72px; height: 1px;
+      background: rgba(43, 8, 16, 0.14);
+      margin: 0 auto; overflow: hidden;
+    }
+    .audit-loader::after {
+      content: ''; position: absolute; inset: 0;
+      width: 40%;
+      background: linear-gradient(to right, var(--color-gold-vif), var(--color-gold-brule));
+      animation: loaderSlide 1.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes loaderSlide { 0% { transform: translateX(-100%); } 100% { transform: translateX(250%); } }
+    @media (prefers-reduced-motion: reduce) { .audit-loader::after { animation: none; } }
+
+    /* ---- Result rows ---- */
+    .check-row {
+      display: flex; align-items: flex-start; gap: 18px;
+      padding: 22px 0;
+      border-top: 1px solid rgba(43, 8, 16, 0.12);
+    }
+    .check-row:last-child { border-bottom: 1px solid rgba(43, 8, 16, 0.12); }
+    .check-icon {
+      flex-shrink: 0; width: 28px; height: 28px; border-radius: 999px;
+      display: inline-flex; align-items: center; justify-content: center;
+      margin-top: 1px;
+    }
+    .check-icon--pass {
+      background: linear-gradient(135deg, rgba(212, 168, 87, 0.20), rgba(184, 146, 75, 0.16));
+      color: var(--color-gold-brule);
+      border: 1px solid rgba(184, 146, 75, 0.40);
+    }
+    .check-icon--fail {
+      background: rgba(107, 21, 37, 0.10);
+      color: var(--color-rouge-velours);
+      border: 1px solid rgba(107, 21, 37, 0.35);
+    }
+    .check-label {
+      font-family: 'Fraunces', Georgia, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+      color: var(--color-rouge-profond);
+    }
+    .check-detail {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.55;
+      margin-top: 6px;
+      color: rgba(43, 8, 16, 0.72);
+    }
+    .check-detail--pass { color: var(--color-gold-brule); }
+    .check-detail--fail { color: var(--color-rouge-velours); }
+
+    /* Reveal stagger for result rows */
+    .reveal { opacity: 0; transform: translateY(12px); transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1), transform 700ms cubic-bezier(0.22, 1, 0.36, 1); }
+    .results-in .reveal { opacity: 1; transform: translateY(0); }
+    .results-in .r-1 { transition-delay: 0.08s; }
+    .results-in .r-2 { transition-delay: 0.16s; }
+    .results-in .r-3 { transition-delay: 0.24s; }
+    .results-in .r-4 { transition-delay: 0.32s; }
+    .results-in .r-5 { transition-delay: 0.40s; }
+    .results-in .r-6 { transition-delay: 0.48s; }
+    .results-in .r-7 { transition-delay: 0.56s; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+    }
+
+    /* Link underline reuse */
+    .link-underline { position: relative; display: inline-block; }
+    .link-underline::after {
+      content: ''; position: absolute; left: 0; bottom: -2px;
+      width: 100%; height: 1px; background: currentColor;
+      transform: scaleX(0); transform-origin: right;
+      transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .link-underline:hover::after { transform: scaleX(1); transform-origin: left; }
+  </style>
+</head>
+
+<body x-data="auditApp()" x-init="init()" x-cloak>
+
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="page-grain" aria-hidden="true"></div>
+
+  <a href="#main" class="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-3 focus-visible:left-3 focus-visible:z-50 focus-visible:px-4 focus-visible:py-2 focus-visible:bg-bone focus-visible:text-rouge-profond focus-visible:rounded-md focus-visible:font-medium">
+    Naar inhoud
+  </a>
+
+  <!-- ============== NAV ============== -->
+  <nav class="relative z-30 px-6 md:px-12 lg:px-20 py-6 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2 group focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-vif rounded-sm" aria-label="Smoova — terug naar home">
+      <span class="font-display text-2xl font-medium tracking-tight text-rouge-profond">smoova</span>
+      <span aria-hidden="true" class="italic-display text-gold-vif text-2xl">.</span>
+    </a>
+
+    <div class="flex items-center gap-6 md:gap-8">
+      <a href="/" class="text-sm text-rouge-profond/70 hover:text-rouge-profond link-underline transition-colors">Home</a>
+      <a href="/book.html" class="hidden sm:inline-block text-sm text-rouge-profond/70 hover:text-rouge-profond link-underline transition-colors">Kennismaking</a>
+    </div>
+  </nav>
+
+  <!-- ============== MAIN ============== -->
+  <main id="main" class="relative z-10 mx-auto max-w-2xl px-6 md:px-12 pt-6 md:pt-10 pb-16">
+
+    <!-- ===== STATE: IDLE (form) ===== -->
+    <section x-show="state === 'idle'" x-transition.opacity.duration.300ms>
+      <div class="anim-fade-up" style="animation-delay: 80ms;">
+        <p class="audit-eyebrow mb-5">Salon audit · gratis</p>
+      </div>
+      <h1 class="anim-fade-up font-display font-medium text-[34px] sm:text-[44px] md:text-5xl leading-[1.04] tracking-tight text-rouge-profond mb-5"
+          style="animation-delay: 140ms;">
+        Hoe zichtbaar is jouw salon <span class="italic-display text-rouge-velours">online</span><span class="text-gold-vif">?</span>
+      </h1>
+      <p class="anim-fade-up font-sans text-base md:text-lg leading-relaxed text-rouge-profond/75 mb-12 max-w-[480px]"
+         style="animation-delay: 220ms;">
+        Vul je gegevens in. Binnen dertig seconden weet je hoe je ervoor staat bij Google, op Maps en in AI-zoekmachines.
+      </p>
+
+      <div class="rouge-rule mb-10 anim-fade-up" style="animation-delay: 280ms;"></div>
+
+      <form @submit.prevent="runAudit()" novalidate class="space-y-9">
+        <div class="anim-fade-up" style="animation-delay: 320ms;">
+          <label for="salon_name" class="audit-eyebrow block mb-2">Salon</label>
+          <input id="salon_name" type="text" class="audit-field"
+                 placeholder="Naam van je salon"
+                 x-model.trim="form.salon_name" required autocomplete="organization" />
+        </div>
+
+        <div class="anim-fade-up" style="animation-delay: 380ms;">
+          <label for="city" class="audit-eyebrow block mb-2">Stad</label>
+          <input id="city" type="text" class="audit-field"
+                 placeholder="Amsterdam, Rotterdam, Utrecht..."
+                 x-model.trim="form.city" required autocomplete="address-level2" />
+        </div>
+
+        <div class="anim-fade-up" style="animation-delay: 440ms;">
+          <label for="salon_type" class="audit-eyebrow block mb-2">Type salon</label>
+          <select id="salon_type" class="audit-field" x-model="form.salon_type" required>
+            <option value="" disabled>Kies een type</option>
+            <option value="schoonheidssalon">Schoonheidssalon</option>
+            <option value="kapsalon">Kapsalon</option>
+            <option value="nagelsalon">Nagelsalon</option>
+            <option value="barbershop">Barbershop</option>
+            <option value="beautysalon">Beautysalon</option>
+          </select>
+        </div>
+
+        <div class="pt-4 anim-fade-up" style="animation-delay: 520ms;">
+          <button type="submit" class="btn-rouge w-full sm:w-auto" :disabled="!canSubmit()">
+            <span>Start audit</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+
+        <p class="audit-eyebrow opacity-70 pt-2 anim-fade-up" style="animation-delay: 580ms;">
+          Geen account · Geen spam · Resultaat op deze pagina
+        </p>
+      </form>
+    </section>
+
+    <!-- ===== STATE: LOADING ===== -->
+    <section x-show="state === 'loading'" x-transition.opacity.duration.300ms class="py-28 text-center">
+      <div class="audit-loader mb-10" aria-hidden="true"></div>
+      <p class="italic-display text-[22px] leading-[1.35] text-rouge-profond" x-text="loadingMessage" aria-live="polite"></p>
+    </section>
+
+    <!-- ===== STATE: RESULTS ===== -->
+    <section x-show="state === 'results'"
+             x-transition.opacity.duration.300ms
+             :class="state === 'results' ? 'results-in' : ''">
+
+      <!-- Salon header -->
+      <div class="reveal r-1 mt-4 mb-10">
+        <p class="audit-eyebrow mb-4">Audit resultaat</p>
+        <h1 class="font-display font-medium text-[30px] sm:text-[40px] leading-[1.08] tracking-tight text-rouge-profond">
+          <span x-text="result.salon_name || form.salon_name"></span>
+        </h1>
+        <p class="font-sans text-sm text-rouge-profond/65 mt-2" x-text="result.city || form.city"></p>
+      </div>
+
+      <!-- Score -->
+      <div class="reveal r-2 mb-10">
+        <div class="flex items-baseline gap-3">
+          <span class="font-display font-light leading-none tracking-[-0.03em]"
+                style="font-size: clamp(64px, 14vw, 96px);"
+                :style="passCount >= 3 ? 'background: linear-gradient(135deg, #D4A857 0%, #8A6B2E 100%); -webkit-background-clip: text; background-clip: text; color: transparent;' : passCount >= 2 ? 'color: #2B0810;' : 'background: linear-gradient(135deg, #6B1525 0%, #2B0810 100%); -webkit-background-clip: text; background-clip: text; color: transparent;'"
+                x-text="passCount"></span>
+          <span class="font-display font-light text-[34px] text-rouge-profond/55 leading-none">/ 4</span>
+        </div>
+        <p class="italic-display text-[20px] sm:text-[22px] leading-[1.4] text-rouge-profond mt-4 max-w-[480px]" x-text="scoreCopy"></p>
+      </div>
+
+      <!-- Check rows -->
+      <div class="mb-12">
+        <!-- 1. Google Reviews -->
+        <div class="check-row reveal r-3">
+          <span class="check-icon" :class="checks.reviews.pass ? 'check-icon--pass' : 'check-icon--fail'">
+            <template x-if="checks.reviews.pass">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            </template>
+            <template x-if="!checks.reviews.pass">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </template>
+          </span>
+          <div class="flex-1 min-w-0">
+            <p class="check-label">Google Reviews</p>
+            <p class="check-detail" :class="checks.reviews.pass ? 'check-detail--pass' : 'check-detail--fail'" x-text="checks.reviews.detail"></p>
+          </div>
+        </div>
+
+        <!-- 2. Eigen website -->
+        <div class="check-row reveal r-4">
+          <span class="check-icon" :class="checks.website.pass ? 'check-icon--pass' : 'check-icon--fail'">
+            <template x-if="checks.website.pass">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            </template>
+            <template x-if="!checks.website.pass">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </template>
+          </span>
+          <div class="flex-1 min-w-0">
+            <p class="check-label">Eigen website</p>
+            <p class="check-detail" :class="checks.website.pass ? 'check-detail--pass' : 'check-detail--fail'" x-text="checks.website.detail"></p>
+          </div>
+        </div>
+
+        <!-- 3. Google Maps -->
+        <div class="check-row reveal r-5">
+          <span class="check-icon" :class="checks.maps.pass ? 'check-icon--pass' : 'check-icon--fail'">
+            <template x-if="checks.maps.pass">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            </template>
+            <template x-if="!checks.maps.pass">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </template>
+          </span>
+          <div class="flex-1 min-w-0">
+            <p class="check-label">Google Maps</p>
+            <p class="check-detail" :class="checks.maps.pass ? 'check-detail--pass' : 'check-detail--fail'" x-text="checks.maps.detail"></p>
+          </div>
+        </div>
+
+        <!-- 4. AI-zichtbaarheid -->
+        <div class="check-row reveal r-6">
+          <span class="check-icon" :class="checks.ai.pass ? 'check-icon--pass' : 'check-icon--fail'">
+            <template x-if="checks.ai.pass">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            </template>
+            <template x-if="!checks.ai.pass">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </template>
+          </span>
+          <div class="flex-1 min-w-0">
+            <p class="check-label">AI-zichtbaarheid</p>
+            <p class="check-detail" :class="checks.ai.pass ? 'check-detail--pass' : 'check-detail--fail'" x-text="checks.ai.detail"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="reveal r-7 pt-2">
+        <p class="italic-display text-[20px] sm:text-[22px] leading-[1.45] text-rouge-profond mb-6 max-w-[460px]">
+          Wil je zien hoe Smoova dit oplost? Plan een vrijblijvend gesprek van twintig minuten.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+          <a href="/book.html" class="btn-gold w-full sm:w-auto">
+            <span>Plan een gesprek</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+          <a href="https://instagram.com/smoova.studio" target="_blank" rel="noopener noreferrer" class="btn-ghost w-full sm:w-auto">
+            Of DM op Instagram
+          </a>
+        </div>
+
+        <button @click="reset()" class="mt-10 audit-eyebrow hover:text-rouge-velours transition-colors">
+          ← Nog een salon checken
+        </button>
+      </div>
+    </section>
+
+    <!-- ===== STATE: NOT FOUND ===== -->
+    <section x-show="state === 'not-found'" x-transition.opacity.duration.300ms class="py-20 text-center">
+      <p class="audit-eyebrow mb-5">Geen resultaat</p>
+      <p class="italic-display text-[26px] leading-[1.35] text-rouge-profond mb-3 max-w-[420px] mx-auto">
+        We konden je salon niet vinden.
+      </p>
+      <p class="font-sans text-[15px] text-rouge-profond/70 mb-10 max-w-[420px] mx-auto">
+        Controleer de naam en de stad, en probeer het opnieuw.
+      </p>
+      <button @click="reset()" class="btn-rouge">Probeer opnieuw</button>
+    </section>
+
+    <!-- ===== STATE: ERROR ===== -->
+    <section x-show="state === 'error'" x-transition.opacity.duration.300ms class="py-20 text-center">
+      <p class="audit-eyebrow mb-5" style="color: var(--color-rouge-velours);">Er ging iets mis</p>
+      <p class="italic-display text-[26px] leading-[1.35] text-rouge-profond mb-3 max-w-[420px] mx-auto">
+        Onze audit haperde even.
+      </p>
+      <p class="font-sans text-[15px] text-rouge-profond/70 mb-10 max-w-[420px] mx-auto">
+        Probeer het opnieuw, of stuur ons een DM op Instagram.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <button @click="reset()" class="btn-rouge">Probeer opnieuw</button>
+        <a href="https://instagram.com/smoova.studio" target="_blank" rel="noopener noreferrer" class="btn-ghost">DM ons</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============== FOOTER ============== -->
+  <footer class="relative z-10 mx-auto max-w-7xl px-6 md:px-12 lg:px-20 py-8 mt-8 flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-6 text-center md:text-left"
+          style="border-top: 1px solid rgba(43, 8, 16, 0.10);">
+    <p class="font-mono text-[11px] tracking-wider text-rouge-profond/55">
+      © 2026 Smoova B.V. · Alle rechten voorbehouden
+    </p>
+    <a href="mailto:info@smoova.studio"
+       class="group inline-flex items-center justify-center md:justify-end gap-2 min-h-[44px] font-mono text-[11px] tracking-wider text-rouge-profond/55 hover:text-rouge-velours transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-vif rounded-sm">
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="5" width="18" height="14" rx="2"/>
+        <path d="M3.5 6l8.5 7 8.5-7"/>
+      </svg>
+      <span>info@smoova.studio</span>
+    </a>
+  </footer>
+
+  <!-- ============== ALPINE STATE ============== -->
+  <script>
+    function auditApp() {
+      return {
+        state: 'idle', // idle | loading | results | not-found | error
+        form: { salon_name: '', city: '', salon_type: '' },
+        result: {},
+        loadingMessage: 'We zoeken je salon op...',
+        _timers: [],
+
+        init() { /* placeholder; reserved for future analytics opt-in or persistence */ },
+
+        canSubmit() {
+          return this.form.salon_name && this.form.city && this.form.salon_type;
+        },
+
+        // Strip protocol + path, leave clean hostname for display
+        cleanDomain(url) {
+          if (!url) return '';
+          try {
+            const u = new URL(url.startsWith('http') ? url : 'https://' + url);
+            return u.hostname.replace(/^www\./, '');
+          } catch {
+            return String(url).replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
+          }
+        },
+
+        // A website that points to Treatwell / Fresha / Planity means the salon
+        // is on a marketplace, not on their own domain. We count that as a fail.
+        isPlatformUrl(url) {
+          if (!url) return false;
+          const lower = url.toLowerCase();
+          return ['treatwell', 'fresha', 'planity'].some(d => lower.includes(d));
+        },
+
+        get checks() {
+          const r = this.result || {};
+
+          // 1. Google Reviews — pass if rating >= 4.0
+          const rating = Number(r.rating);
+          const reviewCount = Number(r.review_count);
+          const reviewsPass = !isNaN(rating) && rating >= 4.0;
+          const reviewsDetail = !isNaN(rating)
+            ? `${rating.toLocaleString('nl-NL', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} sterren · ${(isNaN(reviewCount) ? 0 : reviewCount).toLocaleString('nl-NL')} reviews`
+            : 'Geen Google reviews gevonden';
+
+          // 2. Eigen website — pass if a real domain (not a platform)
+          const hasWebsite = !!r.website;
+          const onPlatform = this.isPlatformUrl(r.website);
+          const websitePass = hasWebsite && !onPlatform;
+          const websiteDetail = !hasWebsite
+            ? 'Geen eigen website gevonden'
+            : onPlatform
+              ? `Alleen zichtbaar via ${this.cleanDomain(r.website)}`
+              : this.cleanDomain(r.website);
+
+          // 3. Google Maps — pass if listing exists
+          const mapsPass = !!r.google_maps_url;
+          const mapsDetail = mapsPass ? 'Je staat op Google Maps' : 'Niet gevonden op Google Maps';
+
+          // 4. AI-zichtbaarheid — pass if mentioned
+          const aiPass = r.ai_mentioned === true;
+          const aiDetail = aiPass ? 'ChatGPT noemt je salon' : 'ChatGPT noemt je niet';
+
+          return {
+            reviews: { pass: reviewsPass, detail: reviewsDetail },
+            website: { pass: websitePass, detail: websiteDetail },
+            maps:    { pass: mapsPass,    detail: mapsDetail },
+            ai:      { pass: aiPass,      detail: aiDetail },
+          };
+        },
+
+        get passCount() {
+          const c = this.checks;
+          return [c.reviews.pass, c.website.pass, c.maps.pass, c.ai.pass].filter(Boolean).length;
+        },
+
+        get scoreCopy() {
+          const n = this.passCount;
+          if (n <= 1) return 'Er is werk aan de winkel. Maar dat is oplosbaar.';
+          if (n === 2) return 'Je hebt een basis. Maar je laat klanten liggen.';
+          if (n === 3) return 'Goed bezig. Eén ding mist nog.';
+          return 'Uitstekend. Je bent al goed zichtbaar.';
+        },
+
+        // Webhook fetch with 30s timeout. Aborts on timeout, propagates errors
+        // for the caller's catch block to map to the 'error' state.
+        async fetchAudit() {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 30000);
+          try {
+            const res = await fetch('https://hook.eu1.make.com/7c69neddaya7x9pe7l66s8thljbq2ect', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(this.form),
+              signal: controller.signal,
+            });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return await res.json();
+          } finally {
+            clearTimeout(timeoutId);
+          }
+        },
+
+        // A response counts as "not found" only when every meaningful field
+        // (rating, review_count, website, google_maps_url, ai_mentioned, ai_top5)
+        // is missing or null. A salon with only a Maps listing should still
+        // produce a result — that's the audit's value: showing partial presence.
+        isEmptyResponse(data) {
+          if (!data) return true;
+          const hasAnySignal = data.rating != null
+            || data.review_count != null
+            || data.website
+            || data.google_maps_url
+            || data.ai_mentioned != null
+            || (Array.isArray(data.ai_top5) && data.ai_top5.length > 0);
+          return !hasAnySignal;
+        },
+
+        async runAudit() {
+          if (!this.canSubmit()) return;
+
+          this.state = 'loading';
+          this.loadingMessage = 'We zoeken je salon op...';
+
+          // Rotate to second loading message after 3s
+          const msgTimer = setTimeout(() => {
+            if (this.state === 'loading') this.loadingMessage = 'Bijna klaar...';
+          }, 3000);
+          this._timers.push(msgTimer);
+
+          try {
+            const data = await this.fetchAudit();
+            if (this.isEmptyResponse(data)) {
+              this.state = 'not-found';
+              return;
+            }
+            this.result = data;
+            this.state = 'results';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          } catch (err) {
+            this.state = 'error';
+          } finally {
+            this._timers.forEach(clearTimeout);
+            this._timers = [];
+          }
+        },
+
+        reset() {
+          this._timers.forEach(clearTimeout);
+          this._timers = [];
+          this.state = 'idle';
+          this.result = {};
+          this.loadingMessage = 'We zoeken je salon op...';
+          // Form values preserved so user can correct and retry without retyping
+        },
+      };
+    }
+  </script>
+</body>
+</html>
