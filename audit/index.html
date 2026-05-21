@@ -716,7 +716,7 @@
           <div class="flex-1 min-w-0">
             <p class="check-label">Boekingssysteem</p>
             <p class="check-detail mt-3" x-text="pillars.booking.detail"></p>
-            <template x-if="result.on_treatwell === true">
+            <template x-if="result.on_treatwell === true && !reportedTreatwell">
               <p style="color: #A6543A; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 10px;">
                 Ook gevonden op Treatwell (25–35% commissie)
               </p>
@@ -764,7 +764,7 @@
             <p class="check-detail mt-3" x-text="pillars.ai.detail"></p>
             <template x-if="aiTop5.length > 0">
               <p style="color: rgba(43, 8, 16, 0.62); font-family: 'Inter', system-ui, sans-serif; font-size: 13px; line-height: 1.5; margin-top: 8px;">
-                <span x-text="result.ai_mentioned === true ? 'Ook genoemd: ' : 'ChatGPT noemt: '"></span><span x-text="aiTop5.join(', ')"></span>
+                Anderen die wel genoemd worden: <span x-text="aiTop5.join(', ')"></span>
               </p>
             </template>
             <template x-if="result.ai_response">
@@ -982,11 +982,50 @@
           return mentioned ? 7 : 2;
         },
 
-        // Capitalize first letter (used for the self-reported booking system value).
+        // Capitalize first letter (kept for any future use; the booking row now uses
+        // bookingSystemDisplay below).
         capFirst(s) {
           if (!s) return '';
           const str = String(s);
           return str.charAt(0).toUpperCase() + str.slice(1);
+        },
+
+        // Map a raw booking_system value (form value, webhook echo, or label) to a
+        // clean Dutch display label. Order is important: specific platforms first,
+        // then the generic catches.
+        bookingSystemDisplay(raw) {
+          if (!raw) return '';
+          const s = String(raw).toLowerCase();
+          if (s.includes('treatwell')) return 'Treatwell';
+          if (s.includes('fresha')) return 'Fresha';
+          if (s.includes('planity')) return 'Planity';
+          if (s.includes('salonized')) return 'Salonized';
+          if (s.includes('other') || s.includes('anders')) return 'Ander systeem';
+          if (s.includes('eigen') || s.includes('own')) return 'Eigen boekingssysteem';
+          if (s.includes('geen') || s.includes('no')) return 'Geen online boekingen';
+          return '';
+        },
+
+        // True if the salon owner already told us they're on Treatwell — either in
+        // the chip group or via the webhook's echo. Gates the on_treatwell warning
+        // so we don't tell them what they already volunteered.
+        get reportedTreatwell() {
+          const reported = String((this.result && this.result.booking_system_reported) || '').toLowerCase();
+          const formArr = (this.form.booking_system || []).map(v => String(v).toLowerCase());
+          return reported.includes('treatwell') || formArr.includes('treatwell');
+        },
+
+        // True if the candidate name contains a word repeated within itself, e.g.
+        // "Kapsalon Kapsalon". Used to filter low-quality entries out of ai_top5.
+        hasRepeatedWord(name) {
+          if (!name) return false;
+          const words = String(name).toLowerCase().split(/\s+/).filter(Boolean);
+          const seen = new Set();
+          for (const w of words) {
+            if (seen.has(w)) return true;
+            seen.add(w);
+          }
+          return false;
         },
 
         get pillars() {
@@ -1027,22 +1066,31 @@
             const platformName = matched ? this.platformLabel(matched[0]) : 'een platform';
             websiteDetail = `Via ${platformName} (je betaalt commissie)`;
           } else {
-            const httpsBit = wHttps ? 'HTTPS ✓' : 'HTTPS ✗';
+            // Site loads-but-no-HTTPS gets a more actionable line. Loads-failure or
+            // HTTPS-present cases keep the short marker.
+            const httpsBit = wHttps
+              ? 'HTTPS ✓'
+              : (wLoads ? 'Geen HTTPS in Google' : 'HTTPS ✗');
             const bookBit = wBooking ? 'Boekknop ✓' : 'Geen boekknop ✗';
             websiteDetail = `${this.cleanDomain(r.website)} · ${httpsBit} · ${bookBit}`;
           }
 
-          // 4. Boekingssysteem (informational). Self-reported value from the form's
-          //    booking_system_reported string. Falls back to the multi-select array
-          //    if the webhook didn't echo it.
+          // 4. Boekingssysteem (informational). Only the user-reported value is
+          //    shown here; the webhook's booking_platform detection is a separate
+          //    signal used elsewhere. The display label is mapped through
+          //    bookingSystemDisplay so e.g. "own_website" becomes "Eigen
+          //    boekingssysteem", not a raw machine value.
           let bookingDetail;
-          if (r.booking_system_reported && String(r.booking_system_reported).trim().length > 0) {
-            bookingDetail = this.capFirst(String(r.booking_system_reported).trim());
-          } else if (Array.isArray(this.form.booking_system) && this.form.booking_system.length > 0) {
-            bookingDetail = this.form.booking_system.map(v => this.platformLabel(v)).join(', ');
-          } else {
-            bookingDetail = '—';
+          const reportedRaw = String((r.booking_system_reported || '')).trim();
+          let bookingLabel = this.bookingSystemDisplay(reportedRaw);
+          if (!bookingLabel && Array.isArray(this.form.booking_system) && this.form.booking_system.length > 0) {
+            // Multi-select fallback: map each form value, dedupe labels, join.
+            const labels = this.form.booking_system
+              .map(v => this.bookingSystemDisplay(v))
+              .filter(Boolean);
+            bookingLabel = Array.from(new Set(labels)).join(', ');
           }
+          bookingDetail = bookingLabel || '—';
 
           // 5. Google Maps — presence/absence, no /10 score.
           const mapsPass = !!r.google_maps_url;
@@ -1093,10 +1141,9 @@
           return 'Klaar voor de volgende stap? Plan een vrijblijvend gesprek van twintig minuten.';
         },
 
-        // Cleaned ai_top5: accepts either a comma-separated string (current webhook
-        // shape) or an array (legacy), filters out the salon's own name
-        // (case-insensitive) so the "het noemt deze salons" list never shows you
-        // to yourself, and caps at 5.
+        // Cleaned ai_top5 competitors list: accepts a comma-separated string or an
+        // array; trims; drops the salon's own name; dedupes case-insensitively;
+        // filters out repeated-word junk ("Kapsalon Kapsalon"); caps at 4.
         get aiTop5() {
           if (!this.result) return [];
           let raw = this.result.ai_top5;
@@ -1106,11 +1153,20 @@
             raw = [];
           }
           const own = (this.form.salon_name || '').trim().toLowerCase();
-          return raw
-            .map(n => (typeof n === 'string' ? n.trim() : ''))
-            .filter(n => n.length > 0)
-            .filter(n => !own || n.toLowerCase() !== own)
-            .slice(0, 5);
+          const seen = new Set();
+          const out = [];
+          for (const item of raw) {
+            const name = typeof item === 'string' ? item.trim() : '';
+            if (!name) continue;
+            const key = name.toLowerCase();
+            if (own && key === own) continue;
+            if (seen.has(key)) continue;
+            if (this.hasRepeatedWord(name)) continue;
+            seen.add(key);
+            out.push(name);
+            if (out.length >= 4) break;
+          }
+          return out;
         },
 
         // Webhook fetch with 30s timeout. Aborts on timeout, propagates errors
