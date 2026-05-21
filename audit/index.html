@@ -957,10 +957,11 @@
 
         scoreReviews(rating, count) {
           if (!count || count === 0) return 1;
-          let base = count > 100 ? 10 : count > 50 ? 8 : count > 20 ? 7 : count > 5 ? 5 : 3;
-          if (rating && rating < 3.5) base = Math.max(1, base - 3);
-          if (rating && rating >= 4.5) base = Math.min(10, base + 1);
-          return base;
+          // Count component (0-5)
+          const countScore = count > 100 ? 5 : count > 50 ? 4 : count > 20 ? 3 : count > 5 ? 2 : 1;
+          // Rating component (0-5)
+          const ratingScore = !rating ? 2 : rating >= 4.7 ? 5 : rating >= 4.3 ? 4 : rating >= 4.0 ? 3 : rating >= 3.5 ? 2 : 1;
+          return countScore + ratingScore;
         },
 
         scoreGBP(hasPhone, hasHours, photoCount) {
