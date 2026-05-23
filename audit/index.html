@@ -170,7 +170,7 @@
         linear-gradient(to bottom, #F2EBDD 0%, #F2EBDD 65%, #EFE3CC 100%);
     }
     .page-grain {
-      position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.05; mix-blend-mode: multiply;
+      position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.03; mix-blend-mode: multiply;
       background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.5'/></svg>");
     }
 
@@ -180,8 +180,18 @@
     /* Animations */
     @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
     .anim-fade-up { animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+    /* Editorial fade-up used by the redesigned form (15px translate, 600ms,
+       ease-out). Apply with inline animation-delay for the staggered intro. */
+    @keyframes auditUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .audit-up { animation: auditUp 600ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+
     @media (prefers-reduced-motion: reduce) {
-      .anim-fade-up { animation: none !important; opacity: 1 !important; transform: none !important; }
+      .anim-fade-up,
+      .audit-up { animation: none !important; opacity: 1 !important; transform: none !important; }
     }
 
     /* Hairline accent rule */
@@ -194,32 +204,34 @@
         transparent 100%);
     }
 
-    /* ---- Form fields ---- */
+    /* ---- Form fields (editorial redesign) ---- */
     .audit-field {
       width: 100%;
       background: transparent;
       border: 0;
-      border-bottom: 1px solid rgba(43, 8, 16, 0.22);
+      border-bottom: 1px solid #E8E3DA;
       padding: 14px 0;
-      font-size: 17px;
+      font-size: 18px;
       line-height: 1.4;
-      color: var(--color-rouge-profond);
+      color: #1A1A1A;
       font-family: 'Newsreader', Georgia, serif;
       font-weight: 400;
       border-radius: 0;
-      transition: border-color 220ms ease-out;
+      transition: border-color 300ms cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .audit-field::placeholder { color: rgba(43, 8, 16, 0.38); font-style: italic; }
-    .audit-field:focus { outline: none; border-bottom-color: var(--color-rouge-velours); }
+    .audit-field::placeholder { color: #C4B8A8; font-style: italic; }
+    .audit-field:focus { outline: none; border-bottom-color: #A6543A; }
     select.audit-field {
       appearance: none;
       -webkit-appearance: none;
-      background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236B1525' stroke-width='1.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23A6543A' stroke-width='1.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 4px center;
       padding-right: 28px;
     }
     select.audit-field option { background: #F2EBDD; color: #2B0810; }
+
+    /* The eyebrow ("SALON AUDIT · FREE") keeps its gold-brule character. */
     .audit-eyebrow {
       font-family: 'JetBrains Mono', monospace;
       font-size: 10px;
@@ -228,30 +240,148 @@
       color: var(--color-gold-brule);
     }
 
-    /* ---- Salon-type chips: ditches native <select> for a faster, more tactile mobile pick ---- */
-    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    /* Per-field labels (Salon name / City / Salon type / Booking system).
+       Warmer, quieter than the eyebrow. */
+    .field-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #8C8278;
+    }
+
+    /* Editorial headline. Newsreader, 48px desktop / 32px mobile, normal weight,
+       max-width 700px so "online?" never wraps. */
+    .audit-headline {
+      font-family: 'Newsreader', Georgia, serif;
+      font-weight: 400;
+      font-size: 48px;
+      line-height: 1.08;
+      letter-spacing: -0.015em;
+      color: var(--color-rouge-profond);
+      max-width: 700px;
+    }
+    .audit-headline em {
+      font-style: italic;
+      color: var(--color-rouge-velours);
+      font-weight: 400;
+    }
+    .audit-headline .rust-q {
+      color: #A6543A;
+      font-style: normal;
+    }
+    @media (max-width: 640px) {
+      .audit-headline { font-size: 32px; }
+    }
+
+    /* Editorial subline: 16px, warm gray, max-width 400px. */
+    .audit-subline {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.55;
+      color: #7A7268;
+      max-width: 400px;
+    }
+
+    /* Decorative divider between subline and form: a 1px hairline with a
+       6px rust dot centered on it. Pure decoration; aria-hidden. */
+    .audit-decorator {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      height: 6px;
+      margin: 0 auto;
+    }
+    .audit-decorator::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: #E8E3DA;
+      transform: translateY(-0.5px);
+    }
+    .audit-decorator::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 6px;
+      height: 6px;
+      background: #A6543A;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Form container width. Centered, 520px max, full bleed on mobile. */
+    .audit-form-shell { width: 100%; max-width: 520px; margin-left: auto; margin-right: auto; }
+
+    /* ---- Salon-type + booking-system pills (editorial chip redesign) ---- */
+    .chip-row { display: flex; flex-wrap: wrap; gap: 10px; }
     .chip {
       display: inline-flex; align-items: center; justify-content: center;
       min-height: 44px;
-      padding: 10px 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(43, 8, 16, 0.22);
+      padding: 10px 24px;
+      border-radius: 100px;
+      border: 1px solid #DDD8CE;
       background: transparent;
-      color: var(--color-rouge-profond);
+      color: #8C8278;
       font-family: 'Inter', system-ui, sans-serif;
       font-size: 14px;
       font-weight: 500;
       letter-spacing: 0.01em;
       cursor: pointer;
-      transition: background-color 220ms ease-out, border-color 220ms ease-out, color 220ms ease-out;
+      transition: background-color 250ms ease, border-color 250ms ease, color 250ms ease;
     }
-    .chip:hover { border-color: var(--color-rouge-velours); color: var(--color-rouge-velours); }
+    .chip:hover { border-color: #A6543A; color: #A6543A; }
     .chip[aria-pressed="true"] {
-      background: var(--color-rouge-profond);
-      border-color: var(--color-rouge-profond);
-      color: var(--color-bone);
+      background: #1A1A1A;
+      border-color: #1A1A1A;
+      color: #F5F0E8;
     }
-    .chip[aria-pressed="true"]:hover { background: var(--color-rouge-velours); border-color: var(--color-rouge-velours); }
+    .chip[aria-pressed="true"]:hover { background: #1A1A1A; border-color: #1A1A1A; color: #F5F0E8; }
+
+    /* ---- Editorial submit button (replaces .btn-rouge for the audit form) ---- */
+    .audit-submit {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%;
+      height: 56px;
+      background: #1A1A1A;
+      color: #F5F0E8;
+      border: 0;
+      border-radius: 100px;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background-color 300ms ease-out, transform 100ms ease-out;
+    }
+    .audit-submit:hover:not(:disabled) { background: #A6543A; }
+    .audit-submit:active:not(:disabled) { transform: scale(0.98); }
+    .audit-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+    .audit-submit svg { color: #F5F0E8; }
+    @media (max-width: 640px) {
+      .audit-submit { height: 52px; }
+    }
+
+    /* Microcopy under the submit button ("Takes about 30 seconds"). */
+    .audit-microcopy {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 12px;
+      color: #B0A89C;
+      text-align: center;
+      letter-spacing: 0.02em;
+    }
+
+    /* iOS zoom prevention: any input rendering at <16px triggers a viewport
+       zoom on focus. Force inputs to 16px under 640px while keeping the
+       editorial 18px on desktop. */
+    @media (max-width: 640px) {
+      .audit-field { font-size: 16px; }
+    }
 
     /* Helper microcopy under disabled submit. Reveals when the user has tried to submit
        an incomplete form, or is hinted into the form. */
@@ -260,6 +390,19 @@
       font-size: 13px;
       color: var(--color-rouge-velours);
       margin-top: 12px;
+    }
+
+    /* Per-field inline validation error. Tighter top margin than .form-helper
+       because it sits directly under the input's bottom border. */
+    .form-error {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 13px;
+      color: var(--color-rouge-velours);
+      margin-top: 8px;
+      letter-spacing: 0.005em;
+    }
+    .audit-field[aria-invalid="true"] {
+      border-bottom-color: var(--color-rouge-velours);
     }
 
 
@@ -598,33 +741,78 @@
         100% { transform: translateX(0); }
       }
     }
+    /* Language toggle: subtle text buttons (no flags). Underline marks the
+       active language. Tap target padded to ~32px without enlarging the type. */
+    .lang-toggle { display: inline-flex; align-items: center; gap: 4px; }
+    .lang-toggle__btn {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: rgba(43, 8, 16, 0.45);
+      padding: 6px 4px;
+      min-height: 32px;
+      cursor: pointer;
+      background: transparent;
+      border: 0;
+      transition: color 200ms ease-out;
+    }
+    .lang-toggle__btn:hover { color: var(--color-rouge-velours); }
+    .lang-toggle__btn:focus-visible {
+      outline: 2px solid var(--color-gold-vif);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+    .lang-toggle__btn[aria-pressed="true"] {
+      color: var(--color-rouge-profond);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      text-decoration-thickness: 1px;
+    }
+    .lang-toggle__sep {
+      color: rgba(43, 8, 16, 0.28);
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 11px;
+      user-select: none;
+    }
   </style>
 </head>
 
-<body x-data="auditApp()" x-init="init()" x-cloak>
+<body x-data="auditApp()" x-init="init()" x-cloak :class="lang === 'en' ? 'lang-en' : 'lang-nl'">
 
   <div class="page-bg" aria-hidden="true"></div>
   <div class="page-grain" aria-hidden="true"></div>
 
-  <a href="#main" class="skip-link">Naar inhoud</a>
+  <a href="#main" class="skip-link" x-text="t('skip_link')">Naar inhoud</a>
 
   <!-- ============== NAV ============== -->
   <nav class="relative z-30 px-6 md:px-12 lg:px-20 py-6 flex items-center justify-between">
-    <a href="/" class="flex items-center gap-2 group focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-vif rounded-sm" aria-label="Smoova — terug naar home">
+    <a href="/" class="flex items-center gap-2 group focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold-vif rounded-sm" :aria-label="t('logo_aria')">
       <span class="font-display text-2xl font-medium tracking-tight text-rouge-profond">smoova</span>
       <span aria-hidden="true" class="italic-display text-gold-vif text-2xl">.</span>
     </a>
 
-    <div class="flex items-center gap-6 md:gap-8">
-      <a href="/" class="text-sm text-rouge-profond/70 hover:text-rouge-profond link-underline transition-colors">Home</a>
-      <a href="/book.html" class="hidden sm:inline-block text-sm text-rouge-profond/70 hover:text-rouge-profond link-underline transition-colors">Kennismaking</a>
+    <div class="flex items-center gap-4 sm:gap-6 md:gap-8">
+      <a href="/" class="text-sm text-rouge-profond/70 hover:text-rouge-profond link-underline transition-colors" x-text="t('nav_home')">Home</a>
+      <a href="/book.html" class="hidden sm:inline-block text-sm text-rouge-profond/70 hover:text-rouge-profond link-underline transition-colors" x-text="t('nav_book')">Kennismaking</a>
+      <!-- Language toggle. Session-only; default NL. -->
+      <div class="lang-toggle" role="group" :aria-label="t('lang_switch_aria')">
+        <button type="button" class="lang-toggle__btn"
+                :aria-pressed="lang === 'nl'"
+                @click="setLang('nl')">NL</button>
+        <span class="lang-toggle__sep" aria-hidden="true">/</span>
+        <button type="button" class="lang-toggle__btn"
+                :aria-pressed="lang === 'en'"
+                @click="setLang('en')">EN</button>
+      </div>
     </div>
   </nav>
 
   <!-- ============== MAIN ============== -->
   <main id="main" class="relative z-10 mx-auto max-w-2xl px-6 md:px-12 pt-6 md:pt-10 pb-16">
 
-    <!-- ===== STATE: IDLE (form) ===== -->
+    <!-- ===== STATE: IDLE (form) =====
+         Editorial redesign: 700px max-width heading shell, 520px form shell,
+         decorative hairline+rust-dot divider, pill chips, dark Inter submit. -->
     <section x-show="state === 'idle'"
              x-transition:enter="transition duration-300 ease-out"
              x-transition:enter-start="opacity-0"
@@ -632,82 +820,98 @@
              x-transition:leave="transition duration-400 ease-out"
              x-transition:leave-start="opacity-100 translate-y-0"
              x-transition:leave-end="opacity-0 -translate-y-5">
-      <div class="anim-fade-up" style="animation-delay: 80ms;">
-        <p class="audit-eyebrow mb-5">Salon audit · gratis</p>
+
+      <!-- Heading shell — 700px max so "online?" never wraps on desktop. -->
+      <div class="mx-auto" style="max-width: 700px;">
+        <p class="audit-eyebrow mb-5 audit-up" style="animation-delay: 50ms;" x-text="t('eyebrow_audit')">Salon audit · gratis</p>
+
+        <h1 class="audit-headline mb-5 audit-up" style="animation-delay: 100ms;"
+            :aria-label="t('headline_aria')">
+          <span x-text="t('headline_part1')"></span><span style="white-space: nowrap;"><em x-text="t('headline_online')"></em><span class="rust-q" x-text="t('headline_q')"></span></span>
+        </h1>
+
+        <p class="audit-subline audit-up" style="animation-delay: 200ms;"
+           x-text="t('subline')"></p>
       </div>
-      <h1 class="font-display font-medium text-[34px] sm:text-[44px] md:text-5xl leading-[1.04] tracking-tight text-rouge-profond mb-5"
-          aria-label="Hoe zichtbaar is jouw salon online?">
-        <template x-for="(c, i) in headlineChars" :key="i"><span
-          :class="c.cls"
-          :style="`animation-delay: ${100 + i * 40}ms`"
-          x-html="c.ch === ' ' ? '&nbsp;' : c.ch"></span></template>
-      </h1>
-      <p class="anim-fade-up font-sans text-base md:text-lg leading-relaxed text-rouge-profond/75 mb-12 max-w-[480px]"
-         style="animation-delay: 220ms;">
-        Vul je gegevens in. Binnen dertig seconden weet je hoe je ervoor staat bij Google, op Maps en in AI-zoekmachines.
-      </p>
 
-      <div class="rouge-rule mb-10 anim-fade-up" style="animation-delay: 280ms;"></div>
+      <!-- Decorator — hairline + rust dot — sits 48px above the form. -->
+      <div class="audit-decorator audit-up" style="animation-delay: 300ms; margin-top: 36px; margin-bottom: 48px;" aria-hidden="true"></div>
 
-      <form @submit.prevent="runAudit()" novalidate class="space-y-9">
-        <div class="anim-fade-up" style="animation-delay: 320ms;">
-          <label for="salon_name" class="audit-eyebrow block mb-2">Salon</label>
-          <input id="salon_name" type="text" class="audit-field"
-                 placeholder="Naam van je salon"
-                 x-model.trim="form.salon_name" required autocomplete="organization" />
-        </div>
-
-        <div class="anim-fade-up" style="animation-delay: 380ms;">
-          <label for="city" class="audit-eyebrow block mb-2">Stad</label>
-          <input id="city" type="text" class="audit-field"
-                 placeholder="Amsterdam, Rotterdam, Utrecht..."
-                 x-model.trim="form.city" required autocomplete="address-level2" />
-        </div>
-
-        <div class="anim-fade-up" style="animation-delay: 440ms;">
-          <span class="audit-eyebrow block mb-3" id="salon_type_label">Type salon</span>
-          <div class="chip-row" role="group" aria-labelledby="salon_type_label">
-            <template x-for="opt in salonTypes" :key="opt.value">
-              <button type="button" class="chip"
-                      :aria-pressed="form.salon_type === opt.value"
-                      @click="form.salon_type = opt.value"
-                      x-text="opt.label"></button>
-            </template>
+      <!-- Form shell — 520px max, centered. Field group rhythm via space-y-9 (36px). -->
+      <div class="audit-form-shell">
+        <form @submit.prevent="runAudit()" novalidate class="space-y-9">
+          <div class="audit-up" style="animation-delay: 400ms;">
+            <label for="salon_name" class="field-label block mb-2" x-text="t('form_label_salon')">Salon</label>
+            <input id="salon_name" type="text" class="audit-field"
+                   :placeholder="t('form_placeholder_salon')"
+                   x-model.trim="form.salon_name" required autocomplete="organization"
+                   @blur="validateField('salon_name')"
+                   @input="if (validationErrors.salon_name) validateField('salon_name')"
+                   :aria-invalid="!!validationErrors.salon_name"
+                   :aria-describedby="validationErrors.salon_name ? 'salon_name-error' : null" />
+            <p id="salon_name-error" class="form-error" role="alert"
+               x-show="validationErrors.salon_name"
+               x-text="validationErrors.salon_name"
+               x-transition.opacity></p>
           </div>
-        </div>
 
-        <div class="anim-fade-up" style="animation-delay: 500ms;">
-          <span class="audit-eyebrow block mb-3" id="booking_system_label">Gebruik je een boekingssysteem?</span>
-          <div class="chip-row" role="group" aria-labelledby="booking_system_label" aria-describedby="booking_system_hint">
-            <template x-for="opt in bookingSystems" :key="opt.value">
-              <button type="button" class="chip"
-                      :aria-pressed="form.booking_system.includes(opt.value)"
-                      @click="toggleBookingSystem(opt.value)"
-                      x-text="opt.label"></button>
-            </template>
+          <div class="audit-up" style="animation-delay: 480ms;">
+            <label for="city" class="field-label block mb-2" x-text="t('form_label_city')">Stad</label>
+            <input id="city" type="text" class="audit-field"
+                   :placeholder="t('form_placeholder_city')"
+                   x-model.trim="form.city" required autocomplete="address-level2"
+                   @blur="validateField('city')"
+                   @input="if (validationErrors.city) validateField('city')"
+                   :aria-invalid="!!validationErrors.city"
+                   :aria-describedby="validationErrors.city ? 'city-error' : null" />
+            <p id="city-error" class="form-error" role="alert"
+               x-show="validationErrors.city"
+               x-text="validationErrors.city"
+               x-transition.opacity></p>
           </div>
-          <p id="booking_system_hint" class="audit-eyebrow opacity-60 mt-2" style="letter-spacing: 0.22em;">
-            Meerdere mogelijk
-          </p>
-        </div>
 
-        <div class="pt-4 anim-fade-up" style="animation-delay: 560ms;">
-          <button type="submit" class="btn-rouge w-full sm:w-auto" :disabled="!canSubmit()">
-            <span>Start audit</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </button>
-          <p class="form-helper" x-show="!canSubmit() && (form.salon_name || form.city || form.salon_type || form.booking_system.length > 0)" x-transition.opacity>
-            Vul alle vier de velden in om te starten.
-          </p>
-        </div>
+          <div class="audit-up" style="animation-delay: 560ms;">
+            <span class="field-label block mb-3" id="salon_type_label" x-text="t('form_label_type')">Type salon</span>
+            <div class="chip-row" role="group" aria-labelledby="salon_type_label">
+              <template x-for="opt in salonTypes" :key="opt.value">
+                <button type="button" class="chip"
+                        :aria-pressed="form.salon_type === opt.value"
+                        @click="form.salon_type = opt.value"
+                        x-text="opt.label"></button>
+              </template>
+            </div>
+          </div>
 
-        <p class="audit-eyebrow opacity-70 pt-2 anim-fade-up" style="animation-delay: 620ms;">
-          Geen account · Geen spam · Resultaat op deze pagina
-        </p>
-      </form>
+          <div class="audit-up" style="animation-delay: 640ms;">
+            <span class="field-label block mb-3" id="booking_system_label" x-text="t('form_label_booking')">Welk boekingssysteem gebruik je?</span>
+            <div class="chip-row" role="group" aria-labelledby="booking_system_label" aria-describedby="booking_system_hint">
+              <template x-for="opt in bookingSystems" :key="opt.value">
+                <button type="button" class="chip"
+                        :aria-pressed="form.booking_system.includes(opt.value)"
+                        @click="toggleBookingSystem(opt.value)"
+                        x-text="opt.label"></button>
+              </template>
+            </div>
+            <p id="booking_system_hint" class="field-label opacity-70 mt-2"
+               x-text="t('form_hint_multi')">Meerdere mogelijk</p>
+          </div>
+
+          <!-- Submit + helper + microcopy. mt-12 = 48px gap from last field
+               group, per spec. -->
+          <div class="audit-up" style="animation-delay: 700ms; margin-top: 48px;">
+            <button type="submit" class="audit-submit" :disabled="!canSubmit()">
+              <span x-text="t('form_btn_submit')">Start audit</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+            <p class="form-helper text-center" x-show="!canSubmit() && (form.salon_name || form.city || form.salon_type || form.booking_system.length > 0)" x-transition.opacity
+               x-text="t('form_helper_incomplete')"></p>
+            <p class="audit-microcopy mt-4" x-text="t('takes_about_30s')">Takes about 30 seconds</p>
+          </div>
+        </form>
+      </div>
     </section>
 
     <!-- ===== STATE: LOADING ===== -->
@@ -727,16 +931,42 @@
       </div>
     </section>
 
+    <!-- ===== STATE: CONFIRM =====
+         After the webhook responds we show the Google match for explicit
+         confirmation before kicking off the scored animation. This prevents
+         the audit from rendering for the wrong business when the user typed
+         a partial / misspelled name. -->
+    <section x-show="state === 'confirm'" x-transition.opacity.duration.300ms class="py-16">
+      <div class="max-w-[520px] mx-auto">
+        <p class="audit-eyebrow mb-5 text-center" x-text="t('confirm_eyebrow')"></p>
+        <p class="italic-display text-[22px] sm:text-[24px] leading-[1.4] text-rouge-profond/85 text-center mb-8"
+           x-text="t('confirm_intro')"></p>
+        <div class="rounded-sm px-6 py-7 mb-8"
+             style="background: rgba(43, 8, 16, 0.025); border: 1px solid rgba(43, 8, 16, 0.12);">
+          <p class="font-display font-medium text-[24px] sm:text-[26px] leading-[1.2] tracking-tight text-rouge-profond"
+             x-text="result.found_name || result.salon_name || form.salon_name"></p>
+          <p class="font-sans text-[14px] leading-relaxed text-rouge-profond/65 mt-2"
+             x-show="result.found_address"
+             x-text="result.found_address"></p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <button @click="proceedToResults()" class="btn-rouge" x-text="t('confirm_btn_yes')"></button>
+          <button @click="backToForm()" class="btn-ghost" x-text="t('confirm_btn_no')"></button>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== STATE: RESULTS ===== -->
     <section x-show="state === 'results'"
              x-transition.opacity.duration.300ms
              :class="state === 'results' ? 'results-in' : ''">
 
-      <!-- Salon header -->
+      <!-- Salon header.
+           Prefer found_name (Google's canonical match — "Oak Salon" beats user's "oak"). -->
       <div class="reveal r-1 mt-4 mb-10">
-        <p class="audit-eyebrow mb-4">Audit resultaat</p>
+        <p class="audit-eyebrow mb-4" x-text="t('results_eyebrow')">Audit resultaat</p>
         <h1 class="font-display font-medium text-[30px] sm:text-[40px] leading-[1.08] tracking-tight text-rouge-profond">
-          <span x-text="result.salon_name || form.salon_name"></span>
+          <span x-text="result.found_name || result.salon_name || form.salon_name"></span>
         </h1>
         <p class="font-sans text-sm text-rouge-profond/65 mt-2" x-text="result.city || form.city"></p>
       </div>
@@ -769,7 +999,7 @@
           </span>
           <div class="flex-1 min-w-0">
             <div class="flex items-baseline justify-between gap-3">
-              <p class="check-label">Google Reviews</p>
+              <p class="check-label" x-text="t('pillar_reviews')">Google Reviews</p>
               <span class="pillar-score" :style="`color: ${scoreColorFor(animatedPillarScores.reviews)}`">
                 <span x-text="Math.round(animatedPillarScores.reviews)"></span><span class="denom" x-text="'/' + pillars.reviews.maxScore"></span>
               </span>
@@ -795,7 +1025,7 @@
           </span>
           <div class="flex-1 min-w-0">
             <div class="flex items-baseline justify-between gap-3">
-              <p class="check-label">Google Bedrijfsprofiel</p>
+              <p class="check-label" x-text="t('pillar_gbp')">Google Bedrijfsprofiel</p>
               <span class="pillar-score" :style="`color: ${scoreColorFor(animatedPillarScores.gbp)}`">
                 <span x-text="Math.round(animatedPillarScores.gbp)"></span><span class="denom" x-text="'/' + pillars.gbp.maxScore"></span>
               </span>
@@ -819,7 +1049,7 @@
           </span>
           <div class="flex-1 min-w-0">
             <div class="flex items-baseline justify-between gap-3">
-              <p class="check-label">Eigen website</p>
+              <p class="check-label" x-text="t('pillar_website')">Eigen website</p>
               <span class="pillar-score" :style="`color: ${scoreColorFor(animatedPillarScores.website)}`">
                 <span x-text="Math.round(animatedPillarScores.website)"></span><span class="denom" x-text="'/' + pillars.website.maxScore"></span>
               </span>
@@ -845,7 +1075,7 @@
           </span>
           <div class="flex-1 min-w-0">
             <div class="flex items-baseline justify-between gap-3">
-              <p class="check-label">Lokale SEO</p>
+              <p class="check-label" x-text="t('pillar_seo')">Lokale SEO</p>
               <span class="pillar-score" :style="`color: ${scoreColorFor(animatedPillarScores.seo)}`">
                 <span x-text="Math.round(animatedPillarScores.seo)"></span><span class="denom" x-text="'/' + pillars.seo.maxScore"></span>
               </span>
@@ -869,7 +1099,7 @@
           </span>
           <div class="flex-1 min-w-0">
             <div class="flex items-baseline justify-between gap-3">
-              <p class="check-label">AI-zichtbaarheid</p>
+              <p class="check-label" x-text="t('pillar_ai')">AI-zichtbaarheid</p>
               <span class="pillar-score" :style="`color: ${scoreColorFor(animatedPillarScores.ai)}`">
                 <span x-text="Math.round(animatedPillarScores.ai)"></span><span class="denom" x-text="'/' + pillars.ai.maxScore"></span>
               </span>
@@ -879,9 +1109,8 @@
             </div>
             <p class="check-detail mt-3" x-text="pillars.ai.detail"></p>
             <template x-if="!isTruthy(result.ai_mentioned) && aiTop5.length > 0">
-              <p style="color: rgba(43, 8, 16, 0.62); font-family: 'Inter', system-ui, sans-serif; font-size: 13px; line-height: 1.5; margin-top: 8px;">
-                Wel genoemd: <span x-text="aiTop5.join(', ')"></span>
-              </p>
+              <p style="color: rgba(43, 8, 16, 0.62); font-family: 'Inter', system-ui, sans-serif; font-size: 13px; line-height: 1.5; margin-top: 8px;"
+                 x-text="t('ai_also_mentioned', { names: aiTop5.join(', ') })"></p>
             </template>
           </div>
         </div>
@@ -890,12 +1119,11 @@
         <div class="check-row reveal r-8">
           <span class="check-icon check-icon--info" aria-hidden="true"></span>
           <div class="flex-1 min-w-0">
-            <p class="check-label">Boekingssysteem</p>
+            <p class="check-label" x-text="t('pillar_booking')">Boekingssysteem</p>
             <p class="check-detail mt-3" x-text="pillars.booking.detail"></p>
             <template x-if="usesCommissionPlatform">
-              <p class="commission-shake" style="color: #B8860B; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 8px;">
-                Op je website gaan boekingen via een extern platform. Dat kost je commissie per klant.
-              </p>
+              <p class="commission-shake" style="color: #B8860B; font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.45; margin-top: 8px;"
+                 x-text="t('commission_warning')"></p>
             </template>
           </div>
         </div>
@@ -903,7 +1131,7 @@
         <!-- Google Maps footnote. Only renders when a Maps listing exists; if
              not, nothing shows (no failure marker). -->
         <template x-if="pillars.maps.pass">
-          <p class="maps-footnote">✓ Gevonden op Google Maps</p>
+          <p class="maps-footnote" x-text="t('maps_found')">✓ Gevonden op Google Maps</p>
         </template>
       </div>
 
@@ -912,9 +1140,7 @@
            Generic copy — no platform name interpolated. -->
       <template x-if="usesCommissionPlatform">
         <div class="reveal r-9 leak-block commission-shake">
-          <p class="leak-block__body">
-            Externe boekingsplatformen rekenen 25 tot 35 procent per boeking. Bij een behandeling van 85 euro is dat tot 30 euro commissie, per klant, elke keer. Een eigen boekingspagina kost een fractie daarvan.
-          </p>
+          <p class="leak-block__body" x-text="t('leak_body')"></p>
         </div>
       </template>
 
@@ -924,44 +1150,49 @@
         <p class="italic-display text-[22px] sm:text-[26px] leading-[1.3] text-rouge-profond mb-7 max-w-[480px]"
            x-text="ctaCopy"></p>
         <a href="/book.html" class="btn-rust w-full sm:w-auto">
-          <span>Plan een vrijblijvend gesprek</span>
+          <span x-text="t('cta_btn_book')">Plan een gesprek</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
             <line x1="5" y1="12" x2="19" y2="12"></line>
             <polyline points="12 5 19 12 12 19"></polyline>
           </svg>
         </a>
         <p class="mt-5">
-          <a href="/" class="link-underline text-sm text-rouge-profond/70 hover:text-rouge-profond transition-colors">
-            Of bekijk eerst wat Smoova doet →
-          </a>
+          <a href="/" class="link-underline text-sm text-rouge-profond/70 hover:text-rouge-profond transition-colors"
+             x-text="t('cta_secondary')">Of bekijk eerst wat Smoova doet →</a>
         </p>
       </div>
     </section>
 
-    <!-- ===== STATE: NOT FOUND ===== -->
+    <!-- ===== STATE: NOT FOUND =====
+         Fires for webhook 404, body `error: true`, or empty-of-signals response.
+         Shows no scores or pillar cards. -->
     <section x-show="state === 'not-found'" x-transition.opacity.duration.300ms class="py-20 text-center">
-      <p class="audit-eyebrow mb-5">Geen resultaat</p>
-      <p class="italic-display text-[26px] leading-[1.35] text-rouge-profond mb-3 max-w-[420px] mx-auto">
-        We konden je salon niet vinden.
-      </p>
-      <p class="font-sans text-[15px] text-rouge-profond/70 mb-10 max-w-[420px] mx-auto">
-        Controleer de naam en de stad, en probeer het opnieuw.
-      </p>
-      <button @click="reset()" class="btn-rouge">Probeer opnieuw</button>
+      <svg class="mx-auto mb-6 text-rouge-profond/40" width="44" height="44"
+           viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+           aria-hidden="true">
+        <circle cx="11" cy="11" r="7"/>
+        <line x1="20" y1="20" x2="16.5" y2="16.5"/>
+      </svg>
+      <p class="audit-eyebrow mb-5" x-text="t('notfound_eyebrow')">Geen resultaat</p>
+      <p class="italic-display text-[26px] leading-[1.35] text-rouge-profond mb-3 max-w-[460px] mx-auto"
+         x-text="t('notfound_title')">Salon niet gevonden</p>
+      <p class="font-sans text-[15px] leading-relaxed text-rouge-profond/70 mb-10 max-w-[460px] mx-auto"
+         x-text="notFoundMessage"></p>
+      <button @click="reset()" class="btn-rouge" x-text="t('notfound_btn')">Probeer opnieuw</button>
     </section>
 
     <!-- ===== STATE: ERROR ===== -->
     <section x-show="state === 'error'" x-transition.opacity.duration.300ms class="py-20 text-center">
-      <p class="audit-eyebrow mb-5" style="color: var(--color-rouge-velours);">Er ging iets mis</p>
-      <p class="italic-display text-[26px] leading-[1.35] text-rouge-profond mb-3 max-w-[420px] mx-auto">
-        Onze audit haperde even.
-      </p>
-      <p class="font-sans text-[15px] text-rouge-profond/70 mb-10 max-w-[420px] mx-auto">
-        Probeer het opnieuw, of stuur ons een DM op Instagram.
-      </p>
+      <p class="audit-eyebrow mb-5" style="color: var(--color-rouge-velours);" x-text="t('err_eyebrow')">Er ging iets mis</p>
+      <p class="italic-display text-[26px] leading-[1.35] text-rouge-profond mb-3 max-w-[420px] mx-auto"
+         x-text="t('err_title')"></p>
+      <p class="font-sans text-[15px] text-rouge-profond/70 mb-10 max-w-[420px] mx-auto"
+         x-text="t('err_body')"></p>
       <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <button @click="reset()" class="btn-rouge">Probeer opnieuw</button>
-        <a href="https://instagram.com/smoova.studio" target="_blank" rel="noopener noreferrer" class="btn-ghost">DM ons</a>
+        <button @click="reset()" class="btn-rouge" x-text="t('err_btn_retry')">Probeer opnieuw</button>
+        <a href="https://instagram.com/smoova.studio" target="_blank" rel="noopener noreferrer" class="btn-ghost"
+           x-text="t('err_btn_dm')">DM ons</a>
       </div>
     </section>
 
@@ -970,7 +1201,8 @@
   <!-- ============== FOOTER ============== -->
   <footer class="relative z-10 mx-auto max-w-7xl px-6 md:px-12 lg:px-20 py-8 mt-8 flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-6 text-center md:text-left"
           style="border-top: 1px solid rgba(43, 8, 16, 0.10);">
-    <p class="font-mono text-[11px] tracking-wider text-rouge-profond/55">
+    <p class="font-mono text-[11px] tracking-wider text-rouge-profond/55"
+       x-text="`© 2026 Smoova B.V. · ${t('footer_rights')}`">
       © 2026 Smoova B.V. · Alle rechten voorbehouden
     </p>
     <a href="mailto:info@smoova.studio"
@@ -987,9 +1219,21 @@
   <script>
     function auditApp() {
       return {
-        state: 'idle', // idle | loading | results | not-found | error
+        state: 'idle', // idle | loading | confirm | results | not-found | error
+        // Language toggle. Session-scoped (no localStorage), default Dutch.
+        lang: 'nl',
         form: { salon_name: '', city: '', salon_type: '', booking_system: [] },
+        validationErrors: { salon_name: '', city: '' },
         result: {},
+        // Tracks WHY we ended up in the not-found state so notFoundMessage can
+        // re-resolve when the language toggles. 'default' = standard "no salon
+        // found in this city" copy; 'non_salon' = Google matched a non-beauty
+        // business (notFoundName carries the matched business name).
+        notFoundReason: 'default',
+        notFoundName: '',
+        // Google place types that are clearly not a beauty business. Substring
+        // match against found_type, case-insensitive.
+        NON_SALON_TYPES: ['restaurant', 'grocery', 'store', 'pharmacy', 'hospital', 'bank', 'gas_station'],
         resultsRevealed: false, // flips true a tick after results render, so bar fills animate
         _timers: [],
         _rafIds: [],
@@ -997,54 +1241,373 @@
         // Motion / count-up state
         loadingProgress: 0,         // 0-100, drives the loading hero number
         loadingMessageIndex: 0,     // which entry in loadingMessages is visible
-        loadingMessages: [
-          'Google Reviews ophalen...',
-          'Website analyseren...',
-          'Google Maps checken...',
-          'AI-zoekmachines doorzoeken...',
-          'Score berekenen...',
-        ],
         animatedAverageScore: 0,    // the headline X.X/10 counts up to averageScore
         animatedPillarScores: {     // each pillar score number animates from 0 -> final
           reviews: 0, gbp: 0, website: 0, seo: 0, ai: 0,
         },
 
-        salonTypes: [
-          { value: 'schoonheidssalon', label: 'Schoonheidssalon' },
-          { value: 'kapsalon',         label: 'Kapsalon' },
-          { value: 'nagelsalon',       label: 'Nagelsalon' },
-          { value: 'barbershop',       label: 'Barbershop' },
-          { value: 'beautysalon',      label: 'Beautysalon' },
-        ],
+        // ============== TRANSLATIONS ==============
+        // Single source of truth for every visible string. `t(key, params)`
+        // resolves against this.translations[this.lang], falling back to NL,
+        // then to the raw key. `{placeholders}` in values are substituted from
+        // the params object so getter-driven detail lines can interpolate
+        // rating / count / domain / etc.
+        translations: {
+          nl: {
+            skip_link: 'Naar inhoud',
+            nav_home: 'Home',
+            nav_book: 'Kennismaking',
+            logo_aria: 'Smoova — terug naar home',
+            lang_switch_aria: 'Taal wisselen',
 
-        bookingSystems: [
-          { value: 'none',           label: 'Nee, alleen telefoon/WhatsApp' },
-          { value: 'treatwell',      label: 'Ja, Treatwell' },
-          { value: 'fresha',         label: 'Ja, Fresha' },
-          { value: 'planity',        label: 'Ja, Planity' },
-          { value: 'salonized',      label: 'Ja, Salonized' },
-          { value: 'own_website',    label: 'Ja, eigen website' },
-          { value: 'other',          label: 'Ja, anders' },
-        ],
+            eyebrow_audit: 'Salon audit · gratis',
+            headline_part1: 'Hoe zichtbaar is jouw salon ',
+            headline_online: 'online',
+            headline_q: '?',
+            headline_aria: 'Hoe zichtbaar is jouw salon online?',
+            subline: 'Vul je gegevens in. Binnen dertig seconden weet je het.',
+
+            form_label_salon: 'Salon',
+            form_placeholder_salon: 'Naam van je salon',
+            form_label_city: 'Stad',
+            form_placeholder_city: 'Amsterdam, Rotterdam, Utrecht...',
+            form_label_type: 'Type salon',
+            form_label_booking: 'Welk boekingssysteem gebruik je?',
+            form_hint_multi: 'Meerdere mogelijk',
+            form_btn_submit: 'Start audit',
+            form_helper_incomplete: 'Vul alle vier de velden in om te starten.',
+            form_bottom_line: 'Geen account · Geen spam · Resultaat op deze pagina',
+            takes_about_30s: 'Duurt ongeveer 30 seconden',
+            err_salon: 'Vul een geldige salonnaam in',
+            err_city: 'Vul een geldige stad in',
+
+            type_schoonheidssalon: 'Schoonheidssalon',
+            type_kapsalon: 'Kapsalon',
+            type_nagelsalon: 'Nagelsalon',
+            type_barbershop: 'Barbershop',
+            type_beautysalon: 'Beautysalon',
+
+            booking_none: 'Nee, alleen telefoon/WhatsApp',
+            booking_treatwell: 'Ja, Treatwell',
+            booking_fresha: 'Ja, Fresha',
+            booking_planity: 'Ja, Planity',
+            booking_salonized: 'Ja, Salonized',
+            booking_own: 'Ja, eigen website',
+            booking_other: 'Ja, anders',
+
+            loading_reviews: 'Google Reviews ophalen...',
+            loading_website: 'Website analyseren...',
+            loading_maps: 'Google Maps checken...',
+            loading_ai: 'AI-zoekmachines doorzoeken...',
+            loading_score: 'Score berekenen...',
+
+            confirm_eyebrow: 'Even bevestigen',
+            confirm_intro: 'We vonden dit bedrijf op Google',
+            confirm_btn_yes: 'Ja, dit is mijn salon',
+            confirm_btn_no: 'Nee, probeer opnieuw',
+            not_salon: "We vonden '{name}', maar dat lijkt geen salon te zijn. Controleer de naam en probeer opnieuw.",
+
+            gate_title: 'Bekijk je volledige resultaten',
+            gate_body: 'Vul je e-mailadres in om de details per categorie te zien.',
+            gate_placeholder: 'je@email.nl',
+            gate_btn: 'Toon resultaten',
+            gate_disclaimer: 'Geen spam. Alleen jouw auditresultaten.',
+
+            results_eyebrow: 'Audit resultaat',
+            pillar_reviews: 'Google Reviews',
+            pillar_gbp: 'Google Bedrijfsprofiel',
+            pillar_website: 'Eigen website',
+            pillar_seo: 'Lokale SEO',
+            pillar_ai: 'AI-zichtbaarheid',
+            pillar_booking: 'Boekingssysteem',
+
+            reviews_none: 'Geen beoordelingen gevonden. Nieuwe klanten vertrouwen salons zonder reviews niet.',
+            reviews_strong: '{rating} sterren uit {count} beoordelingen',
+            reviews_mid: '{rating} sterren uit {count} beoordelingen. Klanten filteren op 4,5.',
+            reviews_low: '{rating} sterren uit {count} beoordelingen. Onder de 4,0 schrikken nieuwe klanten af.',
+
+            gbp_full: "Telefoonnummer, openingstijden en {photos} foto's ingevuld",
+            gbp_missing: 'Je mist: {list}. Google toont incomplete profielen lager.',
+            gbp_few_photos: "{photos} foto's. Salons met 15+ foto's krijgen meer clicks.",
+            gbp_photos_only: "{photos} foto's.",
+            gbp_phone: 'telefoonnummer',
+            gbp_hours: 'openingstijden',
+            gbp_photos: "foto's",
+
+            website_none: 'Geen eigen website. Klanten die je Googlen vinden niets.',
+            website_platform_only: 'Je enige online plek is een boekingsplatform. Je hebt geen eigen merk online.',
+            website_booking_via_platform: '{domain}. Je boekknop stuurt klanten naar een extern platform dat commissie rekent.',
+            website_own_booking: '{domain} met eigen boekingen.',
+            website_no_booking: "{domain} zonder online boekingen. Klanten die 's avonds willen boeken haken af.",
+
+            seo_no_website: 'Zonder website geen SEO. Je bent onvindbaar buiten Google Maps.',
+            seo_low: "Je website is voor Google bijna onleesbaar. Zoeken op '{type} {city}' levert je niets op.",
+            seo_mid: 'Google kan je vinden, maar je mist technische basis. Je concurrent met een betere site wint.',
+            seo_high: 'Technisch in orde. Google kan je goed lezen.',
+
+            ai_mentioned: 'ChatGPT noemt je salon. Dat is voorsprong.',
+            ai_not_mentioned: "ChatGPT noemt je niet als iemand vraagt: 'wat is een goede {type} in {city}?'",
+            ai_also_mentioned: 'Wel genoemd: {names}',
+
+            maps_found: '✓ Gevonden op Google Maps',
+            commission_warning: 'Op je website gaan boekingen via een extern platform. Dat kost je commissie per klant.',
+            commission_treatwell: 'Ook gevonden op Treatwell (25-35% commissie)',
+            leak_body: 'Externe boekingsplatformen rekenen 25 tot 35 procent per boeking. Bij een behandeling van 85 euro is dat tot 30 euro commissie, per klant, elke keer. Een eigen boekingspagina kost een fractie daarvan.',
+
+            summary_1: 'Er is werk aan de winkel. Maar dat is oplosbaar.',
+            summary_2: 'Je hebt een basis. Maar je laat klanten liggen.',
+            summary_3: 'Goed bezig. Er mist nog wat.',
+            summary_4: 'Bijna perfect. Nog een paar details.',
+            summary_5: 'Uitstekend. Je bent al goed zichtbaar.',
+
+            cta_below: 'Wil je zien hoe Smoova dit oplost? Plan een vrijblijvend gesprek van 20 minuten.',
+            cta_above: 'Je bent al ver. Wat er nog mist is snel geregeld.',
+            cta_btn_book: 'Plan een gesprek',
+            cta_secondary: 'Of bekijk eerst wat Smoova doet →',
+            cta_dm: 'Of DM ons op Instagram',
+            cta_check_another: 'Nog een salon checken',
+
+            notfound_eyebrow: 'Geen resultaat',
+            notfound_title: 'Salon niet gevonden',
+            notfound_body: 'We konden geen salon vinden met deze naam in deze stad. Controleer de spelling en probeer opnieuw.',
+            notfound_btn: 'Probeer opnieuw',
+
+            err_eyebrow: 'Er ging iets mis',
+            err_title: 'Onze audit haperde even.',
+            err_body: 'Probeer het opnieuw, of stuur ons een DM op Instagram.',
+            err_btn_retry: 'Probeer opnieuw',
+            err_btn_dm: 'DM ons',
+
+            footer_rights: 'Alle rechten voorbehouden',
+
+            display_other_system: 'Ander systeem',
+            display_own_system: 'Eigen systeem',
+            display_phone_walkin: 'Alleen telefoon of walk-in',
+            default_city: 'jouw stad',
+          },
+          en: {
+            skip_link: 'Skip to content',
+            nav_home: 'Home',
+            nav_book: 'Book a call',
+            logo_aria: 'Smoova — back to home',
+            lang_switch_aria: 'Switch language',
+
+            eyebrow_audit: 'Salon audit · free',
+            headline_part1: 'How visible is your salon ',
+            headline_online: 'online',
+            headline_q: '?',
+            headline_aria: 'How visible is your salon online?',
+            subline: "Enter your details. You'll know in 30 seconds.",
+
+            form_label_salon: 'Salon name',
+            form_placeholder_salon: 'Your salon name',
+            form_label_city: 'City',
+            form_placeholder_city: 'Amsterdam, Rotterdam, Utrecht...',
+            form_label_type: 'Salon type',
+            form_label_booking: 'What booking system do you use?',
+            form_hint_multi: 'Multiple allowed',
+            form_btn_submit: 'Start audit',
+            form_helper_incomplete: 'Fill in all four fields to start.',
+            form_bottom_line: 'No account · No spam · Result on this page',
+            takes_about_30s: 'Takes about 30 seconds',
+            err_salon: 'Enter a valid salon name',
+            err_city: 'Enter a valid city',
+
+            type_schoonheidssalon: 'Beauty salon',
+            type_kapsalon: 'Hair salon',
+            type_nagelsalon: 'Nail salon',
+            type_barbershop: 'Barbershop',
+            type_beautysalon: 'Beauty salon',
+
+            booking_none: 'No, phone/WhatsApp only',
+            booking_treatwell: 'Yes, Treatwell',
+            booking_fresha: 'Yes, Fresha',
+            booking_planity: 'Yes, Planity',
+            booking_salonized: 'Yes, Salonized',
+            booking_own: 'Yes, own website',
+            booking_other: 'Yes, other',
+
+            loading_reviews: 'Fetching Google Reviews...',
+            loading_website: 'Analyzing website...',
+            loading_maps: 'Checking Google Maps...',
+            loading_ai: 'Searching AI engines...',
+            loading_score: 'Calculating score...',
+
+            confirm_eyebrow: 'Quick confirmation',
+            confirm_intro: 'We found this business on Google',
+            confirm_btn_yes: "Yes, that's my salon",
+            confirm_btn_no: 'No, try again',
+            not_salon: "We found '{name}', but it doesn't appear to be a salon. Check the name and try again.",
+
+            gate_title: 'View your full results',
+            gate_body: 'Enter your email to see the detailed breakdown.',
+            gate_placeholder: 'you@email.com',
+            gate_btn: 'Show results',
+            gate_disclaimer: 'No spam. Just your audit results.',
+
+            results_eyebrow: 'Audit result',
+            pillar_reviews: 'Google Reviews',
+            pillar_gbp: 'Google Business Profile',
+            pillar_website: 'Own website',
+            pillar_seo: 'Local SEO',
+            pillar_ai: 'AI visibility',
+            pillar_booking: 'Booking system',
+
+            reviews_none: "No reviews found. New customers don't trust salons without reviews.",
+            reviews_strong: '{rating} stars from {count} reviews',
+            reviews_mid: '{rating} stars from {count} reviews. Customers filter for 4.5+.',
+            reviews_low: '{rating} stars from {count} reviews. Below 4.0 scares new customers away.',
+
+            gbp_full: 'Phone, hours, and {photos} photos filled in',
+            gbp_missing: "You're missing: {list}. Google ranks incomplete profiles lower.",
+            gbp_few_photos: '{photos} photos. Salons with 15+ photos get more clicks.',
+            gbp_photos_only: '{photos} photos.',
+            gbp_phone: 'phone number',
+            gbp_hours: 'hours',
+            gbp_photos: 'photos',
+
+            website_none: 'No own website found. Customers who Google you find nothing.',
+            website_platform_only: 'Your only online presence is a booking platform. You have no brand of your own online.',
+            website_booking_via_platform: '{domain}. Your booking button sends customers to an external platform that charges commission.',
+            website_own_booking: '{domain} with own bookings.',
+            website_no_booking: '{domain} without online booking. Customers who want to book in the evening drop off.',
+
+            seo_no_website: "No website, no SEO. You can't be found outside Google Maps.",
+            seo_low: "Your website is nearly unreadable for Google. Searching '{type} {city}' gets you nothing.",
+            seo_mid: 'Google can find you, but you lack the technical basics. A competitor with a better site wins.',
+            seo_high: 'Technically sound. Google can read you well.',
+
+            ai_mentioned: 'ChatGPT mentions your salon. That is an edge.',
+            ai_not_mentioned: "ChatGPT does not mention you when someone asks: 'what's a good {type} in {city}?'",
+            ai_also_mentioned: 'Also mentioned: {names}',
+
+            maps_found: '✓ Found on Google Maps',
+            commission_warning: "Your website's bookings go through an external platform. That costs you commission per customer.",
+            commission_treatwell: 'Also found on Treatwell (25-35% commission)',
+            leak_body: "External booking platforms charge 25 to 35 percent per booking. On an €85 treatment that's up to €30 commission, per customer, every time. Your own booking page costs a fraction of that.",
+
+            summary_1: "There's work to be done. But it's fixable.",
+            summary_2: "You have a foundation. But you're leaving customers behind.",
+            summary_3: 'Good progress. A few things still missing.',
+            summary_4: 'Almost perfect. Just a few details left.',
+            summary_5: "Excellent. You're already highly visible.",
+
+            cta_below: 'Want to see how Smoova solves this? Schedule a free 20-minute consultation.',
+            cta_above: "You're already far along. What's missing is quick to fix.",
+            cta_btn_book: 'Schedule a meeting',
+            cta_secondary: 'Or see what Smoova does first →',
+            cta_dm: 'Or DM us on Instagram',
+            cta_check_another: 'Check another salon',
+
+            notfound_eyebrow: 'No result',
+            notfound_title: 'Salon not found',
+            notfound_body: "We couldn't find a salon with this name in this city. Check the spelling and try again.",
+            notfound_btn: 'Try again',
+
+            err_eyebrow: 'Something went wrong',
+            err_title: 'Our audit hit a snag.',
+            err_body: 'Try again, or send us a DM on Instagram.',
+            err_btn_retry: 'Try again',
+            err_btn_dm: 'DM us',
+
+            footer_rights: 'All rights reserved',
+
+            display_other_system: 'Other system',
+            display_own_system: 'Own system',
+            display_phone_walkin: 'Phone or walk-in only',
+            default_city: 'your city',
+          },
+        },
+
+        // Translate a key with optional `{name}` placeholder substitution.
+        // Falls back to NL, then to the key itself, so missing translations
+        // surface as visible bugs instead of empty strings.
+        t(key, params) {
+          const dict = this.translations[this.lang] || this.translations.nl;
+          let s = dict[key];
+          if (s == null) s = this.translations.nl[key];
+          if (s == null) return key;
+          if (params) {
+            for (const k in params) {
+              s = s.split('{' + k + '}').join(String(params[k]));
+            }
+          }
+          return s;
+        },
+
+        // Toggle the language. Re-renders every x-text and re-resolves every
+        // t()-driven getter. No reload, no localStorage (per spec).
+        setLang(l) {
+          if (l !== 'nl' && l !== 'en') return;
+          this.lang = l;
+          // Sync <html lang> so screen readers + browser UA features pick up
+          // the change (otherwise the doc keeps its initial value).
+          if (typeof document !== 'undefined' && document.documentElement) {
+            document.documentElement.lang = l;
+          }
+          // If we're showing a validation error, re-resolve it in the new
+          // language by re-running the field check.
+          if (this.validationErrors.salon_name) this.validateField('salon_name');
+          if (this.validationErrors.city)       this.validateField('city');
+        },
+
+        // Locale-aware decimal formatter for ratings (4,5 NL / 4.5 EN).
+        formatRating(n) {
+          const loc = this.lang === 'en' ? 'en-US' : 'nl-NL';
+          return n.toLocaleString(loc, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+        },
+
+        formatInt(n) {
+          const loc = this.lang === 'en' ? 'en-US' : 'nl-NL';
+          return n.toLocaleString(loc);
+        },
+
+        // Loading messages and chip lists are now getters so they re-render
+        // when the user toggles language.
+        get loadingMessages() {
+          return [
+            this.t('loading_reviews'),
+            this.t('loading_website'),
+            this.t('loading_maps'),
+            this.t('loading_ai'),
+            this.t('loading_score'),
+          ];
+        },
+
+        // Four canonical salon types. Note: 'beautysalon' was dropped because
+        // it renders identically to 'schoonheidssalon' in English ("Beauty
+        // salon"). One row, four pills, no duplicates.
+        get salonTypes() {
+          return [
+            { value: 'schoonheidssalon', label: this.t('type_schoonheidssalon') },
+            { value: 'kapsalon',         label: this.t('type_kapsalon') },
+            { value: 'nagelsalon',       label: this.t('type_nagelsalon') },
+            { value: 'barbershop',       label: this.t('type_barbershop') },
+          ];
+        },
+
+        get bookingSystems() {
+          return [
+            { value: 'none',         label: this.t('booking_none') },
+            { value: 'treatwell',    label: this.t('booking_treatwell') },
+            { value: 'fresha',       label: this.t('booking_fresha') },
+            { value: 'planity',      label: this.t('booking_planity') },
+            { value: 'salonized',    label: this.t('booking_salonized') },
+            { value: 'own_website',  label: this.t('booking_own') },
+            { value: 'other',        label: this.t('booking_other') },
+          ];
+        },
+
+        // Re-resolves on language toggle: 'default' uses notfound_body verbatim;
+        // 'non_salon' interpolates notFoundName into the not_salon template.
+        get notFoundMessage() {
+          if (this.notFoundReason === 'non_salon') {
+            return this.t('not_salon', { name: this.notFoundName || this.form.salon_name });
+          }
+          return this.t('notfound_body');
+        },
 
         init() { /* placeholder; reserved for future analytics opt-in or persistence */ },
-
-        // Pre-flattened letter list for the typewriter H1. Each entry carries
-        // its character + the Tailwind/Smoova classes for its segment so the
-        // template can render type-chars with a single x-for and one delay
-        // formula.
-        get headlineChars() {
-          const segments = [
-            { text: 'Hoe zichtbaar is jouw salon ', cls: 'type-char' },
-            { text: 'online',                       cls: 'type-char italic-display text-rouge-velours' },
-            { text: '?',                            cls: 'type-char text-gold-vif' },
-          ];
-          const out = [];
-          for (const seg of segments) {
-            for (const ch of seg.text) out.push({ ch, cls: seg.cls });
-          }
-          return out;
-        },
 
         // Returns true if the user has set OS-level reduced-motion preference.
         // Read once per call site so reduced-motion users skip animation deltas.
@@ -1150,6 +1713,30 @@
 
         canSubmit() {
           return this.form.salon_name && this.form.city && this.form.salon_type && this.form.booking_system.length > 0;
+        },
+
+        // Per-field validation: min 2 chars, not numbers-only, trimmed.
+        // Returns true if valid, false if not. Writes the error message into
+        // validationErrors[field] (empty string when valid).
+        validateField(field) {
+          const v = (this.form[field] || '').trim();
+          // x-model.trim already strips edges on input, but re-trim defensively
+          // for paste/programmatic value sets.
+          this.form[field] = v;
+          const msgKey = field === 'salon_name' ? 'err_salon' : 'err_city';
+          if (v.length < 2 || /^\d+$/.test(v)) {
+            this.validationErrors[field] = this.t(msgKey);
+            return false;
+          }
+          this.validationErrors[field] = '';
+          return true;
+        },
+
+        validateAll() {
+          // Validate both so each can surface its own inline error in one pass.
+          const okName = this.validateField('salon_name');
+          const okCity = this.validateField('city');
+          return okName && okCity;
         },
 
         // Toggle a booking-system value in/out of the multi-select array.
@@ -1316,9 +1903,9 @@
           if (s.includes('fresha')) return 'Fresha';
           if (s.includes('planity')) return 'Planity';
           if (s.includes('salonized')) return 'Salonized';
-          if (s.includes('other') || s.includes('anders')) return 'Ander systeem';
-          if (s.includes('eigen') || s.includes('own')) return 'Eigen systeem';
-          if (s.includes('geen') || s.includes('no')) return 'Alleen telefoon of walk-in';
+          if (s.includes('other') || s.includes('anders')) return this.t('display_other_system');
+          if (s.includes('eigen') || s.includes('own')) return this.t('display_own_system');
+          if (s.includes('geen') || s.includes('no')) return this.t('display_phone_walkin');
           return '';
         },
 
@@ -1364,7 +1951,7 @@
         get pillars() {
           const r = this.result || {};
           const salonType = String(this.form.salon_type || 'salon').toLowerCase();
-          const city = (this.form.city || '').trim() || 'jouw stad';
+          const city = (this.form.city || '').trim() || this.t('default_city');
 
           // 1. Google Reviews — score + tier-coloured prose line.
           const rating = Number(r.rating);
@@ -1372,19 +1959,19 @@
           const reviewsScore = this.scoreReviews(isNaN(rating) ? null : rating, isNaN(reviewCount) ? 0 : reviewCount);
           let reviewsDetail, reviewsDetailColor;
           if (isNaN(rating) || !Number.isFinite(reviewCount) || reviewCount === 0) {
-            reviewsDetail = 'Geen beoordelingen gevonden. Nieuwe klanten vertrouwen salons zonder reviews niet.';
+            reviewsDetail = this.t('reviews_none');
             reviewsDetailColor = '#A6543A';
           } else {
-            const ratingStr = rating.toLocaleString('nl-NL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-            const countStr  = reviewCount.toLocaleString('nl-NL');
+            const ratingStr = this.formatRating(rating);
+            const countStr  = this.formatInt(reviewCount);
             if (rating >= 4.5) {
-              reviewsDetail = `${ratingStr} sterren uit ${countStr} beoordelingen`;
+              reviewsDetail = this.t('reviews_strong', { rating: ratingStr, count: countStr });
               reviewsDetailColor = '#5B7F5B';
             } else if (rating >= 4.0) {
-              reviewsDetail = `${ratingStr} sterren uit ${countStr} beoordelingen. Klanten filteren op 4,5.`;
+              reviewsDetail = this.t('reviews_mid', { rating: ratingStr, count: countStr });
               reviewsDetailColor = '#B8860B';
             } else {
-              reviewsDetail = `${ratingStr} sterren uit ${countStr} beoordelingen. Onder de 4,0 schrikken nieuwe klanten af.`;
+              reviewsDetail = this.t('reviews_low', { rating: ratingStr, count: countStr });
               reviewsDetailColor = '#A6543A';
             }
           }
@@ -1398,20 +1985,20 @@
 
           let gbpDetail;
           if (hasPhone && hasHours && photos >= 6) {
-            gbpDetail = `Telefoonnummer, openingstijden en ${photos} foto's ingevuld`;
+            gbpDetail = this.t('gbp_full', { photos });
           } else {
             const missing = [];
-            if (!hasPhone)    missing.push('telefoonnummer');
-            if (!hasHours)    missing.push('openingstijden');
-            if (photos === 0) missing.push("foto's");
+            if (!hasPhone)    missing.push(this.t('gbp_phone'));
+            if (!hasHours)    missing.push(this.t('gbp_hours'));
+            if (photos === 0) missing.push(this.t('gbp_photos'));
             const parts = [];
             if (missing.length > 0) {
-              parts.push(`Je mist: ${missing.join(', ')}. Google toont incomplete profielen lager.`);
+              parts.push(this.t('gbp_missing', { list: missing.join(', ') }));
             }
             if (photos > 0 && photos < 6) {
-              parts.push(`${photos} foto's. Salons met 15+ foto's krijgen meer clicks.`);
+              parts.push(this.t('gbp_few_photos', { photos }));
             }
-            gbpDetail = parts.join(' ') || `${photos} foto's.`;
+            gbpDetail = parts.join(' ') || this.t('gbp_photos_only', { photos });
           }
 
           // 3. Eigen website — prose detail in five colour-coded states. The
@@ -1430,20 +2017,21 @@
           const websiteScore = this.scoreWebsite(r.website, wIsPlatform, wLoads, wHttps, wBooking, bookingViaPlatform);
 
           let websiteDetail, websiteDetailColor;
+          const domain = this.cleanDomain(r.website);
           if (!r.website) {
-            websiteDetail = 'Geen eigen website. Klanten die je Googlen vinden niets.';
+            websiteDetail = this.t('website_none');
             websiteDetailColor = '#A6543A';
           } else if (wIsPlatform) {
-            websiteDetail = 'Je enige online plek is een boekingsplatform. Je hebt geen eigen merk online.';
+            websiteDetail = this.t('website_platform_only');
             websiteDetailColor = '#A6543A';
           } else if (wBooking && bookingViaPlatform) {
-            websiteDetail = `${this.cleanDomain(r.website)}. Je boekknop stuurt klanten naar een extern platform dat commissie rekent.`;
+            websiteDetail = this.t('website_booking_via_platform', { domain });
             websiteDetailColor = '#A6543A';
           } else if (wBooking) {
-            websiteDetail = `${this.cleanDomain(r.website)} met eigen boekingen.`;
+            websiteDetail = this.t('website_own_booking', { domain });
             websiteDetailColor = '#5B7F5B';
           } else {
-            websiteDetail = `${this.cleanDomain(r.website)} zonder online boekingen. Klanten die 's avonds willen boeken haken af.`;
+            websiteDetail = this.t('website_no_booking', { domain });
             websiteDetailColor = '#B8860B';
           }
 
@@ -1452,13 +2040,13 @@
           const seoScore = this.scoreSEO(r);
           let seoDetail;
           if (!r.website) {
-            seoDetail = 'Zonder website geen SEO. Je bent onvindbaar buiten Google Maps.';
+            seoDetail = this.t('seo_no_website');
           } else if (seoScore <= 3) {
-            seoDetail = `Je website is voor Google bijna onleesbaar. Zoeken op '${salonType} ${city}' levert je niets op.`;
+            seoDetail = this.t('seo_low', { type: salonType, city });
           } else if (seoScore <= 6) {
-            seoDetail = 'Google kan je vinden, maar je mist technische basis. Je concurrent met een betere site wint.';
+            seoDetail = this.t('seo_mid');
           } else {
-            seoDetail = 'Technisch in orde. Google kan je goed lezen.';
+            seoDetail = this.t('seo_high');
           }
 
           // Maps is a footnote, not a pillar. Boolean only.
@@ -1468,8 +2056,8 @@
           const aiMentioned = this.isTruthy(r.ai_mentioned);
           const aiScore = this.scoreAI(aiMentioned);
           const aiDetail = aiMentioned
-            ? 'AI-zoekmachines kennen je salon. Dat is voorsprong.'
-            : `Als iemand ChatGPT vraagt: 'wat is een goede ${salonType} in ${city}?' word je niet genoemd.`;
+            ? this.t('ai_mentioned')
+            : this.t('ai_not_mentioned', { type: salonType, city });
 
           // 6. Boekingssysteem (informational). bookingSystemDisplay now maps
           //    empty / "geen" to "Alleen telefoon of walk-in" and "own"/"eigen"
@@ -1482,7 +2070,7 @@
               .filter(Boolean);
             bookingLabel = Array.from(new Set(labels)).join(', ');
           }
-          const bookingDetail = bookingLabel || 'Alleen telefoon of walk-in';
+          const bookingDetail = bookingLabel || this.t('display_phone_walkin');
 
           return {
             reviews: { score: reviewsScore, maxScore: 10, detail: reviewsDetail, detailColor: reviewsDetailColor },
@@ -1507,21 +2095,20 @@
           return Math.round((sum / 5) * 10) / 10;
         },
 
+        // Score summary, 5 buckets per spec: 1-3 / 4-5 / 6-7 / 8-9 / 10.
         get summaryCopy() {
           const n = this.averageScore;
-          if (n <= 3) return 'Je salon is online bijna onzichtbaar. Nieuwe klanten vinden je niet.';
-          if (n <= 5) return 'Je bent er wel, maar je valt niet op. Klanten kiezen je concurrent.';
-          if (n <= 7) return 'Een goede basis. Maar er lekt omzet weg.';
-          if (n <= 9) return 'Sterk. Je bent beter vindbaar dan de meeste salons.';
-          return 'Uitstekend. Je laat bijna niets liggen.';
+          if (n <= 3) return this.t('summary_1');
+          if (n <= 5) return this.t('summary_2');
+          if (n <= 7) return this.t('summary_3');
+          if (n <= 9) return this.t('summary_4');
+          return this.t('summary_5');
         },
 
-        // CTA headline: two paths, splitting at score 7. Below 7 it's a fix
-        // pitch ("dit is op te lossen"); 7+ it's a finish-line pitch.
+        // CTA headline: two paths, splitting at score 7. Below 7 is the fix
+        // pitch; 7+ is the finish-line pitch.
         get ctaCopy() {
-          return this.averageScore < 7
-            ? 'Dit is op te lossen. Veertien dagen, vast tarief, geen commissie.'
-            : 'Je bent al ver. Wat er nog mist is snel geregeld.';
+          return this.averageScore < 7 ? this.t('cta_below') : this.t('cta_above');
         },
 
         // Single source of truth for "this salon is on a commission platform".
@@ -1580,6 +2167,8 @@
 
         // Webhook fetch with 30s timeout. Aborts on timeout, propagates errors
         // for the caller's catch block to map to the 'error' state.
+        // 404 and body `error: true` are mapped to a sentinel that runAudit()
+        // translates into the friendly 'not-found' state (not a hard error).
         async fetchAudit() {
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 30000);
@@ -1590,8 +2179,11 @@
               body: JSON.stringify(this.form),
               signal: controller.signal,
             });
+            if (res.status === 404) return { __notFound: true };
             if (!res.ok) throw new Error('HTTP ' + res.status);
-            return await res.json();
+            const data = await res.json();
+            if (data && this.isTruthy(data.error)) return { __notFound: true };
+            return data;
           } finally {
             clearTimeout(timeoutId);
           }
@@ -1620,6 +2212,18 @@
 
         async runAudit() {
           if (!this.canSubmit()) return;
+
+          // Frontend validation (min 2 chars, not numbers-only). If invalid,
+          // surface inline errors and focus the first bad field; do not call
+          // the webhook.
+          if (!this.validateAll()) {
+            this.$nextTick(() => {
+              const firstBad = this.validationErrors.salon_name ? 'salon_name' : 'city';
+              const el = document.getElementById(firstBad);
+              if (el && typeof el.focus === 'function') el.focus();
+            });
+            return;
+          }
 
           // Reset any prior animation state, then drive the loading hero.
           this.cancelAnimations();
@@ -1665,28 +2269,84 @@
                 website_is_platform:        d.website_is_platform,
               });
             } catch (_) { /* ignore logging failures */ }
+            // Webhook signalled "no salon matched" — either via 404 status or
+            // an explicit `error: true` in the body. Render the friendly
+            // not-found state and skip results entirely.
+            if (data && data.__notFound) {
+              this.result = {};
+              this.state = 'not-found';
+              return;
+            }
             if (this.isEmptyResponse(data)) {
+              this.result = {};
+              this.notFoundReason = 'default';
+              this.notFoundName = '';
+              this.state = 'not-found';
+              return;
+            }
+            // Non-salon guard: if Google matched a restaurant / pharmacy / etc,
+            // skip the confirmation card and go straight to a tailored not-found.
+            if (this.isNonSalonType(data.found_type)) {
+              this.notFoundReason = 'non_salon';
+              this.notFoundName = data.found_name || this.form.salon_name;
+              this.result = {};
               this.state = 'not-found';
               return;
             }
             this.result = data;
             this.resultsRevealed = false;
             // 400ms pause after the loading state fades out before flipping to
-            // results — that beat gives the salon owner a sense of anticipation.
+            // the confirm card. The scored animation only kicks off when the
+            // user clicks "Ja, dit is mijn salon" via proceedToResults().
             const flipTimer = setTimeout(() => {
-              this.state = 'results';
+              this.state = 'confirm';
               window.scrollTo({ top: 0, behavior: 'smooth' });
-              // Kick off the staged results animation (overall score then pillars).
-              this.startResultsAnimation();
-              // Bar-fill scaleX trigger sits at ~120ms, after the row reveals start.
-              const revealTimer = setTimeout(() => { this.resultsRevealed = true; }, 120);
-              this._timers.push(revealTimer);
             }, 400);
             this._timers.push(flipTimer);
           } catch (err) {
             this.cancelAnimations();
             this.state = 'error';
           }
+        },
+
+        // Returns true if Google's place type clearly isn't a beauty business.
+        // Substring match against the lowercased found_type so multi-token
+        // values like "pharmacy,health" or "grocery_or_supermarket" still hit.
+        isNonSalonType(type) {
+          if (!type) return false;
+          const t = String(type).toLowerCase();
+          return this.NON_SALON_TYPES.some(nt => t.includes(nt));
+        },
+
+        // User confirmed the Google match. Run the staged results animation —
+        // same choreography that used to fire automatically after the loading
+        // state. The 120ms reveal beat is preserved so bar scaleX animates in.
+        proceedToResults() {
+          this.resultsRevealed = false;
+          this.state = 'results';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.startResultsAnimation();
+          const revealTimer = setTimeout(() => { this.resultsRevealed = true; }, 120);
+          this._timers.push(revealTimer);
+        },
+
+        // User rejected the Google match. Preserve form values so they can
+        // fix a typo and resubmit without re-entering everything.
+        backToForm() {
+          this.cancelAnimations();
+          this.result = {};
+          this.resultsRevealed = false;
+          this.animatedAverageScore = 0;
+          this.animatedPillarScores = { reviews: 0, gbp: 0, website: 0, seo: 0, ai: 0 };
+          this.loadingProgress = 0;
+          this.loadingMessageIndex = 0;
+          this.notFoundReason = 'default';
+          this.notFoundName = '';
+          this.state = 'idle';
+          this.$nextTick(() => {
+            const first = document.getElementById('salon_name');
+            if (first && typeof first.focus === 'function') first.focus();
+          });
         },
 
         reset() {
@@ -1698,8 +2358,11 @@
           this.animatedPillarScores = { reviews: 0, gbp: 0, website: 0, seo: 0, ai: 0 };
           this.loadingProgress = 0;
           this.loadingMessageIndex = 0;
+          this.notFoundReason = 'default';
+          this.notFoundName = '';
           // Clear all form fields (spec: "All fields are cleared")
           this.form = { salon_name: '', city: '', salon_type: '', booking_system: [] };
+          this.validationErrors = { salon_name: '', city: '' };
           // Focus the first input after Alpine has re-rendered the idle state.
           this.$nextTick(() => {
             const first = document.getElementById('salon_name');
