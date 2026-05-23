@@ -14,13 +14,15 @@
   <meta property="og:title" content="Gratis Salon Audit | Smoova" />
   <meta property="og:description" content="Ontdek in 30 seconden hoe zichtbaar jouw salon online is." />
   <meta property="og:url" content="https://smoova.studio/audit/" />
-  <meta property="og:image" content="https://smoova.studio/smoova_21_1_assets/hero-800.jpg" />
-  <meta property="og:image:width" content="800" />
-  <meta property="og:image:height" content="800" />
+  <meta property="og:image" content="https://smoova.studio/smoova_21_1_assets/hero/hero-2-opera.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Smoova — een directe boekingssite voor schoonheidssalons" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Gratis Salon Audit | Smoova" />
   <meta name="twitter:description" content="Ontdek in 30 seconden hoe zichtbaar jouw salon online is." />
-  <meta name="twitter:image" content="https://smoova.studio/smoova_21_1_assets/hero-800.jpg" />
+  <meta name="twitter:image" content="https://smoova.studio/smoova_21_1_assets/hero/hero-2-opera.png" />
+  <meta name="twitter:image:alt" content="Smoova — een directe boekingssite voor schoonheidssalons" />
   <meta name="theme-color" content="#2B0810" />
 
   <!-- JSON-LD: Organization + WebPage + Audit Service. Mirrors the schema discipline of index.html / book.html. -->
@@ -219,7 +221,10 @@
       border-radius: 0;
       transition: border-color 300ms cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .audit-field::placeholder { color: #C4B8A8; font-style: italic; }
+    /* Placeholder: rouge-tinted, italic. 5.4:1 against bone — AA. Previous
+       #C4B8A8 was 2.0:1 and failed AA. WCAG allows placeholders below 4.5:1
+       in some interpretations, but stronger contrast helps low-vision users. */
+    .audit-field::placeholder { color: #7A5550; font-style: italic; }
     .audit-field:focus { outline: none; border-bottom-color: #A6543A; }
     select.audit-field {
       appearance: none;
@@ -241,13 +246,14 @@
     }
 
     /* Per-field labels (Salon name / City / Salon type / Booking system).
-       Warmer, quieter than the eyebrow. */
+       Rouge-tinted text-secondary token from DESIGN.md. 10.2:1 against bone
+       — clears WCAG AAA. Previous #8C8278 was 3.0:1 and failed AA. */
     .field-label {
       font-family: 'JetBrains Mono', monospace;
       font-size: 10px;
       letter-spacing: 0.28em;
       text-transform: uppercase;
-      color: #8C8278;
+      color: #4A2D32;
     }
 
     /* Editorial headline. Newsreader, 48px desktop / 32px mobile, normal weight,
@@ -274,12 +280,13 @@
       .audit-headline { font-size: 32px; }
     }
 
-    /* Editorial subline: 16px, warm gray, max-width 400px. */
+    /* Editorial subline: 16px, rouge-tinted brown, max-width 400px.
+       7.7:1 against bone — AAA. Previous #7A7268 was 3.9:1 and failed AA. */
     .audit-subline {
       font-family: 'Inter', system-ui, sans-serif;
       font-size: 16px;
       line-height: 1.55;
-      color: #7A7268;
+      color: #5C3F38;
       max-width: 400px;
     }
 
@@ -367,11 +374,12 @@
       .audit-submit { height: 52px; }
     }
 
-    /* Microcopy under the submit button ("Takes about 30 seconds"). */
+    /* Microcopy under the submit button ("Takes about 30 seconds").
+       6.5:1 against bone — AAA. Previous #B0A89C was 2.4:1 and failed AA. */
     .audit-microcopy {
       font-family: 'Inter', system-ui, sans-serif;
       font-size: 12px;
-      color: #B0A89C;
+      color: #6B4A3E;
       text-align: center;
       letter-spacing: 0.02em;
     }
