@@ -867,13 +867,36 @@
       margin-bottom: 56px;
     }
 
-    /* Each pillar: question H2 in Fraunces title weight + Inter body prose.
-       The body sits at 17px (slightly larger than default Inter body) so the
-       40-60 word answers read like editorial paragraphs, not microcopy. */
+    /* Each pillar: two-column editorial layout. Roman numeral hangs in the
+       left margin (gold-brule, Fraunces italic, oversize); question + body
+       sit in the content column. The 80px numeral column intentionally
+       echoes the 80px gold hairline section divider further down. */
     .audit-pillar {
-      margin-top: 48px;
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      column-gap: 32px;
+      margin-top: 64px;
+      align-items: baseline;
     }
     .audit-pillar:first-of-type { margin-top: 0; }
+    .audit-pillar__numeral {
+      font-family: 'Fraunces', Georgia, serif;
+      font-style: italic;
+      font-weight: 300;
+      font-optical-sizing: auto;
+      font-size: clamp(2rem, 3vw, 2.625rem);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--color-gold-brule, #8A6B2E);
+      text-align: right;
+      /* Tiny optical offset: italic Roman numerals visually rise above the
+         H2 baseline if perfectly aligned. Push down 2px to feel anchored. */
+      transform: translateY(2px);
+      user-select: none;
+    }
+    .audit-pillar__content {
+      min-width: 0; /* prevent grid blowout from long words */
+    }
     .audit-pillar-q {
       font-family: 'Fraunces', Georgia, serif;
       font-weight: 400;
@@ -892,7 +915,18 @@
       max-width: 65ch;
     }
     @media (max-width: 640px) {
-      .audit-pillar { margin-top: 36px; }
+      /* Mobile: collapse to single column. Numeral sits above the question,
+         left-aligned, smaller. */
+      .audit-pillar {
+        grid-template-columns: 1fr;
+        row-gap: 6px;
+        margin-top: 48px;
+      }
+      .audit-pillar__numeral {
+        font-size: 1.5rem;
+        text-align: left;
+        transform: none;
+      }
       .audit-pillar-body { font-size: 16px; }
     }
 
@@ -909,11 +943,33 @@
       .audit-section-rule { margin-top: 64px; }
     }
 
-    /* FAQ: H3 questions in Fraunces, Inter answers. No accordion, no cards. */
+    /* FAQ: two-column editorial layout matching the pillar grid, but with
+       a different numeral language. JetBrains Mono "01." / "02." marks read
+       as forensic case-file catalog tags (the brand's "this is on the
+       record" mono voice) — distinct from the pillar's italic Roman energy. */
     .audit-faq-item {
-      margin-top: 32px;
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      column-gap: 32px;
+      margin-top: 40px;
+      align-items: baseline;
     }
     .audit-faq-item:first-of-type { margin-top: 0; }
+    .audit-faq__numeral {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      color: var(--color-gold-brule, #8A6B2E);
+      text-align: right;
+      text-transform: uppercase;
+      /* Lift mono numeral to align with the cap-height of the H3 question. */
+      transform: translateY(3px);
+      user-select: none;
+    }
+    .audit-faq__content {
+      min-width: 0;
+    }
     .audit-faq-q {
       font-family: 'Fraunces', Georgia, serif;
       font-weight: 400;
@@ -932,7 +988,41 @@
       max-width: 65ch;
     }
     @media (max-width: 640px) {
-      .audit-faq-item { margin-top: 26px; }
+      .audit-faq-item {
+        grid-template-columns: 1fr;
+        row-gap: 4px;
+        margin-top: 32px;
+      }
+      .audit-faq__numeral {
+        text-align: left;
+        transform: none;
+      }
+    }
+
+    /* Scroll-reveal: each pillar and FAQ item fades up when entering the
+       viewport. Default state is invisible; the IntersectionObserver in
+       auditApp().init() flips `is-revealed` on entry. Reduced-motion users
+       get the revealed state immediately (no transition, no transform). */
+    .audit-pillar,
+    .audit-faq-item {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, transform;
+    }
+    .audit-pillar.is-revealed,
+    .audit-faq-item.is-revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .audit-pillar,
+      .audit-faq-item {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
     }
   </style>
 </head>
@@ -1380,72 +1470,87 @@
 
       <!-- Pillar 1: Google Reviews -->
       <article class="audit-pillar">
-        <h2 class="audit-pillar-q">
-          <span x-show="lang === 'nl'">Hoe belangrijk zijn Google Reviews voor een salon?</span>
-          <span x-show="lang === 'en'">How much do Google Reviews actually matter for a salon?</span>
-        </h2>
-        <p class="audit-pillar-body" x-show="lang === 'nl'">
-          Google Reviews zijn vaak het eerste dat nieuwe klanten over je salon zien, nog voor je website of je Instagram. 81% van de consumenten leest Google-reviews om lokale bedrijven te beoordelen (BrightLocal, Local Consumer Review Survey 2024), en 49% vertrouwt ze net zoveel als een persoonlijke aanbeveling. Salons onder de 4,2 sterren verliezen al klanten voordat ze de deur uit zijn. De audit checkt je gemiddelde score, het aantal recente beoordelingen, of je reageert binnen 48 uur, en hoe je presteert tegenover vergelijkbare salons in jouw stad.
-        </p>
-        <p class="audit-pillar-body" x-show="lang === 'en'">
-          Google Reviews are often the first thing new customers see about your salon, before your website or your Instagram. 81% of consumers read Google reviews to evaluate local businesses (BrightLocal, Local Consumer Review Survey 2024), and 49% trust them as much as a personal recommendation. Salons below 4.2 stars lose customers before they walk in. The audit checks your average rating, your recent review volume, whether you respond within 48 hours, and how you compare to similar salons in your city.
-        </p>
+        <span class="audit-pillar__numeral" aria-hidden="true">I</span>
+        <div class="audit-pillar__content">
+          <h2 class="audit-pillar-q">
+            <span x-show="lang === 'nl'">Hoe belangrijk zijn Google Reviews voor een salon?</span>
+            <span x-show="lang === 'en'">How much do Google Reviews actually matter for a salon?</span>
+          </h2>
+          <p class="audit-pillar-body" x-show="lang === 'nl'">
+            Google Reviews zijn vaak het eerste dat nieuwe klanten over je salon zien, nog voor je website of je Instagram. 81% van de consumenten leest Google-reviews om lokale bedrijven te beoordelen (BrightLocal, Local Consumer Review Survey 2024), en 49% vertrouwt ze net zoveel als een persoonlijke aanbeveling. Salons onder de 4,2 sterren verliezen al klanten voordat ze de deur uit zijn. De audit checkt je gemiddelde score, het aantal recente beoordelingen, of je reageert binnen 48 uur, en hoe je presteert tegenover vergelijkbare salons in jouw stad.
+          </p>
+          <p class="audit-pillar-body" x-show="lang === 'en'">
+            Google Reviews are often the first thing new customers see about your salon, before your website or your Instagram. 81% of consumers read Google reviews to evaluate local businesses (BrightLocal, Local Consumer Review Survey 2024), and 49% trust them as much as a personal recommendation. Salons below 4.2 stars lose customers before they walk in. The audit checks your average rating, your recent review volume, whether you respond within 48 hours, and how you compare to similar salons in your city.
+          </p>
+        </div>
       </article>
 
       <!-- Pillar 2: Google Business Profile -->
       <article class="audit-pillar">
-        <h2 class="audit-pillar-q">
-          <span x-show="lang === 'nl'">Wat is een Google Bedrijfsprofiel en waarom maakt het uit?</span>
-          <span x-show="lang === 'en'">What is a Google Business Profile and why does it matter?</span>
-        </h2>
-        <p class="audit-pillar-body" x-show="lang === 'nl'">
-          Je Google Bedrijfsprofiel is het paneel dat verschijnt rechts in de zoekresultaten: foto's, openingstijden, telefoonnummer, route, "Nu boeken". Voor zoekopdrachten als "kapper in de buurt" of "balayage Amsterdam" beslist dit profiel of iemand belt of doorscrolt. Bedrijven met complete profielen krijgen volgens Google 7 keer meer profielklikken dan bedrijven zonder. De audit checkt of je profiel geclaimd en geverifieerd is, of je recente foto's hebt geüpload (minder dan 30 dagen oud), of je categorieën kloppen, en of je actief Google Posts plaatst.
-        </p>
-        <p class="audit-pillar-body" x-show="lang === 'en'">
-          Your Google Business Profile is the panel on the right side of search results: photos, opening hours, phone number, directions, "Book now". For searches like "hairdresser near me" or "balayage Amsterdam," this panel decides whether someone calls or scrolls past. Businesses with complete profiles get 7 times more profile clicks than businesses without, according to Google. The audit checks whether your profile is claimed and verified, whether you've uploaded recent photos (less than 30 days old), whether your categories are correct, and whether you're posting Google Posts regularly.
-        </p>
+        <span class="audit-pillar__numeral" aria-hidden="true">II</span>
+        <div class="audit-pillar__content">
+          <h2 class="audit-pillar-q">
+            <span x-show="lang === 'nl'">Wat is een Google Bedrijfsprofiel en waarom maakt het uit?</span>
+            <span x-show="lang === 'en'">What is a Google Business Profile and why does it matter?</span>
+          </h2>
+          <p class="audit-pillar-body" x-show="lang === 'nl'">
+            Je Google Bedrijfsprofiel is het paneel dat verschijnt rechts in de zoekresultaten: foto's, openingstijden, telefoonnummer, route, "Nu boeken". Voor zoekopdrachten als "kapper in de buurt" of "balayage Amsterdam" beslist dit profiel of iemand belt of doorscrolt. Bedrijven met complete profielen krijgen volgens Google 7 keer meer profielklikken dan bedrijven zonder. De audit checkt of je profiel geclaimd en geverifieerd is, of je recente foto's hebt geüpload (minder dan 30 dagen oud), of je categorieën kloppen, en of je actief Google Posts plaatst.
+          </p>
+          <p class="audit-pillar-body" x-show="lang === 'en'">
+            Your Google Business Profile is the panel on the right side of search results: photos, opening hours, phone number, directions, "Book now". For searches like "hairdresser near me" or "balayage Amsterdam," this panel decides whether someone calls or scrolls past. Businesses with complete profiles get 7 times more profile clicks than businesses without, according to Google. The audit checks whether your profile is claimed and verified, whether you've uploaded recent photos (less than 30 days old), whether your categories are correct, and whether you're posting Google Posts regularly.
+          </p>
+        </div>
       </article>
 
       <!-- Pillar 3: Own website -->
       <article class="audit-pillar">
-        <h2 class="audit-pillar-q">
-          <span x-show="lang === 'nl'">Heb ik een eigen website nodig als ik op Treatwell sta?</span>
-          <span x-show="lang === 'en'">Do I need my own website if I'm already on Treatwell?</span>
-        </h2>
-        <p class="audit-pillar-body" x-show="lang === 'nl'">
-          Ja. Een eigen website is de enige plek waar klanten kunnen boeken zonder dat jij commissie afdraagt, en het is wat zoekmachines vertrouwen als jouw officiële identiteit. Zonder eigen site ben je een vermelding op iemand anders zijn platform. De audit checkt of je een eigen domein bezit, of je site werkt op mobiel (waar 78% van salonzoekopdrachten plaatsvindt volgens Think with Google), hoe snel de pagina laadt, of er een boekingsknop above-the-fold staat, en of de structuur duidelijk vertelt welk type salon je hebt.
-        </p>
-        <p class="audit-pillar-body" x-show="lang === 'en'">
-          Yes. Your own website is the only place customers can book without you paying commission, and it's what search engines trust as your real identity. Without one, you're a listing on someone else's platform. The audit checks whether you own your domain, whether your site works on mobile (where 78% of salon searches happen, per Think with Google), how fast the page loads, whether there's a booking button above the fold, and whether the page structure clearly tells search engines what kind of salon you run.
-        </p>
+        <span class="audit-pillar__numeral" aria-hidden="true">III</span>
+        <div class="audit-pillar__content">
+          <h2 class="audit-pillar-q">
+            <span x-show="lang === 'nl'">Heb ik een eigen website nodig als ik op Treatwell sta?</span>
+            <span x-show="lang === 'en'">Do I need my own website if I'm already on Treatwell?</span>
+          </h2>
+          <p class="audit-pillar-body" x-show="lang === 'nl'">
+            Ja. Een eigen website is de enige plek waar klanten kunnen boeken zonder dat jij commissie afdraagt, en het is wat zoekmachines vertrouwen als jouw officiële identiteit. Zonder eigen site ben je een vermelding op iemand anders zijn platform. De audit checkt of je een eigen domein bezit, of je site werkt op mobiel (waar 78% van salonzoekopdrachten plaatsvindt volgens Think with Google), hoe snel de pagina laadt, of er een boekingsknop above-the-fold staat, en of de structuur duidelijk vertelt welk type salon je hebt.
+          </p>
+          <p class="audit-pillar-body" x-show="lang === 'en'">
+            Yes. Your own website is the only place customers can book without you paying commission, and it's what search engines trust as your real identity. Without one, you're a listing on someone else's platform. The audit checks whether you own your domain, whether your site works on mobile (where 78% of salon searches happen, per Think with Google), how fast the page loads, whether there's a booking button above the fold, and whether the page structure clearly tells search engines what kind of salon you run.
+          </p>
+        </div>
       </article>
 
       <!-- Pillar 4: Local SEO -->
       <article class="audit-pillar">
-        <h2 class="audit-pillar-q">
-          <span x-show="lang === 'nl'">Wat is lokale SEO en hoe werkt het voor salons?</span>
-          <span x-show="lang === 'en'">What is local SEO and how does it work for salons?</span>
-        </h2>
-        <p class="audit-pillar-body" x-show="lang === 'nl'">
-          Lokale SEO bepaalt of je in de drie kaart-resultaten bovenaan Google verschijnt, het "Local Pack". Dat is waar 44% van de klikken naartoe gaat bij lokale zoekopdrachten (BrightLocal, 2024 Local Search Ranking Factors). De audit checkt of je NAP-gegevens (naam, adres, telefoon) overal hetzelfde staan, of je vermeld bent in relevante NL-gidsen zoals Treatwell, Salonkee en Yelp, of je website een duidelijke locatie-pagina heeft, en op welke positie je staat voor 3 tot 5 zoektermen die jouw klanten daadwerkelijk gebruiken.
-        </p>
-        <p class="audit-pillar-body" x-show="lang === 'en'">
-          Local SEO decides whether you appear in the three map results at the top of Google, the "Local Pack." That's where 44% of clicks go for local searches (BrightLocal, 2024 Local Search Ranking Factors). The audit checks whether your NAP data (name, address, phone) is consistent everywhere, whether you're listed in relevant local directories like Treatwell, Salonkee, and Yelp, whether your website has a clear location page, and where you currently rank for 3 to 5 search terms your customers actually use.
-        </p>
+        <span class="audit-pillar__numeral" aria-hidden="true">IV</span>
+        <div class="audit-pillar__content">
+          <h2 class="audit-pillar-q">
+            <span x-show="lang === 'nl'">Wat is lokale SEO en hoe werkt het voor salons?</span>
+            <span x-show="lang === 'en'">What is local SEO and how does it work for salons?</span>
+          </h2>
+          <p class="audit-pillar-body" x-show="lang === 'nl'">
+            Lokale SEO bepaalt of je in de drie kaart-resultaten bovenaan Google verschijnt, het "Local Pack". Dat is waar 44% van de klikken naartoe gaat bij lokale zoekopdrachten (BrightLocal, 2024 Local Search Ranking Factors). De audit checkt of je NAP-gegevens (naam, adres, telefoon) overal hetzelfde staan, of je vermeld bent in relevante NL-gidsen zoals Treatwell, Salonkee en Yelp, of je website een duidelijke locatie-pagina heeft, en op welke positie je staat voor 3 tot 5 zoektermen die jouw klanten daadwerkelijk gebruiken.
+          </p>
+          <p class="audit-pillar-body" x-show="lang === 'en'">
+            Local SEO decides whether you appear in the three map results at the top of Google, the "Local Pack." That's where 44% of clicks go for local searches (BrightLocal, 2024 Local Search Ranking Factors). The audit checks whether your NAP data (name, address, phone) is consistent everywhere, whether you're listed in relevant local directories like Treatwell, Salonkee, and Yelp, whether your website has a clear location page, and where you currently rank for 3 to 5 search terms your customers actually use.
+          </p>
+        </div>
       </article>
 
       <!-- Pillar 5: AI visibility -->
       <article class="audit-pillar">
-        <h2 class="audit-pillar-q">
-          <span x-show="lang === 'nl'">Word ik gevonden in ChatGPT en Google AI?</span>
-          <span x-show="lang === 'en'">Will I get found in ChatGPT and Google AI?</span>
-        </h2>
-        <p class="audit-pillar-body" x-show="lang === 'nl'">
-          Misschien wel, misschien niet. Volgens Bain &amp; Company (2024) gebruikt 80% van de consumenten "zero-click" zoekresultaten, oftewel antwoorden uit AI-overzichten of samenvattingen, voor minstens 40% van hun zoekopdrachten. Sinds 2025 vragen klanten steeds vaker direct aan ChatGPT, Perplexity of Google AI Overviews: "wat is de beste salon in Utrecht voor balayage?" Als jouw salon niet in dat antwoord staat, besta je voor die klant niet. De audit checkt of je salon genoemd wordt in AI-antwoorden voor 3 relevante zoektermen, en welke concurrenten wél worden genoemd.
-        </p>
-        <p class="audit-pillar-body" x-show="lang === 'en'">
-          Maybe, maybe not. According to Bain &amp; Company (2024), 80% of consumers rely on "zero-click" results, meaning answers from AI summaries, for at least 40% of their searches. Since 2025, customers increasingly ask ChatGPT, Perplexity, or Google AI Overviews directly: "what's the best salon in Utrecht for balayage?" If your salon isn't in that answer, you don't exist for that customer. The audit checks whether your salon gets mentioned in AI answers for 3 relevant search terms, and which competitors do get mentioned.
-        </p>
+        <span class="audit-pillar__numeral" aria-hidden="true">V</span>
+        <div class="audit-pillar__content">
+          <h2 class="audit-pillar-q">
+            <span x-show="lang === 'nl'">Word ik gevonden in ChatGPT en Google AI?</span>
+            <span x-show="lang === 'en'">Will I get found in ChatGPT and Google AI?</span>
+          </h2>
+          <p class="audit-pillar-body" x-show="lang === 'nl'">
+            Misschien wel, misschien niet. Volgens Bain &amp; Company (2024) gebruikt 80% van de consumenten "zero-click" zoekresultaten, oftewel antwoorden uit AI-overzichten of samenvattingen, voor minstens 40% van hun zoekopdrachten. Sinds 2025 vragen klanten steeds vaker direct aan ChatGPT, Perplexity of Google AI Overviews: "wat is de beste salon in Utrecht voor balayage?" Als jouw salon niet in dat antwoord staat, besta je voor die klant niet. De audit checkt of je salon genoemd wordt in AI-antwoorden voor 3 relevante zoektermen, en welke concurrenten wél worden genoemd.
+          </p>
+          <p class="audit-pillar-body" x-show="lang === 'en'">
+            Maybe, maybe not. According to Bain &amp; Company (2024), 80% of consumers rely on "zero-click" results, meaning answers from AI summaries, for at least 40% of their searches. Since 2025, customers increasingly ask ChatGPT, Perplexity, or Google AI Overviews directly: "what's the best salon in Utrecht for balayage?" If your salon isn't in that answer, you don't exist for that customer. The audit checks whether your salon gets mentioned in AI answers for 3 relevant search terms, and which competitors do get mentioned.
+          </p>
+        </div>
       </article>
     </section>
 
@@ -1466,68 +1571,83 @@
       </h2>
 
       <article class="audit-faq-item">
-        <h3 class="audit-faq-q">
-          <span x-show="lang === 'nl'">Hoe lang duurt de audit?</span>
-          <span x-show="lang === 'en'">How long does the audit take?</span>
-        </h3>
-        <p class="audit-faq-a" x-show="lang === 'nl'">
-          Ongeveer 30 seconden. Vier vragen, geen account, geen wachttijd. Je krijgt direct je scorecard te zien, niet later in een e-mail.
-        </p>
-        <p class="audit-faq-a" x-show="lang === 'en'">
-          About 30 seconds. Four questions, no account, no waiting. You see your scorecard immediately, not later in an email.
-        </p>
+        <span class="audit-faq__numeral" aria-hidden="true">01.</span>
+        <div class="audit-faq__content">
+          <h3 class="audit-faq-q">
+            <span x-show="lang === 'nl'">Hoe lang duurt de audit?</span>
+            <span x-show="lang === 'en'">How long does the audit take?</span>
+          </h3>
+          <p class="audit-faq-a" x-show="lang === 'nl'">
+            Ongeveer 30 seconden. Vier vragen, geen account, geen wachttijd. Je krijgt direct je scorecard te zien, niet later in een e-mail.
+          </p>
+          <p class="audit-faq-a" x-show="lang === 'en'">
+            About 30 seconds. Four questions, no account, no waiting. You see your scorecard immediately, not later in an email.
+          </p>
+        </div>
       </article>
 
       <article class="audit-faq-item">
-        <h3 class="audit-faq-q">
-          <span x-show="lang === 'nl'">Wat checkt de audit precies?</span>
-          <span x-show="lang === 'en'">What does the audit actually check?</span>
-        </h3>
-        <p class="audit-faq-a" x-show="lang === 'nl'">
-          Vijf pijlers van online vindbaarheid: Google Reviews, Google Bedrijfsprofiel, je eigen website, lokale SEO en AI-zichtbaarheid in ChatGPT, Perplexity en Google AI Overviews. Per pijler krijg je een score van 0 tot 100 en de drie belangrijkste verbeterpunten.
-        </p>
-        <p class="audit-faq-a" x-show="lang === 'en'">
-          Five pillars of online visibility: Google Reviews, Google Business Profile, your own website, local SEO, and AI visibility in ChatGPT, Perplexity, and Google AI Overviews. For each pillar you get a score from 0 to 100 and the three most important improvement points.
-        </p>
+        <span class="audit-faq__numeral" aria-hidden="true">02.</span>
+        <div class="audit-faq__content">
+          <h3 class="audit-faq-q">
+            <span x-show="lang === 'nl'">Wat checkt de audit precies?</span>
+            <span x-show="lang === 'en'">What does the audit actually check?</span>
+          </h3>
+          <p class="audit-faq-a" x-show="lang === 'nl'">
+            Vijf pijlers van online vindbaarheid: Google Reviews, Google Bedrijfsprofiel, je eigen website, lokale SEO en AI-zichtbaarheid in ChatGPT, Perplexity en Google AI Overviews. Per pijler krijg je een score van 0 tot 100 en de drie belangrijkste verbeterpunten.
+          </p>
+          <p class="audit-faq-a" x-show="lang === 'en'">
+            Five pillars of online visibility: Google Reviews, Google Business Profile, your own website, local SEO, and AI visibility in ChatGPT, Perplexity, and Google AI Overviews. For each pillar you get a score from 0 to 100 and the three most important improvement points.
+          </p>
+        </div>
       </article>
 
       <article class="audit-faq-item">
-        <h3 class="audit-faq-q">
-          <span x-show="lang === 'nl'">Is de audit echt gratis?</span>
-          <span x-show="lang === 'en'">Is the audit really free?</span>
-        </h3>
-        <p class="audit-faq-a" x-show="lang === 'nl'">
-          Ja, en ja, ook zonder addertjes. Geen account, geen creditcard, geen verplichte e-mail. We bouwen websites voor salons, dus we vinden het logisch om eerst te laten zien wat we kunnen. Of je daarna iets afsluit is helemaal jouw beslissing.
-        </p>
-        <p class="audit-faq-a" x-show="lang === 'en'">
-          Yes, and yes, no strings. No account, no credit card, no required email. We build websites for salons, so it makes sense to show what we can do first. Whether you sign up for anything afterward is entirely your call.
-        </p>
+        <span class="audit-faq__numeral" aria-hidden="true">03.</span>
+        <div class="audit-faq__content">
+          <h3 class="audit-faq-q">
+            <span x-show="lang === 'nl'">Is de audit echt gratis?</span>
+            <span x-show="lang === 'en'">Is the audit really free?</span>
+          </h3>
+          <p class="audit-faq-a" x-show="lang === 'nl'">
+            Ja, en ja, ook zonder addertjes. Geen account, geen creditcard, geen verplichte e-mail. We bouwen websites voor salons, dus we vinden het logisch om eerst te laten zien wat we kunnen. Of je daarna iets afsluit is helemaal jouw beslissing.
+          </p>
+          <p class="audit-faq-a" x-show="lang === 'en'">
+            Yes, and yes, no strings. No account, no credit card, no required email. We build websites for salons, so it makes sense to show what we can do first. Whether you sign up for anything afterward is entirely your call.
+          </p>
+        </div>
       </article>
 
       <article class="audit-faq-item">
-        <h3 class="audit-faq-q">
-          <span x-show="lang === 'nl'">Wat gebeurt er met mijn gegevens?</span>
-          <span x-show="lang === 'en'">What happens to my data?</span>
-        </h3>
-        <p class="audit-faq-a" x-show="lang === 'nl'">
-          We slaan alleen geanonimiseerde scores op om de audit zelf te verbeteren. Je salonnaam, adres en cijfers worden niet gedeeld met derden, niet verkocht, en niet gebruikt voor reclame. Je krijgt geen marketingmails van ons tenzij je daar zelf om vraagt.
-        </p>
-        <p class="audit-faq-a" x-show="lang === 'en'">
-          We only store anonymized scores to improve the audit itself. Your salon name, address, and numbers are not shared with third parties, not sold, and not used for advertising. You won't get marketing emails from us unless you ask for them.
-        </p>
+        <span class="audit-faq__numeral" aria-hidden="true">04.</span>
+        <div class="audit-faq__content">
+          <h3 class="audit-faq-q">
+            <span x-show="lang === 'nl'">Wat gebeurt er met mijn gegevens?</span>
+            <span x-show="lang === 'en'">What happens to my data?</span>
+          </h3>
+          <p class="audit-faq-a" x-show="lang === 'nl'">
+            We slaan alleen geanonimiseerde scores op om de audit zelf te verbeteren. Je salonnaam, adres en cijfers worden niet gedeeld met derden, niet verkocht, en niet gebruikt voor reclame. Je krijgt geen marketingmails van ons tenzij je daar zelf om vraagt.
+          </p>
+          <p class="audit-faq-a" x-show="lang === 'en'">
+            We only store anonymized scores to improve the audit itself. Your salon name, address, and numbers are not shared with third parties, not sold, and not used for advertising. You won't get marketing emails from us unless you ask for them.
+          </p>
+        </div>
       </article>
 
       <article class="audit-faq-item">
-        <h3 class="audit-faq-q">
-          <span x-show="lang === 'nl'">Wat als mijn salon niet gevonden wordt?</span>
-          <span x-show="lang === 'en'">What if my salon isn't found?</span>
-        </h3>
-        <p class="audit-faq-a" x-show="lang === 'nl'">
-          Dat is op zich al een uitkomst. Dan zien we precies waar de gaten zitten, meestal in je Google Bedrijfsprofiel of je vermelding op kaart-resultaten. We laten je in dat geval ook zien welke eerste stap het meest oplevert, vaak een verificatie die je in 10 minuten zelf kunt doen.
-        </p>
-        <p class="audit-faq-a" x-show="lang === 'en'">
-          That's already a useful result. It shows exactly where the gaps are, usually in your Google Business Profile or your local map listings. In that case we also show you which first step pays off most, often a verification you can do yourself in 10 minutes.
-        </p>
+        <span class="audit-faq__numeral" aria-hidden="true">05.</span>
+        <div class="audit-faq__content">
+          <h3 class="audit-faq-q">
+            <span x-show="lang === 'nl'">Wat als mijn salon niet gevonden wordt?</span>
+            <span x-show="lang === 'en'">What if my salon isn't found?</span>
+          </h3>
+          <p class="audit-faq-a" x-show="lang === 'nl'">
+            Dat is op zich al een uitkomst. Dan zien we precies waar de gaten zitten, meestal in je Google Bedrijfsprofiel of je vermelding op kaart-resultaten. We laten je in dat geval ook zien welke eerste stap het meest oplevert, vaak een verificatie die je in 10 minuten zelf kunt doen.
+          </p>
+          <p class="audit-faq-a" x-show="lang === 'en'">
+            That's already a useful result. It shows exactly where the gaps are, usually in your Google Business Profile or your local map listings. In that case we also show you which first step pays off most, often a verification you can do yourself in 10 minutes.
+          </p>
+        </div>
       </article>
     </section>
 
@@ -1942,7 +2062,29 @@
           return this.t('notfound_body');
         },
 
-        init() { /* placeholder; reserved for future analytics opt-in or persistence */ },
+        init() {
+          // Scroll-triggered reveal for the always-visible editorial sections
+          // below the form (pillars + FAQ items). Each element fades up the
+          // moment it enters the viewport. Reduced-motion users get the
+          // revealed state immediately; we don't even instantiate the observer.
+          const targets = document.querySelectorAll('.audit-pillar, .audit-faq-item');
+          if (this.prefersReducedMotion()) {
+            targets.forEach(el => el.classList.add('is-revealed'));
+            return;
+          }
+          // 15% intersection + 10% bottom-margin offset means each element
+          // begins its reveal slightly before fully entering view, so the
+          // motion lands as the reader's eye arrives.
+          const io = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-revealed');
+                io.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
+          targets.forEach(el => io.observe(el));
+        },
 
         // Returns true if the user has set OS-level reduced-motion preference.
         // Read once per call site so reduced-motion users skip animation deltas.
